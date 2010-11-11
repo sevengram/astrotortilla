@@ -1,0 +1,79 @@
+AstroMate
+=========
+Copyright 2010 Antti Kuntsi <mickut@gmail.com>
+
+The AstroMate project aims to automate repetitive tasks during a modern day
+astrophotography session using plate-solving software to speed up the mount
+alignment and GoTo error corrections.
+
+The initial version is targeting to have Python [1] interfaces for ASCOM [2]
+compatible mounts and cameras, astrometry.net [3] plate solving application and
+Nebulosity2 [4] astrophometry application by Stark Labs. Contributions for
+integrating with other applications are welcome.
+
+This project is licensed under GPL, see the file LICENSE for details. This
+software is delivered as-is, with no expressed or implied guarantees of being
+fit for any purpose.
+
+
+Using AstroMate
+---------------
+
+To be written in more detail later on.
+
+Intent of AstroMate is to enable using the imaging camera for determining the
+need for slew corrections.  Using the imaging camera ensures that the GoTo is
+slewed dead-on on the camera view.
+
+The images obtained from a camera are evaluated by a plate solving application,
+and initially a wrapper for astrometry.net is implemented. The code for
+astrometry.net is freely available, but the astrometric indexes are available
+upon request only. For details see the GETTING-INDICES file in the
+astrometry.net source package or on the http://astrometry.net/ website.
+
+All copyrights and trademarks are recognized and respected.
+
+Python
+------
+
+The application AstroTortilla and the astromate library are written in Python
+2.6, using WxPython [5] , Python win32all extension [6] and Python Imaging
+Library 1.1.7 [7].
+
+Running astrometry.net
+----------------------
+
+The astrometry.net is not originally inteded to run on Windows, but it can be
+compiled and run under Cygwin [8]. Before compiling the astrometry.net code,
+make sure you have the required packages installed and at least with version
+0.34 the utils/Makefile updated to compile correctly. See the file
+AstrometryNetPackages.txt for list of known packages. To ensure speedy
+execution, make sure to disable the bash autocomplete package in Cygwin.
+
+
+ASCOM
+-----
+
+The AstroMate is tested on the latest available ASCOM platform available on
+the release date. ASCOM support requires the Python win32all extensions [5].
+
+
+Nebulosity2
+-----------
+
+If you are using Nebulosity 2, you might want to use it with AstroMate to make
+sure your imaging camera is pointing to the correct location. AstroMate
+depends on the new TCP/IP based scripting feature.
+
+
+References
+----------
+[1] http://www.python.org/
+[2] http://ascom-standards.org/
+[3] http://astrometry.net
+[4] http://www.stark-labs.com/nebulosity.html 
+[5] http://wxpython.org/
+[6] http://python.net/crew/skippy/win32/Downloads.html
+[7] http://www.pythonware.com/products/pil/
+[8] http://www.cygwin.com/
+
