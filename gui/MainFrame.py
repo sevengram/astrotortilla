@@ -560,7 +560,7 @@ class mainFrame(wx.Frame):
         try:
             while True:
                 distance = self.__captureSolve()
-                if not self.chkRepeat.IsEnabled():
+                if not self.chkRepeat.IsChecked():
                     break
                 if distance <= self.numCtrlAccuracy.GetValue():
                     break
@@ -634,10 +634,10 @@ class mainFrame(wx.Frame):
                     pointError = self.solution.center - targetPos
                     self.SetStatusText(_("Separation: %s")%deg2dms(pointError.degrees))
                 if self.telescope and self.telescope.tracking:
-                    if self.chkSync.IsEnabled():
+                    if self.chkSync.IsChecked():
                         self.telescope.position = self.solution.center
-                    if self.chkSlewTarget.IsEnabled():
-                        self.telescope.SlewToAsync(targetPos)
+                    if self.chkSlewTarget.IsChecked():
+                        self.telescope.slewToAsync(targetPos)
             else:
                 self.SetStatusText(_("Solution not found."))
         return pointError

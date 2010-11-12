@@ -1,1 +1,1 @@
-__all__ = ["ASCOMCamera", "CaptureCamera", "NebulosityCamera"]
+__all__ = ["ASCOMCamera", "CaptureCamera", "NebulosityCamera", "FileOpenCamera"]

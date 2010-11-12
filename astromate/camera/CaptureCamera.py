@@ -1,5 +1,5 @@
 """CaptureCamera
-- simple camera interface to Nebulosity 2
+- simple camera interface to screen capture based imaging
 """
 
 from ..ICamera import ICamera
@@ -58,7 +58,7 @@ class CaptureCamera(ICamera):
 	@property
 	def imageTypes(self):
 		"List of image types supported by the camera"
-		return ["bmp"]
+		return ["jpg"]
 
 	@property
 	def cameraList(self):
@@ -146,13 +146,13 @@ class CaptureCamera(ICamera):
 	@property
 	def imageReady(self):
 		"Returns True if a captured image is available"
-		return len(glob.glob(os.path.join(self.workingDirectory, self.__basename+".bmp"))) > 0
+		return len(glob.glob(os.path.join(self.workingDirectory, self.__basename+".jpg"))) > 0
 	
 	def capture(self, duration):
 		"Starts image exposure, waits `duration` seconds before window capture, no returned value"
 # clear temp directory first
 		try:
-			map(os.remove, glob.glob(os.path.join(self.workingDirectory, self.__basename+".bmp")))
+			map(os.remove, glob.glob(os.path.join(self.workingDirectory, self.__basename+".jpg")))
 		except Exception as detail:
 			raise IOError("Failed to clear cache: %s"%detail)
 
@@ -179,9 +179,7 @@ class CaptureCamera(ICamera):
 		saveBitMap.CreateCompatibleBitmap(mfcDC, w, h)
 		saveDC.SelectObject(saveBitMap)
 		saveDC.BitBlt((0,0),(w, h) , mfcDC, (lm,tm), win32con.SRCCOPY)
-		#bmpname = os.path.join(self.workingDirectory, self.__basename+".bmp")
-		#saveBitMap.SaveBitmapFile(saveDC, bmpname)
-		jpgname = os.path.join(self.workingDirectory, self.__basename+".bmp")
+		jpgname = os.path.join(self.workingDirectory, self.__basename+".jpg")
 		bmpstr = saveBitMap.GetBitmapBits(True)
 		bmpinfo = saveBitMap.GetInfo()
  
@@ -196,6 +194,6 @@ class CaptureCamera(ICamera):
 	def getImage(self):
 		"Returns None or path to image"
 		if self.imageReady:
-			return glob.glob(os.path.join(self.workingDirectory, self.__basename+".bmp"))[-1]
+			return glob.glob(os.path.join(self.workingDirectory, self.__basename+".jpg"))[-1]
 		else:
 			return None
