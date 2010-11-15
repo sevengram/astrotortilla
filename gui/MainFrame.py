@@ -679,9 +679,11 @@ class mainFrame(wx.Frame):
         try:
             while True:
                 distance = self.__captureSolve()
+		if not distance:
+			break
                 if not self.chkRepeat.IsChecked():
                     break
-                if distance <= self.numCtrlAccuracy.GetValue():
+                if distance.arcminutes <= self.numCtrlAccuracy.GetValue() :
                     break
         finally:
             for row in range(self.configGrid.GetNumberRows()):
@@ -701,7 +703,7 @@ class mainFrame(wx.Frame):
             while self.telescope.slewing:
                 sleep(0.2)
             targetPos = self.telescope.position
-        self.solution = 0
+	self.lastSolution = 0
         try:
             self.solution = None
             try:
@@ -813,11 +815,11 @@ class mainFrame(wx.Frame):
         if not targetPos: targetPos = curPos
         self.txtScopeTargetRA.SetLabel(deg2hms(targetPos.RA))
         self.txtScopeTargetDec.SetLabel(deg2dms(targetPos.dec))
-        if self.lastSolution:
+        if self.lastSolution and self.solution:
                 separation = self.telescope.position - self.solution.center
                 separationString = ""
                 if separation.degrees > 1:
-                    separationString = u"%.2fxb0"%(separation.degrees)
+                    separationString = u"%.2f\xb0"%(separation.degrees)
                 elif separation.arcminutes>1:
                     separationString = u"%.2f'"%(separation.arcminutes)
                 else:

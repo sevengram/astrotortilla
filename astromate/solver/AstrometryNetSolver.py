@@ -108,9 +108,9 @@ class AstrometryNetSolver(IPlateSolver):
 		options=[]
 		if target:
 			if targetRadius:
-				t_radius = targetRadius
+				t_radius = float(targetRadius)
 			else:
-				t_radius = self.getProperty("searchradius")
+				t_radius = float(self.getProperty("searchradius"))
 			options.append("-3 %f -4 %f -5 %f"%(target.RA, target.dec, t_radius))
 		options.append("-b `cygpath %s`"%(self.getProperty("configfile").replace("\\", "/")))
 		options.append("%s"%(self.getProperty("xtra")))

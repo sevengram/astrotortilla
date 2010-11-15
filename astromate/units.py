@@ -101,6 +101,7 @@ class Separation(object):
 		"Angular separation in arcminutes"
 		return self.__sep * 60.
 
+	@property
 	def arcseconds(self):
 		"Angular separation in arcseconds"
 		return self.__sep * 3600.
