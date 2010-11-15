@@ -6,6 +6,8 @@ import wx.lib.masked.numctrl
 import DlgHelpAbout
 import DlgCameraSetup
 import gettext
+import ConfigParser
+import os, os.path
 from time import time, sleep
 from astromate import CameraState
 from astromate.units import Coordinate, Separation, deg2dms, deg2hms
@@ -34,7 +36,46 @@ def create(parent):
  wxID_MAINFRAMETXTSCOPETARGETRA, wxID_MAINFRAMETXTSCOPETRACKING, 
 ] = [wx.NewId() for _init_ctrls in range(44)]
 
-[wxID_MAINFRAMEMENUFILEFILEEXIT] = [wx.NewId() for _init_coll_menuFile_Items in range(1)]
+CFGFILE = "astrotortilla.cfg" 
+
+def hide(ctrl):
+    """Hide a control if it's not hidden yet. 
+    Fails silently if IsShown and Hide are not implemented for control"""
+    try:
+        if ctrl.IsShown():
+            ctrl.Hide()
+    except:
+        pass
+
+def show(ctrl):
+    """Show a control if it's hidden.
+    Fails silently if IsShown and Show are not implemented for control"""
+    try:
+        if not ctrl.IsShown():
+            ctrl.Show()
+    except:
+        pass
+
+def enable(ctrl):
+    """Enables a control if it is disabled."""
+    try:
+        if not ctrl.IsEnabled():
+            ctrl.Enable()
+    except:
+        pass
+
+def disable(ctrl):
+    """Disables a control if it is enabled."""
+    try:
+        if ctrl.IsEnabled():
+            ctrl.Disable()
+    except:
+        pass
+
+
+[wxID_MAINFRAMEMENUFILEFILEEXIT, wxID_MAINFRAMEMENUFILEITEMS1, 
+ wxID_MAINFRAMEMENUFILEITEMS2, 
+] = [wx.NewId() for _init_coll_menuFile_Items in range(3)]
 
 [wxID_MAINFRAMEMENUHELPHELPABOUT] = [wx.NewId() for _init_coll_menuHelp_Items in range(1)]
 
@@ -59,11 +100,20 @@ class mainFrame(wx.Frame):
     def _init_coll_menuFile_Items(self, parent):
         # generated method, don't edit
 
+        parent.Append(help='', id=wxID_MAINFRAMEMENUFILEITEMS1,
+              kind=wx.ITEM_NORMAL, text=_('Load settings...'))
+        parent.Append(help='', id=wxID_MAINFRAMEMENUFILEITEMS2,
+              kind=wx.ITEM_NORMAL, text=_('Save settings...'))
+        parent.AppendSeparator()
         parent.Append(help=_('Exit the application'),
               id=wxID_MAINFRAMEMENUFILEFILEEXIT, kind=wx.ITEM_NORMAL,
               text=_('Exit'))
         self.Bind(wx.EVT_MENU, self.OnMenuFileFileexitMenu,
               id=wxID_MAINFRAMEMENUFILEFILEEXIT)
+        self.Bind(wx.EVT_MENU, self.OnMenuFileLoadSettingsMenu,
+              id=wxID_MAINFRAMEMENUFILEITEMS1)
+        self.Bind(wx.EVT_MENU, self.OnMenuFileSaveSettingsMenu,
+              id=wxID_MAINFRAMEMENUFILEITEMS2)
 
     def _init_coll_statusBar1_Fields(self, parent):
         # generated method, don't edit
@@ -360,19 +410,59 @@ class mainFrame(wx.Frame):
 
     def __init__(self, parent):
         self._init_ctrls(parent)
+        self.configGrid.CreateGrid(1,2)
         self.telescope = None
+        self.telescopeName = None
         self.camera = None
+        self.cameraName = None
         self.solver = None
+        self.solverName = None
         self.solution = None
         self.lastSolution = 0
-        self.config = {}
+        self.config = ConfigParser.SafeConfigParser() # Python 2.7: allow_no_value = True)
+        self.config.read(CFGFILE)
+        try:
+            default_path = self.config.get("AstroTortilla", "settings_path")
+        except:
+            if not self.config.has_section("AstroTortilla"):
+                self.config.add_section("AstroTortilla")
+            self.config.set("AstroTortilla", "settings_path", os.getcwdu())
         self.prev_rowcol = [None, None]
         self.txtDec.SetLabel(deg2dms(0))
         self.txtScopeTargetDec.SetLabel(deg2dms(0))
         self.txtCamDec.SetLabel(deg2dms(0))
         self.__solving = False
         self.__abortSolve = False
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
+    
+    def OnClose(self, event):
+        try:
+            if self.telescope and self.telescopeName:
+                self.__saveObjConfig(self.telescope, self.telescopeName)
+            if self.camera and self.cameraName:
+                self.__saveObjConfig(self.camera, self.cameraName)
+            if self.solver and self.solverName:
+                self.__saveObjConfig(self.solver, self.solverName)
+            self.config.write(file(CFGFILE, "w"))
+        except:
+            import traceback
+            traceback.print_exc() 
+        event.Skip()
 
+
+    def __configure(self, obj, name):
+            if obj and self.config.has_section(name):
+                for k,v in self.config.items(name):
+                    obj.setProperty(k,v)
+                    
+    def __saveObjConfig(self, obj, name):
+            if not self.config.has_section(name):
+                self.config.add_section(name)
+                
+            defaultConfig = obj.configuration
+            for k,v in defaultConfig.items():
+                self.config.set(name, k, unicode(v))
+                
     def OnMenuFileFileexitMenu(self, event):
         self.Close()
 
@@ -391,21 +481,30 @@ class mainFrame(wx.Frame):
 
     def _selectSolver(self, n):
         if self.solver:
-            # TODO: save config data
+            self.__saveObjConfig(self.solver, self.solverName)
             del self.solver
             self.configGrid.Hide()
         self.solver = None
+        self.solverName = None
         solver = self.choiceSolver.GetClientData(n)
         if solver:
             self.solver = solver()
-            # update config data structure
-            # TODO: load config data
-            self.configGrid.ClearGrid()
-            self.solver = self.choiceSolver.GetClientData(0)()
+            # update config data structure                    
+            self.solver = self.choiceSolver.GetClientData(n)()
+            self.solverName = "Solver-%s"%(self.choiceSolver.GetStringSelection())
+            self._updateSolverGrid()
+            
+    def _updateSolverGrid(self):
             solverProps = self.solver.propertyList
+            self.__configure(self.solver, self.solverName)
+            self.configGrid.ClearGrid()
             solverConfig = self.solver.configuration
-            self.config["solver"] = solverConfig
-            self.configGrid.CreateGrid(len(solverConfig),2)
+            cfgSize = len(solverConfig)
+            gridSize = self.configGrid.GetNumberRows()
+            if gridSize > cfgSize:
+                self.configGrid.DeleteRows(0, gridSize - cfgSize)
+            elif gridSize < cfgSize:
+                self.configGrid.AppendRows(cfgSize - gridSize)
             self.configGrid.SetRowLabelSize(0)
             self.configGrid.DisableDragGridSize()
             self.configGrid.SetColSize(1, 200)
@@ -442,28 +541,37 @@ class mainFrame(wx.Frame):
 
     def OnChoiceScopeChoice(self, event):
         n = event.GetEventObject().GetSelection()
+        if self.telescope:
+            self.__saveObjConf(self.telescope, self.telescopeName)
         if n == 0:
             del self.telescope
             self.telescope = None
+            self.telescopeName = None
         else:
             self.telescope = self.choiceScope.GetClientData(n)()
-            self.telescope.connected = True
-        self.scopePollTimer.Start(300)
+            self.telescopeName = "Telescope-%s"%(self.choiceScope.GetStringSelection())
+            if self.telescope:
+                self.telescope.connected = True
+                self.scopePollTimer.Start(300)
 
 
     def OnChoiceCamChoice(self, event):
         n = event.GetEventObject().GetSelection()
+        if self.camera:
+            self.__saveObjConfig(self.camera, self.cameraName)
         if n == 0 or self.choiceCam.GetClientData(n) is not type(self.camera):
             if self.camera and self.camera.connected:
                 self.camera.connected = False
             del self.camera
             self.camera = None
+            self.cameraName = None
         if n == 0: 
             self.camSetup.Disable()
             self.txtCam.SetLabel(_("No camera"))
             self._updateCamera()
             return
         self.camera = self.choiceCam.GetClientData(n)()
+        self.cameraName = "Camera-%s"%(self.choiceCam.GetStringSelection)
         self.camSetup.Enable()
         self._updateCamera()
 
@@ -487,13 +595,24 @@ class mainFrame(wx.Frame):
                 vFov *= 60.
                 fovUnit = _("'")
             self.txtField.SetLabel("%01.2f%s x %01.2f%s"%(hFov, fovUnit, vFov, fovUnit))
-            if int(self.solution.parity) != 1:
+            if int(self.solution.parity) == 1:
                 self.lblMirror.SetLabel(_("Flipped"))
             else:
                 self.lblMirror.SetLabel(_("Normal"))
             self.txtRotation.SetLabel("%.2f"%(self.solution.rotation))
             if self.lastSolution:
-                self.txtCam.SetLabel(_("Age: %ds"%(time() - self.lastSolution)))
+                if self.telescope:
+                    separation = self.telescope.position - self.solution.center
+                    separationString = ""
+                    if separation.degrees > 1:
+                        separationString = u"%.2fxb0"%(separation.degrees)
+                    elif separation.arcminutes>1:
+                        separationString = u"%.2f'"%(separation.arcminutes)
+                    else:
+                        separationString = u"%.2f\""%(separation.arcseconds)
+                    self.txtCam.SetLabel(_("Distance: %s (%ds old)"%(separationString, time() - self.lastSolution)))
+                else:
+                    self.txtCam.SetLabel(_("Age: %ds"%(time() - self.lastSolution)))
         
 
     def OnConfigGridMouseEvents(self, event):
@@ -565,6 +684,10 @@ class mainFrame(wx.Frame):
                 if distance <= self.numCtrlAccuracy.GetValue():
                     break
         finally:
+            for row in range(self.configGrid.GetNumberRows()):
+                key = self.configGrid.GetRowLabelValue(row)
+                self.configGrid.SetCellValue(row,1,str(self.solver.getProperty(key)))
+                
             self.__solving = False
             self.__abortSolve = False
             self.btnGO.SetLabel(_("Capture and Solve"))
@@ -649,43 +772,40 @@ class mainFrame(wx.Frame):
     def OnScopePollTimer(self, event):
         if not self.telescope:
             self.scopePollTimer.Stop()
-            self.txtScopeTracking.Hide()
-            self.txtScopeSlewing.Hide()
+            map(hide, (self.txtScopeTracking, self.txtScopeSlewing))
             self.txtScopeTracking.Update()
             self.txtScopeSlewing.Update()
-            self.btnScopePark.Disable()
-            self.chkSync.Disable()
-            self.chkSlewTarget.Disable()
-            self.chkRepeat.Disable()
+            map(disable, (
+                self.btnScopePark,
+                self.chkSync,
+                self.chkSlewTarget,
+                self.chkRepeat
+                ))
             return
-        if not self.btnScopePark.IsEnabled():
-            if self.telescope.parked:
-                self.btnScopePark.Enable()
-                self.chkSync.Disable()
-                self.chkSlewTarget.Disable()
-                self.chkRepeat.Disable()
-            elif not self.chkSync.IsEnabled():
-                self.chkSync.Enable()
-                self.chkSlewTarget.Enable()
-                self.chkRepeat.Enable()
-        elif not self.telescope.parked:
-                self.btnScopePark.Disable()
+        if self.telescope.parked:
+                enable(self.btnScopePark)
+        else:
+                disable(self.btnScopePark)
         if self.telescope.tracking:
-            self.txtScopeTracking.Show()
-            self.chkSync.Enable()
-            self.chkSlewTarget.Enable()
-            self.chkRepeat.Enable()
+            show(self.txtScopeTracking)
+            map(enable, (
+                self.chkSync,
+                self.chkSlewTarget,
+                self.chkRepeat
+                ))
         else:
-            self.txtScopeTracking.Hide()
-            self.chkSync.Disable()
-            self.chkSlewTarget.Disable()
-            self.chkRepeat.Disable()
+            hide(self.txtScopeTracking)
+            map(disable, (
+                self.chkSync,
+                self.chkSlewTarget,
+                self.chkRepeat
+                ))
         if self.telescope.slewing:
-            self.txtScopeSlewing.Show()
-            self.btnGO.Disable()
+            show(self.txtScopeSlewing)
+            disable(self.btnGO)
         else:
-            self.txtScopeSlewing.Hide()
-            self.btnGO.Enable()
+            hide(self.txtScopeSlewing)
+            enable(self.btnGO)
         curPos = self.telescope.position
         targetPos = self.telescope.target
         self.txtRA.SetLabel(deg2hms(curPos.RA))
@@ -694,7 +814,15 @@ class mainFrame(wx.Frame):
         self.txtScopeTargetRA.SetLabel(deg2hms(targetPos.RA))
         self.txtScopeTargetDec.SetLabel(deg2dms(targetPos.dec))
         if self.lastSolution:
-                self.txtCam.SetLabel(_("Age: %ds"%(time() - self.lastSolution)))
+                separation = self.telescope.position - self.solution.center
+                separationString = ""
+                if separation.degrees > 1:
+                    separationString = u"%.2fxb0"%(separation.degrees)
+                elif separation.arcminutes>1:
+                    separationString = u"%.2f'"%(separation.arcminutes)
+                else:
+                    separationString = u"%.2f\""%(separation.arcseconds)
+                self.txtCam.SetLabel(_("Distance: %s (%ds old)"%(separationString, time() - self.lastSolution)))
         self.txtScopeTracking.Update()
         self.txtScopeSlewing.Update()
 
@@ -715,5 +843,44 @@ class mainFrame(wx.Frame):
         except:
             self.SetStatusText("Invalid data")
             self.configGrid.SetCellValue(row,col,str(self.solver.getProperty(key)))
-        
-    
+
+    def OnMenuFileLoadSettingsMenu(self, event):
+        fileName = wx.FileSelector(
+				message=_("Load settings"),
+				default_path = self.config.get("AstroTortilla", "settings_path"),
+				flags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST,
+				wildcard="Config file(*.cfg)|*.cfg",
+				)
+
+        if fileName:
+            self.config.read(fileName)
+            self.config.set("AstroTortilla", "settings_path", os.path.dirname(fileName))
+            self.__configure(self.telescope, "Telescope-%s"%self.telescopeName)
+            self.__configure(self.camera, "Telescope-%s"%self.cameraName)
+            self.__configure(self.solver, "Telescope-%s"%self.solverName)
+            self._updateSolverGrid()
+            
+
+
+    def OnMenuFileSaveSettingsMenu(self, event):
+        fileName = wx.FileSelector(
+				message=_("Save settings"),
+				default_path = self.config.get("AstroTortilla", "settings_path"),
+				flags = wx.FD_SAVE,
+				wildcard="Config file(*.cfg)|*.cfg",
+				)
+        if not fileName:
+            return
+        try:
+            self.config.set("AstroTortilla", "settings_path", os.path.dirname(fileName))
+            if self.telescope and self.telescopeName:
+                self.__saveObjConfig(self.telescope, self.telescopeName)
+            if self.camera and self.cameraName:
+                self.__saveObjConfig(self.camera, self.cameraName)
+            if self.solver and self.solverName:
+                self.__saveObjConfig(self.solver, self.solverName)
+            self.config.write(file(fileName, "w"))
+        except:
+            import traceback
+            traceback.print_exc() 
+            

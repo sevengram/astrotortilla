@@ -132,8 +132,8 @@ class AstrometryNetSolver(IPlateSolver):
 					]
 					)
 			center = Coordinate(self.__wcsInfo["ra_center"], self.__wcsInfo["dec_center"])
-			hFOV = self.__wcsInfo["fieldw"]
-			vFOV = self.__wcsInfo["fieldh"]
+			hFOV = float(self.__wcsInfo["fieldw"])
+			vFOV = float(self.__wcsInfo["fieldh"])
 			vunits = self.__wcsInfo["fieldunits"]
 			if vunits == "degrees":
 				pass
@@ -145,8 +145,8 @@ class AstrometryNetSolver(IPlateSolver):
 				vFOV /= 3600. 
 			self.__solution = Solution(center,
 							self.__wcsInfo["orientation_center"],
-							hFOV, vFOV,
 							self.__wcsInfo["parity"],
+							hFOV, vFOV,
 							wcsInfo = self.__wcsInfo
 						)
 			self.__found = True
