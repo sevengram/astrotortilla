@@ -15,6 +15,7 @@ PROPERTYLIST = {
 		"scale_units":("Scale units", str, "View scale size units", "arcminwidth, degwidth, arcsecperpix", "degwidth"),
 		"scale_xrefine":("Scale refinement", float, "Image scale refinement factor", "0 to turn off", 0.1),
 		"xtra":("Custom options", str, "Additional custom options", "", ""),
+		"shell":("Cygwin shell", str, "Shell command for Cygwin execution", "", 'C:\\cygwin\\bin\\bash --login -c "%s"'),
 		}
 
 def ThreadedReader(pipe, outputList, terminator):
@@ -24,13 +25,12 @@ def ThreadedReader(pipe, outputList, terminator):
 
 class AstrometryNetSolver(IPlateSolver):
 	"PlateSolver using astrometry.net solver"
-	def __init__(self, workDirectory=None, cygShell='C:\\cygwin\\bin\\bash --login -c "%s"'):
+	def __init__(self, workDirectory=None):
 		super(AstrometryNetSolver, self).__init__()
 		self.propertyList = PROPERTYLIST
 		self.__found = False
 		self.__solution = None
 		self.__timeout = 300
-		self.__cygShell = cygShell
 		self.__wd = workDirectory
 		self.__counter = 0
 		self.__wdCreated = False
@@ -58,7 +58,8 @@ class AstrometryNetSolver(IPlateSolver):
 			stderrPipe = subprocess.STDOUT
 		else:
 			stderrPipe = subprocess.PIPE
-		shell = subprocess.Popen(self.__cygShell%command, shell=False, bufsize=1,
+		cygShell = self.getProperty("shell")
+		shell = subprocess.Popen(cygShell%command, shell=False, bufsize=1,
 				stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=stderrPipe)
 		if self.__callback:
 			# Loop until child exits
@@ -69,6 +70,8 @@ class AstrometryNetSolver(IPlateSolver):
 			while shell.poll() == None:
 				if stdoutList:
 					self.__callback(stdoutList.pop())
+				else:
+					self.__callback(None)
 				if self.__abort:
 					terminator.set()
 					shell.kill()

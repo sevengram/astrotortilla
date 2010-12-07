@@ -63,7 +63,8 @@ Nebulosity2
 
 If you are using Nebulosity 2, you might want to use it with AstroMate to make
 sure your imaging camera is pointing to the correct location. AstroMate
-depends on the new TCP/IP based scripting feature.
+depends on the new TCP/IP based scripting feature, win32 extensions and
+SendKeys package for automating the interactions.
 
 
 References
@@ -76,4 +77,3 @@ References
 [6] http://python.net/crew/skippy/win32/Downloads.html
 [7] http://www.pythonware.com/products/pil/
 [8] http://www.cygwin.com/
-

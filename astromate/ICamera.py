@@ -30,7 +30,7 @@ class ICamera(Configurable):
 
 	@property
 	def cameraList(self):
-		"List of cameras supported if one must be pre-selected"
+		"List of cameras supported if one can be pre-selected"
 		return []
 
 	@property

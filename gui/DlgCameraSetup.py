@@ -12,17 +12,18 @@ def create(parent):
 
 [wxID_DLGCAMERASETUP, wxID_DLGCAMERASETUPBTNCLOSE, 
  wxID_DLGCAMERASETUPBTNREFRESH, wxID_DLGCAMERASETUPCHCAMNAME, 
- wxID_DLGCAMERASETUPGRIDCAMERACONF, wxID_DLGCAMERASETUPLBLCAMERANAME, 
- wxID_DLGCAMERASETUPLBLCAMLIST, 
-] = [wx.NewId() for _init_ctrls in range(7)]
+ wxID_DLGCAMERASETUPGRIDCAMERACONF, wxID_DLGCAMERASETUPLBLBINNING, 
+ wxID_DLGCAMERASETUPLBLCAMERANAME, wxID_DLGCAMERASETUPLBLCAMLIST, 
+ wxID_DLGCAMERASETUPSPINBINNING, 
+] = [wx.NewId() for _init_ctrls in range(9)]
 
 class DlgCameraSetup(wx.Dialog):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Dialog.__init__(self, id=wxID_DLGCAMERASETUP, name='', parent=prnt,
-              pos=wx.Point(534, 97), size=wx.Size(265, 316),
+              pos=wx.Point(316, 126), size=wx.Size(304, 342),
               style=wx.DEFAULT_DIALOG_STYLE, title='Camera Setup')
-        self.SetClientSize(wx.Size(257, 282))
+        self.SetClientSize(wx.Size(296, 308))
 
         self.gridCameraConf = wx.grid.Grid(id=wxID_DLGCAMERASETUPGRIDCAMERACONF,
               name='gridCameraConf', parent=self, pos=wx.Point(8, 32),
@@ -36,8 +37,8 @@ class DlgCameraSetup(wx.Dialog):
               self.OnGridCameraConfGridCellChange)
 
         self.btnClose = wx.Button(id=wxID_DLGCAMERASETUPBTNCLOSE,
-              label=_('Close'), name='btnClose', parent=self, pos=wx.Point(176,
-              256), size=wx.Size(75, 23), style=0)
+              label=_('Close'), name='btnClose', parent=self, pos=wx.Point(216,
+              280), size=wx.Size(75, 23), style=0)
         self.btnClose.Bind(wx.EVT_BUTTON, self.OnBtnCloseButton,
               id=wxID_DLGCAMERASETUPBTNCLOSE)
 
@@ -46,20 +47,32 @@ class DlgCameraSetup(wx.Dialog):
               pos=wx.Point(16, 8), size=wx.Size(68, 13), style=0)
 
         self.chCamName = wx.Choice(choices=[], id=wxID_DLGCAMERASETUPCHCAMNAME,
-              name='chCamName', parent=self, pos=wx.Point(16, 224),
+              name='chCamName', parent=self, pos=wx.Point(64, 200),
               size=wx.Size(146, 21), style=0)
+        self.chCamName.SetToolTipString(_('Camera interface selection'))
         self.chCamName.Bind(wx.EVT_CHOICE, self.OnCamChoiceChoice,
               id=wxID_DLGCAMERASETUPCHCAMNAME)
 
+        self.lblCamList = wx.StaticText(id=wxID_DLGCAMERASETUPLBLCAMLIST,
+              label=_('Camera:'), name='lblCamList', parent=self,
+              pos=wx.Point(16, 200), size=wx.Size(41, 13), style=0)
+
         self.btnRefresh = wx.Button(id=wxID_DLGCAMERASETUPBTNREFRESH,
-              label=_('Refresh'), name='btnRefresh', parent=self,
-              pos=wx.Point(176, 224), size=wx.Size(75, 23), style=0)
+              label=_('Refresh list'), name='btnRefresh', parent=self,
+              pos=wx.Point(216, 200), size=wx.Size(75, 23), style=0)
+        self.btnRefresh.SetToolTipString(_('Refresh camera selection list'))
         self.btnRefresh.Bind(wx.EVT_BUTTON, self.OnBtnRefreshButton,
               id=wxID_DLGCAMERASETUPBTNREFRESH)
 
-        self.lblCamList = wx.StaticText(id=wxID_DLGCAMERASETUPLBLCAMLIST,
-              label=_('Select camera:'), name='lblCamList', parent=self,
-              pos=wx.Point(16, 200), size=wx.Size(71, 13), style=0)
+        self.lblBinning = wx.StaticText(id=wxID_DLGCAMERASETUPLBLBINNING,
+              label=_('Binning:'), name='lblBinning', parent=self,
+              pos=wx.Point(16, 240), size=wx.Size(38, 13), style=0)
+
+        self.spinBinning = wx.SpinCtrl(id=wxID_DLGCAMERASETUPSPINBINNING,
+              initial=0, max=100, min=0, name='spinBinning', parent=self,
+              pos=wx.Point(64, 232), size=wx.Size(48, 21),
+              style=wx.SP_ARROW_KEYS)
+        self.spinBinning.SetToolTipString(_('Camera binning'))
 
     def __init__(self, parent):
         self._init_ctrls(parent)
@@ -86,6 +99,8 @@ class DlgCameraSetup(wx.Dialog):
         wx.EVT_MOTION(self.gridCameraConf.GetGridWindow(), self.OnGridCameraConfMotion)
         self.gridCameraConf.ForceRefresh()
         self.gridCameraConf.Show()
+        self.spinBinning.SetRange(1, self.camera.maxBin)
+        self.spinBinning.SetValue(self.camera.binning)
         self.prev_rowcol = [None, None]
         self.__updateCamList()
     
@@ -94,7 +109,6 @@ class DlgCameraSetup(wx.Dialog):
         camlist = self.camera.cameraList
         curCam = self.camera.camera
         map(self.chCamName.Append, camlist)
-        print "Cur:", curCam
         if curCam in camlist:
             self.chCamName.SetStringSelection(curCam)
         if not camlist:
@@ -133,11 +147,13 @@ class DlgCameraSetup(wx.Dialog):
 
     def OnCamChoiceChoice(self, event):
         self.camera.camera = self.chCamName.GetStringSelection()
-        print self.chCamName.GetStringSelection()
-        print self.camera.camera
 
     def OnBtnRefreshButton(self, event):
         self.__updateCamList()
 
     def OnBtnCloseButton(self, event):
+        try:
+            self.camera.binning = self.spinBinning.GetValue()
+        except:
+            pass
         self.Destroy()

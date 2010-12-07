@@ -440,7 +440,7 @@ class mainFrame(wx.Frame):
             if self.telescope and self.telescopeName:
                 self.__saveObjConfig(self.telescope, self.telescopeName)
             if self.camera and self.cameraName:
-                self.__saveObjConfig(self.camera, self.cameraName)
+                self._saveCameraConfig()
             if self.solver and self.solverName:
                 self.__saveObjConfig(self.solver, self.solverName)
             self.config.write(file(CFGFILE, "w"))
@@ -453,7 +453,10 @@ class mainFrame(wx.Frame):
     def __configure(self, obj, name):
             if obj and self.config.has_section(name):
                 for k,v in self.config.items(name):
-                    obj.setProperty(k,v)
+                    try:
+                        obj.setProperty(k,v)
+                    except:
+                        pass
                     
     def __saveObjConfig(self, obj, name):
             if not self.config.has_section(name):
@@ -461,7 +464,7 @@ class mainFrame(wx.Frame):
                 
             defaultConfig = obj.configuration
             for k,v in defaultConfig.items():
-                self.config.set(name, k, unicode(v))
+                self.config.set(name, k, unicode(v).replace("%", "%%"))
                 
     def OnMenuFileFileexitMenu(self, event):
         self.Close()
@@ -538,11 +541,10 @@ class mainFrame(wx.Frame):
             grid.GetGridWindow().SetToolTipString(hinttext)
         evt.Skip()
 
-
     def OnChoiceScopeChoice(self, event):
         n = event.GetEventObject().GetSelection()
         if self.telescope:
-            self.__saveObjConf(self.telescope, self.telescopeName)
+            self.__saveObjConfig(self.telescope, self.telescopeName)
         if n == 0:
             del self.telescope
             self.telescope = None
@@ -555,10 +557,25 @@ class mainFrame(wx.Frame):
                 self.scopePollTimer.Start(300)
 
 
+    def _loadCameraConfig(self):
+        self.__configure(self.camera, self.cameraName)
+        if self.config.has_option(self.cameraName, "binning"):
+            self.camera.binning = self.config.getint(self.cameraName, "binning")
+        if self.config.has_option(self.cameraName, "camera"):
+            self.camera.camera = self.config.get(self.cameraName, "camera")
+    
+    def _saveCameraConfig(self):
+        if self.camera and self.cameraName:
+            self.__saveObjConfig(self.camera, self.cameraName)
+            self.config.set(self.cameraName, "binning", str(self.camera.binning))
+            if self.camera.camera:
+                self.config.set(self.cameraName, "camera", str(self.camera.camera))
+
+
     def OnChoiceCamChoice(self, event):
         n = event.GetEventObject().GetSelection()
         if self.camera:
-            self.__saveObjConfig(self.camera, self.cameraName)
+            self._saveCameraConfig()
         if n == 0 or self.choiceCam.GetClientData(n) is not type(self.camera):
             if self.camera and self.camera.connected:
                 self.camera.connected = False
@@ -571,7 +588,8 @@ class mainFrame(wx.Frame):
             self._updateCamera()
             return
         self.camera = self.choiceCam.GetClientData(n)()
-        self.cameraName = "Camera-%s"%(self.choiceCam.GetStringSelection)
+        self.cameraName = "Camera-%s"%(self.choiceCam.GetStringSelection())
+        self._loadCameraConfig()
         self.camSetup.Enable()
         self._updateCamera()
 
@@ -679,8 +697,8 @@ class mainFrame(wx.Frame):
         try:
             while True:
                 distance = self.__captureSolve()
-		if not distance:
-			break
+                if not distance:
+                    break
                 if not self.chkRepeat.IsChecked():
                     break
                 if distance.arcminutes <= self.numCtrlAccuracy.GetValue() :
@@ -703,14 +721,14 @@ class mainFrame(wx.Frame):
             while self.telescope.slewing:
                 sleep(0.2)
             targetPos = self.telescope.position
-	self.lastSolution = 0
+        self.lastSolution = 0
         try:
             self.solution = None
             try:
                 self.SetStatusText(_("Connecting to camera..."))
                 if not self.camera.canAutoConnect and not self.camera.connected:
                     self.camera.connected = True
-                if self.camera.needsCameraName:
+                if self.camera.needsCameraName and not self.camera.camera:
                     self.camera.camera = self.camera.cameraList[0]
                 self.SetStatusText(_("Exposing: %.2f seconds")%self.numCtrlExposure.GetValue())
                 self.camera.capture(self.numCtrlExposure.GetValue())
@@ -768,7 +786,8 @@ class mainFrame(wx.Frame):
         return pointError
 
     def __statusUpdater(self, status):
-        self.SetStatusText(status)
+        if status:
+            self.SetStatusText(status)
         wx.SafeYield(self)
 
     def OnScopePollTimer(self, event):
@@ -808,7 +827,11 @@ class mainFrame(wx.Frame):
         else:
             hide(self.txtScopeSlewing)
             enable(self.btnGO)
+        self.txtScopeTracking.Update()
+        self.txtScopeSlewing.Update()
         curPos = self.telescope.position
+        if not curPos:
+            return
         targetPos = self.telescope.target
         self.txtRA.SetLabel(deg2hms(curPos.RA))
         self.txtDec.SetLabel(deg2dms(curPos.dec))
@@ -825,8 +848,7 @@ class mainFrame(wx.Frame):
                 else:
                     separationString = u"%.2f\""%(separation.arcseconds)
                 self.txtCam.SetLabel(_("Distance: %s (%ds old)"%(separationString, time() - self.lastSolution)))
-        self.txtScopeTracking.Update()
-        self.txtScopeSlewing.Update()
+
 
     def OnChkSyncCheckbox(self, event):
         state = event.GetEventObject().IsChecked()
@@ -848,29 +870,29 @@ class mainFrame(wx.Frame):
 
     def OnMenuFileLoadSettingsMenu(self, event):
         fileName = wx.FileSelector(
-				message=_("Load settings"),
-				default_path = self.config.get("AstroTortilla", "settings_path"),
-				flags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST,
-				wildcard="Config file(*.cfg)|*.cfg",
-				)
+                message=_("Load settings"),
+                default_path = self.config.get("AstroTortilla", "settings_path"),
+                flags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST,
+                wildcard="Config file(*.cfg)|*.cfg",
+                )
 
         if fileName:
             self.config.read(fileName)
             self.config.set("AstroTortilla", "settings_path", os.path.dirname(fileName))
-            self.__configure(self.telescope, "Telescope-%s"%self.telescopeName)
-            self.__configure(self.camera, "Telescope-%s"%self.cameraName)
-            self.__configure(self.solver, "Telescope-%s"%self.solverName)
+            self.__configure(self.telescope, self.telescopeName)
+            self._loadCameraConfig()
+            self.__configure(self.solver, self.solverName)
             self._updateSolverGrid()
             
 
 
     def OnMenuFileSaveSettingsMenu(self, event):
         fileName = wx.FileSelector(
-				message=_("Save settings"),
-				default_path = self.config.get("AstroTortilla", "settings_path"),
-				flags = wx.FD_SAVE,
-				wildcard="Config file(*.cfg)|*.cfg",
-				)
+                message=_("Save settings"),
+                default_path = self.config.get("AstroTortilla", "settings_path"),
+                flags = wx.FD_SAVE,
+                wildcard="Config file(*.cfg)|*.cfg",
+                )
         if not fileName:
             return
         try:
@@ -878,7 +900,7 @@ class mainFrame(wx.Frame):
             if self.telescope and self.telescopeName:
                 self.__saveObjConfig(self.telescope, self.telescopeName)
             if self.camera and self.cameraName:
-                self.__saveObjConfig(self.camera, self.cameraName)
+                self._saveCameraConfig()
             if self.solver and self.solverName:
                 self.__saveObjConfig(self.solver, self.solverName)
             self.config.write(file(fileName, "w"))

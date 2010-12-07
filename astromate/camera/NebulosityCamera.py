@@ -6,17 +6,61 @@ from ..ICamera import ICamera
 from .. import CameraState
 import tempfile, shutil
 import os.path, os
+import win32ui, win32api, win32con
+try:
+	import winxpgui as win32gui
+except:
+	import win32gui
 import socket, glob, time
+from astromate.automation import SendKeys
 
 CAMERAS = (
 		"No Camera",
 		"Simulator",
+		"Apogee",
+		"Artemis 285 / Atik 16HR",
+		"Artemis 285C / Atik 16HRC",
+		"Artemis 429 / Atik 16",
+		"Artemis 429C / Atik 16C",
+		"Atik 16C",
+		"Atik 16IC Color",
+		"Atik 3xx, 4000, 11000",
+		"Canon DIGICII/III/4 DSLR",
+		"CCD Labs Q285M/QHY2Pro",
+		"FLI",
+		"Fishcamp Starfish",
+		"Meade DSI",
+		"Moravian G2/G3",
+		"Opticstar DS-335C",
+		"Opticstar DS-335C ICE",
+		"Opticstar DS-336C XL",
+		"Opticstar DS-615C XL",
+		"Opticstar PL-130M",
+		"Opticstar PL-130C",
+		"Opticstar DS-142M ICE",
+		"Opticstar DS-142C ICE",
+		"Opticstar DS-145M ICE",
+		"Opticstar DS-145C ICE",
+		"Orion StarShoot",
+		"QHY2 TVDE",
+		"QHY8 Pro",
+		"QHY8",
+		"QHY9",
+		"QSI 500",
+		"SAC-10",
+		"SAC7/SC webcam LXUSB",
+		"SAC7/SC webcam Parallel",
+		"SBIG"
 		"Starlight Xpress USB",
 		"ASCOM Camera",
+		"ASCOMLate Camera",
 		)
 
 PROPERTYLIST = {
 		"port":("Nebulosity ListenPort", int, "", "", 4301),
+		"path":("Nebulosity Path", os.path.isdir, "", "", "C:\\Program Files\\Nebulosity2\\"),
+		"mapColon":("Colon escape", str, "", "", "+."),
+		"mapBackslash":("Backslash escape", str, "", "", "^%\\"),
 		}
 
 class NebulosityCamera(ICamera):
@@ -76,8 +120,6 @@ class NebulosityCamera(ICamera):
 		"Set current camera value or None for no change"
 		if value in CAMERAS or value is None:
 			self.__camera = value
-			if self.__camera:
-				self.__cmd("ConnectName %s"%self.__camera)
 		else:
 			raise NameError("'%s' is not a known camera"%str(value))
 
@@ -91,6 +133,9 @@ class NebulosityCamera(ICamera):
 			if self.__sock:
 				return
 			try:
+				# set Nebulosity to script listening mode
+				self.__nebulosityScriptMode()
+				# connect to server socket
 				self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				self.__sock.connect(("127.0.0.1", self.getProperty("port")))
 				if self.__camera:
@@ -101,10 +146,13 @@ class NebulosityCamera(ICamera):
 		else:
 			if self.__sock == None:
 				return
-			self.__cmd("ListenPort 0")
-			# Wait for Nebulosity to close the socket first
-			self.__sock.recv(1)
-			self.__sock.close()
+			try:
+				self.__cmd("ListenPort 0")
+				# Wait for Nebulosity to close the socket first
+				self.__sock.recv(1)
+				self.__sock.close()
+			except:
+				pass
 			del self.__sock
 			self.__sock = None
 	
@@ -128,10 +176,9 @@ class NebulosityCamera(ICamera):
 	@binning.setter
 	def binning(self, bin):
 		"Set bin value, 1<= `bin` <= `maxBin`"
-		if (1 <= bin <= maxBin):
-			raise ValueError("bin value must be 1 <= value < maxBin")
+		if not (1 <= bin <= self.maxBin):
+			raise ValueError("bin value must be 1 <= value <= maxBin")
 		self.__bin = int(bin)
-		self.__cmd("SetBinning %d"%(self.__bin-1))
 
 	@property
 	def maxBin(self):
@@ -178,6 +225,7 @@ class NebulosityCamera(ICamera):
 		self.__cmd("SetDuration %d"%(int(duration*1000)))
 		self.__cmd("SetDirectory %s"%self.workingDirectory)
 		self.__cmd("SetName %s"%(self.__basename))
+		self.__cmd("SetBinning %d"%(self.__bin-1))
 		self.__cmd("Capture 1")
 		if self.__autoDisco:
 			self.connected = False
@@ -189,3 +237,50 @@ class NebulosityCamera(ICamera):
 			return glob.glob(os.path.join(self.workingDirectory, self.__basename+"*.fit"))[-1]
 		else:
 			return None
+
+	def __nebulosityScriptMode(self):
+		"""Get handle to nebulosity window
+		Send <ctrl-R>
+		get handle to the script loading dialog
+		Create script file with "ListenPort <port>"
+		send path to script file to loading dialog
+		Send <enter> to dialog
+		Throws an exception if anything fails.
+		"""
+		def _hwndCallback(hwnd, extra):
+			extra.append((hwnd,
+				win32gui.GetWindowText(hwnd),
+				win32gui.GetClassName(hwnd)
+				))
+
+		hwndList = []
+		win32gui.EnumWindows(_hwndCallback, hwndList)
+		windows = [window for window in hwndList if window[1].startswith("Nebulosity v2.3.")]
+		if not windows:
+			raise Exception("Nebulosity window not found")
+		hwnd = windows[0][0]
+		win32gui.ShowWindow(hwnd,win32con.SW_RESTORE)
+		win32gui.SetForegroundWindow(hwnd)
+		time.sleep(0.2) # give time for Nebulosity to get focus
+		SendKeys("^r")
+		# Create script file
+		fname = os.path.join(self.getProperty("path"), "capture.neb")
+		f = file(fname, "w")
+		f.write("ListenPort %d\n"%int(self.getProperty("port")))
+		f.close()
+		scriptWin = None
+		start = time.time()
+		while not scriptWin and time.time()-start < 5:
+			hwndList = []
+			win32gui.EnumWindows(_hwndCallback, hwndList)
+			scriptWin = [window for window in hwndList if window[1] == "Load script"]
+		if not scriptWin:
+			raise "Script loading failed"
+		fname = fname.replace(":", self.getProperty("mapColon"))
+		fname = fname.replace("\\", self.getProperty("mapBackslash"))
+		SendKeys(fname, pause=0.00, with_spaces=True)
+		SendKeys("{ENTER}")
+
+
+
+
