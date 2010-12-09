@@ -48,7 +48,7 @@ class BoaApp(wx.App):
     def __populateChoiceList(self, choiceList, moduleRef, baseClass):
         for module in moduleRef.__all__:
             fqmn = moduleRef.__name__+"."+module
-            mod_ = __import__(fqmn, globals(), locals(), "", -1)
+            mod_ = __import__(fqmn, globals(), locals())
             solvers = getmembers(sys.modules[fqmn], lambda m: isclass(m) and issubclass(m, baseClass) and m is not baseClass)
             for className, classRef in solvers:
                 choiceList.Append(className, classRef)
