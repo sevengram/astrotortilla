@@ -48,6 +48,7 @@ class CaptureCamera(ICamera):
 		super(CaptureCamera, self).__init__()
 		self.__basename = "Capture"
 		self.__windowList = []
+		self.__bin = 1
 		self.__camera = None
 		self.__cameraName = None
 		self.propertyList = PROPERTYLIST
@@ -63,7 +64,6 @@ class CaptureCamera(ICamera):
 	@property
 	def cameraList(self):
 		"List of cameras supported if one must be pre-selected"
-		# TODO Return list of window titles
 		hwndList = []
 		win32gui.EnumWindows(_hwndCallback, hwndList)
 		winTitle = re.compile(self.getProperty("windowtitle"))
@@ -113,10 +113,9 @@ class CaptureCamera(ICamera):
 	@binning.setter
 	def binning(self, bin):
 		"Set bin value, 1<= `bin` <= `maxBin`"
-		if (1 <= bin <= maxBin):
+		if (1 <= bin <= self.maxBin):
 			raise ValueError("bin value must be 1 <= value < maxBin")
 		self.__bin = int(bin)
-		self.__cmd("SetBinning %d"%(self.__bin-1))
 
 	@property
 	def maxBin(self):

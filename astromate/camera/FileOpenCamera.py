@@ -4,10 +4,7 @@
 
 from ..ICamera import ICamera
 from .. import CameraState
-import tempfile, shutil
 import os.path, os
-import glob, time, re
-import win32ui, win32api, win32con
 import wx
 
 try:
@@ -30,12 +27,6 @@ handle: (name, validation-func, help, value help, default)
 PROPERTYLIST = {
 		}
 
-def _hwndCallback(hwnd, extra):
-	extra.append((hwnd,
-		win32gui.GetWindowText(hwnd),
-		win32gui.GetClassName(hwnd)
-		))
-
 class FileOpenCamera(ICamera):
 	"""FileOpenCamera()
 	Create FileOpenCamera 
@@ -43,6 +34,7 @@ class FileOpenCamera(ICamera):
 	def __init__(self):
 		super(FileOpenCamera, self).__init__()
 		self.__openedFile = None
+        self.__bin = 1
 		if PROPERTYLIST:
 			self.propertyList = PROPERTYLIST
 	
@@ -91,10 +83,9 @@ class FileOpenCamera(ICamera):
 	@binning.setter
 	def binning(self, bin):
 		"Set bin value, 1<= `bin` <= `maxBin`"
-		if (1 <= bin <= maxBin):
+		if (1 <= bin <= self.maxBin):
 			raise ValueError("bin value must be 1 <= value < maxBin")
 		self.__bin = int(bin)
-		self.__cmd("SetBinning %d"%(self.__bin-1))
 
 	@property
 	def maxBin(self):

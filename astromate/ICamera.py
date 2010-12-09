@@ -8,6 +8,16 @@ import CameraState
 from Configurations import Configurable
 
 class ICamera(Configurable):
+	"""ICamera  - Camera interface for
+	Mandatory properties to implement:
+		bool connected rw
+		CameraState cameraState ro
+		bool imageReady ro
+	Mandatory functions to implement:
+		capture(self, duration)
+		string getImage(self)
+
+	"""
 	def __init__(self):
 		super(ICamera, self).__init__()
 		self.__wd = tempfile.mkdtemp(prefix="cam")
@@ -106,10 +116,12 @@ class ICamera(Configurable):
 
 	@property
 	def imageReady(self):
+		"bool, is image ready"
 		return False
 	
 	@property
 	def workingDirectory(self):
+		"Current temporary working directory"
 		return self.__wd
 	
 	@workingDirectory.setter
@@ -125,5 +137,5 @@ class ICamera(Configurable):
 		return
 
 	def getImage(self):
-		"Returns None or path to image"
+		"@return None or path to image"
 		return None

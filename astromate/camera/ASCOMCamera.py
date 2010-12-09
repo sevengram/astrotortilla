@@ -12,6 +12,7 @@ class ASCOMCamera(ICamera):
 	def __init__(self):
 		super(ASCOMCamera, self).__init__()
 		self.__initChooser()
+		self.__bin = 1
 		self.__camname = None
 		self.__cam = None
 		self.__camState = CameraState.Idle
@@ -58,6 +59,26 @@ class ASCOMCamera(ICamera):
 
 
 	@property
+	def binning(self):
+		"Current binning setting"
+		return self.__bin
+
+	@binning.setter
+	def binning(self, bin):
+		"Set bin value, 1<= `bin` <= `maxBin`"
+		if (1 <= bin <= self.maxBin):
+			raise ValueError("bin value must be 1 <= value < maxBin")
+		self.__bin = int(bin)
+
+	@property
+	def maxBin(self):
+		"Maximum supported binning level"
+        if self.__cam:
+            return self.__cam.MaxBinX
+        else:
+            return 1
+
+	@property
 	def connected(self):
 		if not self.__cam:
 			return False
@@ -90,9 +111,12 @@ class ASCOMCamera(ICamera):
 		self.__camState = CameraState.Exposing
 		try:
 			self.connect()
+            self.__cam.BinX = self.__bin
+            self.__cam.BinY = self.__bin
 			self.__cam.StartExposure(duration, True)
 		except:
 			self.__camState = CameraState.Error
+
 	@property
 	def imageReady(self):
 		if not self.__cam:

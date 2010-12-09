@@ -411,14 +411,14 @@ class mainFrame(wx.Frame):
     def __init__(self, parent):
         self._init_ctrls(parent)
         self.configGrid.CreateGrid(1,2)
-        self.telescope = None
-        self.telescopeName = None
-        self.camera = None
-        self.cameraName = None
-        self.solver = None
-        self.solverName = None
-        self.solution = None
-        self.lastSolution = 0
+        self.telescope = None           # handle to current telescope object
+        self.telescopeName = None       # string representation of telescope
+        self.camera = None              # handle to current camera object
+        self.cameraName = None          # string representation of camera
+        self.solver = None              # handle to current solver object
+        self.solverName = None          # string representation of solver
+        self.solution = None            # current solution object or None
+        self.lastSolution = 0           # time stamp of current solution solving time
         self.config = ConfigParser.SafeConfigParser() # Python 2.7: allow_no_value = True)
         self.config.read(CFGFILE)
         try:
@@ -427,15 +427,19 @@ class mainFrame(wx.Frame):
             if not self.config.has_section("AstroTortilla"):
                 self.config.add_section("AstroTortilla")
             self.config.set("AstroTortilla", "settings_path", os.getcwdu())
-        self.prev_rowcol = [None, None]
+        self.prev_rowcol = [None, None] # helper for solver config matrix tooltip
+        # set default null values everywhere
         self.txtDec.SetLabel(deg2dms(0))
         self.txtScopeTargetDec.SetLabel(deg2dms(0))
         self.txtCamDec.SetLabel(deg2dms(0))
-        self.__solving = False
-        self.__abortSolve = False
+        self.__solving = False      # status of current solver
+        self.__abortSolve = False   # did user want to abort current operation?
+
+        # Bind self.OnClose to window closing event
         self.Bind(wx.EVT_CLOSE, self.OnClose)
     
     def OnClose(self, event):
+        "Save settings on exit"
         try:
             if self.telescope and self.telescopeName:
                 self.__saveObjConfig(self.telescope, self.telescopeName)
@@ -451,20 +455,22 @@ class mainFrame(wx.Frame):
 
 
     def __configure(self, obj, name):
-            if obj and self.config.has_section(name):
-                for k,v in self.config.items(name):
-                    try:
-                        obj.setProperty(k,v)
-                    except:
-                        pass
+        "Configure `obj` from config if `name` is found as a section"
+        if obj and self.config.has_section(name):
+            for k,v in self.config.items(name):
+                try:
+                    obj.setProperty(k,v)
+                except:
+                    pass
                     
     def __saveObjConfig(self, obj, name):
-            if not self.config.has_section(name):
-                self.config.add_section(name)
+        "Save `obj` properties as section `name` in config structure"
+        if not self.config.has_section(name):
+            self.config.add_section(name)
                 
-            defaultConfig = obj.configuration
-            for k,v in defaultConfig.items():
-                self.config.set(name, k, unicode(v).replace("%", "%%"))
+        defaultConfig = obj.configuration
+        for k,v in defaultConfig.items():
+            self.config.set(name, k, unicode(v).replace("%", "%%"))
                 
     def OnMenuFileFileexitMenu(self, event):
         self.Close()
@@ -483,6 +489,7 @@ class mainFrame(wx.Frame):
         self._selectSolver(event.GetEventObject().GetSelection())
 
     def _selectSolver(self, n):
+        "Select solver index `n` from the choice dropdown."
         if self.solver:
             self.__saveObjConfig(self.solver, self.solverName)
             del self.solver
@@ -498,32 +505,33 @@ class mainFrame(wx.Frame):
             self._updateSolverGrid()
             
     def _updateSolverGrid(self):
-            solverProps = self.solver.propertyList
-            self.__configure(self.solver, self.solverName)
-            self.configGrid.ClearGrid()
-            solverConfig = self.solver.configuration
-            cfgSize = len(solverConfig)
-            gridSize = self.configGrid.GetNumberRows()
-            if gridSize > cfgSize:
-                self.configGrid.DeleteRows(0, gridSize - cfgSize)
-            elif gridSize < cfgSize:
-                self.configGrid.AppendRows(cfgSize - gridSize)
-            self.configGrid.SetRowLabelSize(0)
-            self.configGrid.DisableDragGridSize()
-            self.configGrid.SetColSize(1, 200)
+        "Update solver configuration grid"
+        solverProps = self.solver.propertyList
+        self.__configure(self.solver, self.solverName)
+        self.configGrid.ClearGrid()
+        solverConfig = self.solver.configuration
+        cfgSize = len(solverConfig)
+        gridSize = self.configGrid.GetNumberRows()
+        if gridSize > cfgSize:
+            self.configGrid.DeleteRows(0, gridSize - cfgSize)
+        elif gridSize < cfgSize:
+            self.configGrid.AppendRows(cfgSize - gridSize)
+        self.configGrid.SetRowLabelSize(0)
+        self.configGrid.DisableDragGridSize()
+        self.configGrid.SetColSize(1, 200)
 
-            i = 0
-            keyList = solverConfig.keys()
-            keyList.sort()
-            for key in keyList:
-                self.configGrid.SetCellValue(i, 0, solverProps[key][0])
-                self.configGrid.SetReadOnly(i, 0, True)
-                self.configGrid.SetCellValue(i, 1, str(solverConfig[key]))
-                self.configGrid.SetRowLabelValue(i, key)
-                i += 1
-            wx.EVT_MOTION(self.configGrid.GetGridWindow(), self.OnConfigGridMotion)
-            self.configGrid.ForceRefresh()
-            self.configGrid.Show()
+        i = 0
+        keyList = solverConfig.keys()
+        keyList.sort()
+        for key in keyList:
+            self.configGrid.SetCellValue(i, 0, solverProps[key][0])
+            self.configGrid.SetReadOnly(i, 0, True)
+            self.configGrid.SetCellValue(i, 1, str(solverConfig[key]))
+            self.configGrid.SetRowLabelValue(i, key)
+            i += 1
+        wx.EVT_MOTION(self.configGrid.GetGridWindow(), self.OnConfigGridMotion)
+        self.configGrid.ForceRefresh()
+        self.configGrid.Show()
         
     def OnConfigGridMotion(self, evt):
         # evt.GetRow() and evt.GetCol() would be nice to have here,
@@ -558,6 +566,7 @@ class mainFrame(wx.Frame):
 
 
     def _loadCameraConfig(self):
+        "Assign camera specific configuration to current camera"
         self.__configure(self.camera, self.cameraName)
         if self.config.has_option(self.cameraName, "binning"):
             self.camera.binning = self.config.getint(self.cameraName, "binning")
@@ -565,6 +574,7 @@ class mainFrame(wx.Frame):
             self.camera.camera = self.config.get(self.cameraName, "camera")
     
     def _saveCameraConfig(self):
+        "Save current camera properties and other settings"
         if self.camera and self.cameraName:
             self.__saveObjConfig(self.camera, self.cameraName)
             self.config.set(self.cameraName, "binning", str(self.camera.binning))
@@ -594,12 +604,14 @@ class mainFrame(wx.Frame):
         self._updateCamera()
 
     def _updateCamera(self):
+        "Update camera status display"
         if not self.camera:
             self.txtCamStatus.SetLabel(_("Not connected"))
             self.btnGO.Disable()
         else:
             self.btnGO.Enable()
             self.txtCamStatus.SetLabel(CameraState.State[self.camera.cameraState])
+
         if not self.solution:
             if self.camera:
                 self.txtCam.SetLabel(_("No solution"))
@@ -704,6 +716,7 @@ class mainFrame(wx.Frame):
                 if distance.arcminutes <= self.numCtrlAccuracy.GetValue() :
                     break
         finally:
+            # update solver configuration grid from solver properties
             for row in range(self.configGrid.GetNumberRows()):
                 key = self.configGrid.GetRowLabelValue(row)
                 self.configGrid.SetCellValue(row,1,str(self.solver.getProperty(key)))
@@ -714,16 +727,18 @@ class mainFrame(wx.Frame):
                 
 
     def __captureSolve(self):
+        "Capture and solve a single image"
         pointError = -1
         targetPos = None
-        if self.telescope:
+        if self.telescope:  # @todo: add slew settle wait here if slewing
             self.SetStatusText(_("Waiting for scope to stop"))
             while self.telescope.slewing:
                 sleep(0.2)
             targetPos = self.telescope.position
+        # clear current solution data
         self.lastSolution = 0
+        self.solution = None
         try:
-            self.solution = None
             try:
                 self.SetStatusText(_("Connecting to camera..."))
                 if not self.camera.canAutoConnect and not self.camera.connected:
@@ -746,12 +761,13 @@ class mainFrame(wx.Frame):
                     self.SetStatusText(_("Reading image from camera"))
                     img = self.camera.getImage()
                     self.SetStatusText(_("Solving..."))
+                    # solve based on current location if telescope is tracking, otherwise pure blind solve
                     if self.telescope and self.telescope.tracking:
                         self.solution = self.solver.solve(img, target=self.telescope.position, targetRadius=None, callback=self.__statusUpdater)
                     else:
                         self.solution = self.solver.solve(img, callback=self.__statusUpdater)
                 elif self.__abortSolve:
-                    pass
+                    self.SetStatusText(_("Aborted."))
                 else:
                     self.SetStatusText(_("Camera did not produce an image to solve"))
             except Exception, detail:
@@ -776,6 +792,8 @@ class mainFrame(wx.Frame):
                 if targetPos:
                     pointError = self.solution.center - targetPos
                     self.SetStatusText(_("Separation: %s")%deg2dms(pointError.degrees))
+
+                # Sync and re-slew if requested and we have a telescope tracking
                 if self.telescope and self.telescope.tracking:
                     if self.chkSync.IsChecked():
                         self.telescope.position = self.solution.center
@@ -785,7 +803,8 @@ class mainFrame(wx.Frame):
                 self.SetStatusText(_("Solution not found."))
         return pointError
 
-    def __statusUpdater(self, status):
+    def __statusUpdater(self, status=None):
+        "Update status bar and process UI events safely"
         if status:
             self.SetStatusText(status)
         wx.SafeYield(self)
@@ -829,16 +848,22 @@ class mainFrame(wx.Frame):
             enable(self.btnGO)
         self.txtScopeTracking.Update()
         self.txtScopeSlewing.Update()
-        curPos = self.telescope.position
-        if not curPos:
-            return
-        targetPos = self.telescope.target
-        self.txtRA.SetLabel(deg2hms(curPos.RA))
-        self.txtDec.SetLabel(deg2dms(curPos.dec))
-        if not targetPos: targetPos = curPos
-        self.txtScopeTargetRA.SetLabel(deg2hms(targetPos.RA))
-        self.txtScopeTargetDec.SetLabel(deg2dms(targetPos.dec))
-        if self.lastSolution and self.solution:
+        if self.telescope and self.telescope.position:
+            curPos = self.telescope.position
+            targetPos = self.telescope.target
+            self.txtRA.SetLabel(deg2hms(curPos.RA))
+            self.txtDec.SetLabel(deg2dms(curPos.dec))
+
+            # if no targetPosition, assume current position is target
+            if not targetPos:
+                targetPos = curPos
+
+            self.txtScopeTargetRA.SetLabel(deg2hms(targetPos.RA))
+            self.txtScopeTargetDec.SetLabel(deg2dms(targetPos.dec))
+
+            # Calculate and show separation from solution to current assumed position
+            # technically this is meaningful only after telescope sync
+            if self.lastSolution and self.solution:
                 separation = self.telescope.position - self.solution.center
                 separationString = ""
                 if separation.degrees > 1:
