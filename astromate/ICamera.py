@@ -89,6 +89,9 @@ class ICamera(Configurable):
 
 	@binning.setter
 	def binning(self, bin):
+		"Set binning value if 1 <= bin <= maxBin"
+		if not (1 <= bin <= self.maxBin):
+			raise ValueError("bin value range is 1 <= value <= maxBin")
 		return
 
 	@property

@@ -66,7 +66,7 @@ class ASCOMCamera(ICamera):
     @binning.setter
     def binning(self, bin):
         "Set bin value, 1<= `bin` <= `maxBin`"
-        if (1 <= bin <= self.maxBin):
+        if not (1 <= bin <= self.maxBin):
             raise ValueError("bin value must be 1 <= value < maxBin")
         self.__bin = int(bin)
 

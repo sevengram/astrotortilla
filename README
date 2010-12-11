@@ -15,6 +15,11 @@ This project is licensed under GPL, see the file LICENSE for details. This
 software is delivered as-is, with no expressed or implied guarantees of being
 fit for any purpose.
 
+Version history
+---------------
+v0.1.0 First test release packaged as an executable
+v0.1.1 Binning setting comparison fix in camera implementations
+
 
 Using AstroMate
 ---------------
