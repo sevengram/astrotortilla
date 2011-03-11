@@ -1,6 +1,6 @@
 AstroMate
 =========
-Copyright 2010 Antti Kuntsi <mickut@gmail.com>
+Copyright 2010-2011 Antti Kuntsi <mickut@gmail.com>
 
 The AstroMate project aims to automate repetitive tasks during a modern day
 astrophotography session using plate-solving software to speed up the mount
@@ -19,6 +19,8 @@ Version history
 ---------------
 v0.1.0 First test release packaged as an executable
 v0.1.1 Binning setting comparison fix in camera implementations
+v0.1.2 Nebulosity2 scripting support improved, bugfixes for image capture
+       Support for drift-shot added, moves mount in RA during exposure (>=30s)
 
 
 Using AstroMate

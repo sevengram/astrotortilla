@@ -47,6 +47,26 @@ class ITelescope(Configurable):
 		"Is the telescope tracking"
 		return False
 
+	@tracking.setter
+	def tracking(self, value):
+		"Set the telescope tracking to 'value'"
+		pass
+
+	@property
+	def canSetRARate(self):
+		"Can the RA rate be set?"
+		return False
+
+	@property
+	def RightAscensionRate(self):
+		"Right Ascensions rate in sec/sidereal sec"
+		return 0
+
+	@RightAscensionRate.setter
+	def RightAscensionRate(self, value):
+		"Set Right Ascensions rate to 'value' in sec/sidereal sec"
+		pass
+	
 	@property
 	def pierSide(self):
 		"Which side of pier is the scope, 0=looking west, 1=looking east"

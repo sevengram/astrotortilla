@@ -77,6 +77,8 @@ def disable(ctrl):
  wxID_MAINFRAMEMENUFILEITEMS2, 
 ] = [wx.NewId() for _init_coll_menuFile_Items in range(3)]
 
+[wxID_MAINFRAMEMENUTOOLSDRIFTSHOT] = [wx.NewId() for _init_coll_menuTools_Items in range(1)]
+
 [wxID_MAINFRAMEMENUHELPHELPABOUT] = [wx.NewId() for _init_coll_menuHelp_Items in range(1)]
 
 [wxID_MAINFRAMESCOPEPOLLTIMER] = [wx.NewId() for _init_utils in range(1)]
@@ -86,6 +88,7 @@ class mainFrame(wx.Frame):
         # generated method, don't edit
 
         parent.Append(menu=self.menuFile, title=_('File'))
+        parent.Append(menu=self.menuTools, title=_('Tools'))
         parent.Append(menu=self.menuHelp, title=_('Help'))
 
     def _init_coll_menuHelp_Items(self, parent):
@@ -115,6 +118,14 @@ class mainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnMenuFileSaveSettingsMenu,
               id=wxID_MAINFRAMEMENUFILEITEMS2)
 
+    def _init_coll_menuTools_Items(self, parent):
+        # generated method, don't edit
+
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
+              kind=wx.ITEM_NORMAL, text=_('Drift shot'))
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsDriftshotMenu,
+              id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT)
+
     def _init_coll_statusBar1_Fields(self, parent):
         # generated method, don't edit
         parent.SetFieldsCount(1)
@@ -136,9 +147,12 @@ class mainFrame(wx.Frame):
         self.Bind(wx.EVT_TIMER, self.OnScopePollTimer,
               id=wxID_MAINFRAMESCOPEPOLLTIMER)
 
+        self.menuTools = wx.Menu(title='')
+
         self._init_coll_menuFile_Items(self.menuFile)
         self._init_coll_menuHelp_Items(self.menuHelp)
         self._init_coll_menuBar1_Menus(self.menuBar1)
+        self._init_coll_menuTools_Items(self.menuTools)
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
@@ -748,7 +762,7 @@ class mainFrame(wx.Frame):
                 self.SetStatusText(_("Exposing: %.2f seconds")%self.numCtrlExposure.GetValue())
                 self.camera.capture(self.numCtrlExposure.GetValue())
                 tEnd = time() + self.numCtrlExposure.GetValue()
-                while not self.camera.imageReady and self.camera.cameraState not in (CameraState.Error, CameraState.Idle):
+		while not self.camera.imageReady and self.camera.cameraState not in (CameraState.Error, ):
                     sleep(0.1)
                     tLeft = tEnd - time()
                     if tLeft >= 0:
@@ -932,4 +946,44 @@ class mainFrame(wx.Frame):
         except:
             import traceback
             traceback.print_exc() 
-            
+
+    def OnMenuToolsDriftshotMenu(self, event):
+        if not (self.camera and self.telescope and self.telescope.tracking):
+            event.Skip()
+            return
+        disable(self.btnGO)
+        self.SetStatusText(_("Connecting to camera..."))
+	if self.camera.canAutoConnect:
+	    autoDisco = self.camera.disconnectAfterCapture
+	    self.camera.disconnectAfterCapture = False
+        self.camera.connected = True
+        if self.camera.needsCameraName and not self.camera.camera:
+            self.camera.camera = self.camera.cameraList[0]
+        exposeTime = self.numCtrlExposure.GetValue()
+        if exposeTime < 30.0: exposeTime = 30.0
+        self.SetStatusText(_("Drifting: %.2f seconds")%exposeTime)
+        self.camera.capture(exposeTime)
+        self.telescope.tracking=True
+	if exposeTime < 60:
+		stillTime = 5
+	else:
+		stillTime = 10
+        rateQueue = [(-14.0, exposeTime - stillTime), (14.0, (exposeTime-stillTime)/2.)]
+        tEnd = time() + exposeTime
+        tLeft = tEnd - time()
+        while tLeft>0:
+            if rateQueue and tLeft<rateQueue[0][1]:
+                self.telescope.RightAscensionRate = rateQueue[0][0]
+                del rateQueue[0]
+            sleep(0.1)
+            tLeft = tEnd - time()
+            if tLeft >= 0:
+                self.SetStatusText(_("Drifting: %.2f seconds")%tLeft)
+            wx.SafeYield()
+        self.telescope.RightAscensionRate = 0.0
+        self.telescope.tracking=True
+	self.camera.connected = False
+	if self.camera.canAutoConnect:
+	    self.camera.disconnectAfterCapture = autoDisco
+        enable(self.btnGO)
+	self.SetStatusText(_("Drifting done."))

@@ -96,6 +96,39 @@ class ASCOMTelescope(ITelescope):
 			return False
 		return self.__scope.Tracking
 
+	@tracking.setter
+	def tracking(self, value):
+		"Set the telescope tracking to 'value'"
+		if not self.connected:
+			return
+		self.__scope.Tracking = value
+
+
+	@property
+	def canSetRARate(self):
+		"Can the RA rate be set?"
+		if not self.connected:
+			return False
+		else:
+			return self.__scope.canSetRightAscensionRate
+
+	@property
+	def RightAscensionRate(self):
+		"Right Ascensions rate in sec/sidereal sec"
+		if not self.connected:
+			return 0
+		else:
+			return self.__scope.RightAscensionRate
+
+	@RightAscensionRate.setter
+	def RightAscensionRate(self, value):
+		"Set Right Ascensions rate to 'value' in sec/sidereal sec"
+		if not self.connected:
+			return
+		else:
+			self.__scope.RightAscensionRate = float(value)
+	
+
 	@property
 	def pierSide(self):
 		"Which side of pier is the scope, 0=looking west, 1=looking east"

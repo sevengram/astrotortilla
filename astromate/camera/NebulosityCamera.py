@@ -14,6 +14,7 @@ except:
     import win32gui
 import socket, glob, time
 from astromate.automation import SendKeys
+import threading
 
 CAMERAS = (
         "No Camera",
@@ -51,20 +52,25 @@ CAMERAS = (
         "SAC-10",
         "SAC7/SC webcam LXUSB",
         "SAC7/SC webcam Parallel",
-        "SBIG"
+        "SBIG",
         "Starlight Xpress USB",
         "ASCOM Camera",
         "ASCOMLate Camera",
         )
 
+def str2bool(string):
+    s = str(string).lower()+" "
+    return s[0] in ("y", "t", "1")
+
 # Property dict structure:
 # key: (readable name, validation function, name tooltip, value tooltip, default value)
 # The values can be set as strings by the using application.
 PROPERTYLIST = {
-        "port":("Nebulosity ListenPort", int, "", "", 4301),
+        "port":("Nebulosity ListenPort", int, "", "0 for script connection", 0),
         "path":("Nebulosity Path", os.path.isdir, "", "", "C:\\Program Files\\Nebulosity2\\"),
         "mapColon":("Colon escape", str, "", "", "+."),
         "mapBackslash":("Backslash escape", str, "", "", "^%\\"),
+        "setCamera":("Set camera", str2bool, "Set camera model on capture", "True or False", "False"),
         }
 
 class NebulosityCamera(ICamera):
@@ -76,6 +82,7 @@ class NebulosityCamera(ICamera):
         self.__basename = "Capture"
         self.propertyList = PROPERTYLIST
         self.__autoDisco = True
+        self.__state = CameraState.Idle
 
     def __del__(self):
         if self.__sock:
@@ -91,13 +98,31 @@ class NebulosityCamera(ICamera):
     
     def __cmd(self, cmd):
         "Execute script commands in Nebulosity"
-        if not self.__sock:
-            try:
-                self.connected = True
-            except:
-                raise IOError("Not connected")
-        self.__sock.send(cmd.encode())
-        self.__sock.send("\n".encode())
+        if type(cmd)==str:
+            cmd += "\n"
+        elif type(cmd) in (list, tuple):
+            cmd = "\n".join(cmd)
+            cmd += "\n"
+        if int(self.getProperty("port"))>0: # socket communications
+            if not self.__sock:
+                try:
+                    self.connected = True
+                except:
+                    raise IOError("Not connected")
+            self.__sock.send(cmd.encode())
+        else: # direct script communication
+            self.__nebulositySendSript(cmd)
+
+    def __asyncDisconnect(self):
+        "Disconnect asynchronously without blocking"
+        def disconnector(obj):
+            obj.connected=False
+            obj.__state = CameraState.Idle
+
+        worker = threading.Thread(target=disconnector, args=(self,))
+        worker.start()
+        #self.connected=False
+        #self.__state = CameraState.Idle
 
     @property
     def imageTypes(self):
@@ -125,32 +150,32 @@ class NebulosityCamera(ICamera):
     @property
     def connected(self):
         "@return True when connection to Nebulosity exists"
-        return self.__sock != None
+        return int(self.getProperty("port")) <= 0 or self.__sock != None
 
     @connected.setter
     def connected(self, value):
         "Connect to Nebulosity when value == True, disconnect when value == False"
+        if int(self.getProperty("port")) <=0:
+            return
+
         if value == True:
             if self.__sock:
                 return
             try:
                 # set Nebulosity to script listening mode
                 self.__nebulosityScriptMode()
-                # connect to server socket, retry for 10s
+                # connect to server socket, retry for 20s
                 now = startTime = time.time()
                 while not self.__sock:
                     try:
-                        self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                        self.__sock.connect(("127.0.0.1", int(self.getProperty("port"))))
-                    except Exception(error):
+                        self.__sock = socket.create_connection(("127.0.0.1", int(self.getProperty("port"))), 1)
+                    except (Exception, socket.error) as error:
                         now = time.time()
-                        if now - startTime > 10: # re-raise error after 10s
+                        if now - startTime > 20: # re-raise error after 20s
                             raise error
                         time.sleep(0.5)
                         del self.__sock
                         self.__sock = None
-                if self.__camera:
-                    self.__cmd("ConnectName %s"%self.__camera)
             except:
                 self.__sock = None
                 raise IOError("Connection failed")
@@ -203,7 +228,7 @@ class NebulosityCamera(ICamera):
     @property
     def cameraState(self):
         "Current camera state, see ASCOM cameraState parameter"
-        return CameraState.Idle
+        return self.__state
 
     @property
     def errorMessage(self):
@@ -223,11 +248,15 @@ class NebulosityCamera(ICamera):
     @property
     def imageReady(self):
         "@return True if a captured image is available"
-        return len(glob.glob(os.path.join(self.workingDirectory, self.__basename+"*.fit"))) > 0
+        rv = len(glob.glob(os.path.join(self.workingDirectory, self.__basename+"*.fit"))) > 0
+        if rv:
+            self.__state = CameraState.Idle
+        return rv
     
     def capture(self, duration):
         "Starts image exposure, no returned value"
         # clear temp directory first
+        self.__state = CameraState.Exposing
         try:
             map(os.remove, glob.glob(os.path.join(self.workingDirectory, self.__basename+"*.fit")))
         except Exception as detail:
@@ -236,28 +265,33 @@ class NebulosityCamera(ICamera):
         if not self.connected:
             self.connected = True
 
-        self.__cmd("SetDuration %d"%(int(duration*1000)))
-        self.__cmd("SetDirectory %s"%self.workingDirectory)
-        self.__cmd("SetName %s"%(self.__basename))
-        self.__cmd("SetBinning %d"%(self.__bin-1))
-        self.__cmd("Capture 1")
+        cmd = [
+            "SetDuration %d"%(int(duration*1000)),
+            "SetDirectory %s"%self.workingDirectory,
+#            "SetName %s"%(self.__basename),
+            "SetBinning %d"%(self.__bin-1),
+            "CaptureSingle %s"%(self.__basename)]
+        if str2bool(self.getProperty("setCamera")) and self.__camera:
+            cmd.insert(0, "ConnectName %s"%(self.__camera))
+        self.__cmd(cmd)
         
         if self.__autoDisco:
-            self.connected = False
+            self.__asyncDisconnect()
 
 
     def getImage(self):
         "@return None or path to image"
         if self.imageReady:
+            self.__state = CameraState.Idle
             return glob.glob(os.path.join(self.workingDirectory, self.__basename+"*.fit"))[-1]
         else:
             return None
 
-    def __nebulosityScriptMode(self):
+    def __nebulositySendSript(self, script):
         """Get handle to nebulosity window
         Send <ctrl-R>
         get handle to the script loading dialog
-        Create script file with "ListenPort <port>"
+        Create script file with contents from str script
         send path to script file to loading dialog
         Send <enter> to dialog
         Throws an exception if anything fails.
@@ -281,7 +315,7 @@ class NebulosityCamera(ICamera):
         # Create script file
         fname = os.path.join(self.getProperty("path"), "capture.neb")
         f = file(fname, "w")
-        f.write("ListenPort %d\n"%int(self.getProperty("port")))
+        f.write(script)
         f.close()
         scriptWin = None
         start = time.time()
@@ -291,11 +325,13 @@ class NebulosityCamera(ICamera):
             scriptWin = [window for window in hwndList if window[1] == "Load script"]
         if not scriptWin:
             raise "Script loading failed"
+        win32gui.SetForegroundWindow(scriptWin[0][0])
+        time.sleep(0.1)
         fname = fname.replace(":", self.getProperty("mapColon"))
         fname = fname.replace("\\", self.getProperty("mapBackslash"))
-        SendKeys(fname, pause=0.00, with_spaces=True)
+        SendKeys(fname, pause=0.001, with_spaces=True)
         SendKeys("{ENTER}")
 
 
-
-
+    def __nebulosityScriptMode(self):
+        self.__nebulositySendSript("ListenPort %d\n"%int(self.getProperty("port")))
