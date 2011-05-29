@@ -123,7 +123,7 @@ class FileOpenCamera(ICamera):
                 message="Choose file to solve",
                 default_path = os.path.dirname(self.__openedFile or ""),
                 flags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST,
-                wildcard="(*.fit;*.fits;*.jpg;*.tiff;*.tif;*.pnm)",
+		wildcard="Image files (*.fit; *.fits; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.jpg; *.tiff; *.tif; *.pnm"
                 )
         if not fileName:
             self.__openedFile = None
