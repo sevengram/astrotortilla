@@ -762,7 +762,7 @@ class mainFrame(wx.Frame):
                 self.SetStatusText(_("Exposing: %.2f seconds")%self.numCtrlExposure.GetValue())
                 self.camera.capture(self.numCtrlExposure.GetValue())
                 tEnd = time() + self.numCtrlExposure.GetValue()
-		while not self.camera.imageReady and self.camera.cameraState not in (CameraState.Error, ):
+                while not self.camera.imageReady and self.camera.cameraState not in (CameraState.Error, ):
                     sleep(0.1)
                     tLeft = tEnd - time()
                     if tLeft >= 0:
@@ -953,9 +953,9 @@ class mainFrame(wx.Frame):
             return
         disable(self.btnGO)
         self.SetStatusText(_("Connecting to camera..."))
-	if self.camera.canAutoConnect:
-	    autoDisco = self.camera.disconnectAfterCapture
-	    self.camera.disconnectAfterCapture = False
+        if self.camera.canAutoConnect:
+            autoDisco = self.camera.disconnectAfterCapture
+            self.camera.disconnectAfterCapture = False
         self.camera.connected = True
         if self.camera.needsCameraName and not self.camera.camera:
             self.camera.camera = self.camera.cameraList[0]
@@ -964,10 +964,10 @@ class mainFrame(wx.Frame):
         self.SetStatusText(_("Drifting: %.2f seconds")%exposeTime)
         self.camera.capture(exposeTime)
         self.telescope.tracking=True
-	if exposeTime < 60:
-		stillTime = 5
-	else:
-		stillTime = 10
+        if exposeTime < 60:
+                stillTime = 5
+        else:
+                stillTime = 10
         rateQueue = [(-14.0, exposeTime - stillTime), (14.0, (exposeTime-stillTime)/2.)]
         tEnd = time() + exposeTime
         tLeft = tEnd - time()
@@ -982,8 +982,8 @@ class mainFrame(wx.Frame):
             wx.SafeYield()
         self.telescope.RightAscensionRate = 0.0
         self.telescope.tracking=True
-	self.camera.connected = False
-	if self.camera.canAutoConnect:
-	    self.camera.disconnectAfterCapture = autoDisco
+        self.camera.connected = False
+        if self.camera.canAutoConnect:
+            self.camera.disconnectAfterCapture = autoDisco
         enable(self.btnGO)
-	self.SetStatusText(_("Drifting done."))
+        self.SetStatusText(_("Drifting done."))
