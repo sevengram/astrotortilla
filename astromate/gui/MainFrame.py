@@ -742,7 +742,7 @@ class mainFrame(wx.Frame):
 
     def __captureSolve(self):
         "Capture and solve a single image"
-        pointError = -1
+        pointError = None
         targetPos = None
         if self.telescope:  # @todo: add slew settle wait here if slewing
             self.SetStatusText(_("Waiting for scope to stop"))
@@ -982,8 +982,12 @@ class mainFrame(wx.Frame):
             wx.SafeYield()
         self.telescope.RightAscensionRate = 0.0
         self.telescope.tracking=True
-        self.camera.connected = False
         if self.camera.canAutoConnect:
             self.camera.disconnectAfterCapture = autoDisco
+        self.SetStatusText(_("Waiting for camera"))
+        if self.camera.disconnectAfterCapture:
+            while not self.camera.imageReady and self.camera.cameraState not in (CameraState.Error, ):
+                sleep(0.2)
+            self.camera.connected = False
         enable(self.btnGO)
         self.SetStatusText(_("Drifting done."))
