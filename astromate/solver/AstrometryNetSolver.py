@@ -141,8 +141,11 @@ class AstrometryNetSolver(IPlateSolver):
         options.append("-L %s"%(minFov or self.getProperty("scale_low")))
         options.append("-H %s"%(maxFov or self.getProperty("scale_max")))
         options.append("-u %s"%(self.getProperty("scale_units")))
+	if self.getProperty("downscale") > 1:
+		options.append("-z %d"%self.getProperty("downscale"))
 
-        r=self.__execute('solve-field -z %d %s --no-plot -D `cygpath %s` `cygpath %s`'%(int(self.getProperty("downscale")), " ".join(options), workDir, imagePath))
+
+        r=self.__execute('solve-field %s --no-plot -D `cygpath %s` `cygpath %s`'%(" ".join(options), workDir, imagePath))
 
         if r and len(r)>1 and r[1]: print(r[1])
         wcsInfo=[]
