@@ -304,7 +304,7 @@ class NebulosityCamera(ICamera):
 
         hwndList = []
         win32gui.EnumWindows(_hwndCallback, hwndList)
-        windows = [window for window in hwndList if window[1].startswith("Nebulosity v2.3.")]
+        windows = [window for window in hwndList if window[1].startswith("Nebulosity v2.4.")]
         if not windows:
             raise Exception("Nebulosity window not found")
         hwnd = windows[0][0]
