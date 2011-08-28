@@ -5,6 +5,7 @@ import wx.grid
 import wx.lib.masked.numctrl
 import DlgHelpAbout
 import DlgCameraSetup
+import PolarAlignFrame
 import gettext
 import ConfigParser
 import os, os.path
@@ -77,7 +78,8 @@ def disable(ctrl):
  wxID_MAINFRAMEMENUFILEITEMS2, 
 ] = [wx.NewId() for _init_coll_menuFile_Items in range(3)]
 
-[wxID_MAINFRAMEMENUTOOLSDRIFTSHOT] = [wx.NewId() for _init_coll_menuTools_Items in range(1)]
+[wxID_MAINFRAMEMENUTOOLSDRIFTSHOT, wxID_MAINFRAMEMENUTOOLSPOLARALIGN, 
+] = [wx.NewId() for _init_coll_menuTools_Items in range(2)]
 
 [wxID_MAINFRAMEMENUHELPHELPABOUT] = [wx.NewId() for _init_coll_menuHelp_Items in range(1)]
 
@@ -122,9 +124,13 @@ class mainFrame(wx.Frame):
         # generated method, don't edit
 
         parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
-              kind=wx.ITEM_NORMAL, text=_('Drift shot'))
+              kind=wx.ITEM_NORMAL, text=_(u'Drift shot'))
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN,
+              kind=wx.ITEM_NORMAL, text=u'Polar alignment')
         self.Bind(wx.EVT_MENU, self.OnMenuToolsDriftshotMenu,
               id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT)
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsPolaralignMenu,
+              id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN)
 
     def _init_coll_statusBar1_Fields(self, parent):
         # generated method, don't edit
@@ -157,7 +163,7 @@ class mainFrame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_MAINFRAME, name='mainFrame',
-              parent=prnt, pos=wx.Point(481, 126), size=wx.Size(410, 380),
+              parent=prnt, pos=wx.Point(481, 126), size=wx.Size(410, 373),
               style=wx.DEFAULT_FRAME_STYLE, title='AstroTortilla')
         self._init_utils()
         self.SetClientSize(wx.Size(402, 346))
@@ -991,3 +997,7 @@ class mainFrame(wx.Frame):
             self.camera.connected = False
         enable(self.btnGO)
         self.SetStatusText(_("Drifting done."))
+
+    def OnMenuToolsPolaralignMenu(self, event):
+        alignFrame = PolarAlignFrame.PolarAlignFrame(self)
+        alignFrame.Show(True)

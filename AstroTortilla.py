@@ -13,7 +13,10 @@ import sys
 
 modules ={u'DlgCameraSetup': [0, '', u'astromate/gui/DlgCameraSetup.py'],
  'DlgHelpAbout': [0, '', u'astromate/gui/DlgHelpAbout.py'],
- 'MainFrame': [1, 'Main frame of Application', u'astromate/gui/MainFrame.py']}
+ 'MainFrame': [1, 'Main frame of Application', u'astromate/gui/MainFrame.py'],
+ u'PolarAlignFrame': [0,
+                      u'Polar alignment frame',
+                      u'astromate/gui/PolarAlignFrame.py']}
 
 class BoaApp(wx.App):
     def OnInit(self):
