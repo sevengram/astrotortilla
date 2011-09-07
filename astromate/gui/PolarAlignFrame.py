@@ -185,6 +185,7 @@ class PolarAlignFrame(wx.Frame):
             return None
         self.__solving = True
         self.AltitudeMeasureButton.SetLabel(_("Abort solver"))
+        self.AzimuthMeasureButton.SetLabel(_("Abort solver"))
         solution = None
         try:
             try:
@@ -238,6 +239,7 @@ class PolarAlignFrame(wx.Frame):
         finally:
             self._parent._updateCamera()
             self.AltitudeMeasureButton.SetLabel(_("Measure altitude error"))
+            self.AzimuthMeasureButton.SetLabel(_("Measure azimuth error"))
             enable(self._parent.btnGO)
             self.__solving = False
             self.__abortSolve = False
@@ -260,7 +262,7 @@ class PolarAlignFrame(wx.Frame):
             # Take first exposure
             solution = self.__captureSolve()
         if not solution:
-            return
+            return None
         movement = 0.5 # Amount of degrees to slew
         firstSolve = solution.center # Center of the first platesolve
         startPos = self._telescope.position
