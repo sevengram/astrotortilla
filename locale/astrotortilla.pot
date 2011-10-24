@@ -1,0 +1,476 @@
+# AstroTortilla i18n messages
+# Copyright (C) 2011 Antti Kuntsi
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: AstroTortilla 0.2.1\n"
+"POT-Creation-Date: 2011-10-24 21:27+Kesäaika\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: astromate\CameraState.py:14
+msgid "Downloading"
+msgstr ""
+
+#: astromate\CameraState.py:14
+msgid "Error"
+msgstr ""
+
+#: astromate\CameraState.py:14
+msgid "Exposing"
+msgstr ""
+
+#: astromate\CameraState.py:14
+msgid "Idle"
+msgstr ""
+
+#: astromate\CameraState.py:14
+msgid "Reading"
+msgstr ""
+
+#: astromate\CameraState.py:14
+msgid "Waiting"
+msgstr ""
+
+#: astromate\engine.py:46 astromate\engine.py:50 astromate\engine.py:54
+msgid "Not selected"
+msgstr ""
+
+#: astromate\engine.py:302
+msgid "ERROR: No solver selected."
+msgstr ""
+
+#: astromate\engine.py:306 astromate\gui\PolarAlignFrame.py:214
+msgid "Solving..."
+msgstr ""
+
+#: astromate\engine.py:319
+msgid "Solved in %.1fs"
+msgstr ""
+
+#: astromate\engine.py:321
+msgid "No solution in %.1fs"
+msgstr ""
+
+#: astromate\engine.py:328
+msgid "ERROR: No camera connected."
+msgstr ""
+
+#: astromate\engine.py:334 astromate\gui\MainFrame.py:795
+#: astromate\gui\PolarAlignFrame.py:192
+msgid "Connecting to camera..."
+msgstr ""
+
+#: astromate\engine.py:340 astromate\engine.py:347
+#: astromate\gui\PolarAlignFrame.py:205
+msgid "Exposing: %.2f seconds"
+msgstr ""
+
+#: astromate\engine.py:350 astromate\gui\MainFrame.py:827
+#: astromate\gui\PolarAlignFrame.py:207
+msgid "Waiting for camera"
+msgstr ""
+
+#: astromate\engine.py:356 astromate\gui\PolarAlignFrame.py:212
+msgid "Reading image from camera"
+msgstr ""
+
+#: astromate\engine.py:359 astromate\gui\PolarAlignFrame.py:224
+msgid "Aborted."
+msgstr ""
+
+#: astromate\engine.py:361
+msgid "Camera did not produce an image to solve"
+msgstr ""
+
+#: astromate\engine.py:363
+msgid "An error occurred."
+msgstr ""
+
+#: astromate\engine.py:366 astromate\gui\MainFrame.py:193
+msgid ""
+msgstr ""
+
+#: astromate\engine.py:378 astromate\engine.py:390
+msgid "ERROR: No telescope connected."
+msgstr ""
+
+#: astromate\engine.py:393 astromate\gui\PolarAlignFrame.py:179
+msgid "Waiting for scope to stop"
+msgstr ""
+
+#: astromate\engine.py:420
+msgid "Re-centering..."
+msgstr ""
+
+#: astromate\gui\DlgCameraSetup.py:40
+msgid "Close"
+msgstr ""
+
+#: astromate\gui\DlgCameraSetup.py:52
+msgid "Camera interface selection"
+msgstr ""
+
+#: astromate\gui\DlgCameraSetup.py:57
+msgid "Camera:"
+msgstr ""
+
+#: astromate\gui\DlgCameraSetup.py:61
+msgid "Refresh list"
+msgstr ""
+
+#: astromate\gui\DlgCameraSetup.py:63
+msgid "Refresh camera selection list"
+msgstr ""
+
+#: astromate\gui\DlgCameraSetup.py:68
+msgid "Binning:"
+msgstr ""
+
+#: astromate\gui\DlgCameraSetup.py:75
+msgid "Camera binning"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:95
+msgid "File"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:96
+msgid "Tools"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:97
+msgid "Help"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:102
+msgid "Information about the application."
+msgstr ""
+
+#: astromate\gui\MainFrame.py:104
+msgid "About"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:112
+msgid "Load settings..."
+msgstr ""
+
+#: astromate\gui\MainFrame.py:114
+msgid "Save settings..."
+msgstr ""
+
+#: astromate\gui\MainFrame.py:116
+msgid "Exit the application"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:118
+msgid "Exit"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:130 astromate\gui\MainFrame.py:849
+msgid "Goto Image"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:132
+msgid "Polar alignment"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:134
+msgid "Drift shot"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:191
+msgid "Telescope"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:199
+msgid "Camera"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:204
+msgid "Actions"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:208
+msgid "Setup"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:211
+msgid "Setup camera"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:215 astromate\gui\MainFrame.py:291
+msgid "RA:"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:220 astromate\gui\MainFrame.py:300
+msgid "Dec:"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:228
+msgid "Right ascension"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:233
+msgid "Declination"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:236 astromate\gui\MainFrame.py:543
+msgid "No camera"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:241
+msgid "Unpark"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:243
+msgid "Unpark telescope"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:248
+msgid "Field size:"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:257
+msgid "Rotation:"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:266 astromate\gui\MainFrame.py:575
+msgid "Normal"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:271
+msgid "After solve:"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:288
+msgid "arcmin"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:308
+msgid "Status:"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:312 astromate\gui\MainFrame.py:552
+msgid "Not connected"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:316
+msgid "Slewing"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:324
+msgid "Tracking"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:329
+msgid "Exposure:"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:344
+msgid "Exposure time in seconds"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:353
+msgid "Current:"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:360
+msgid "Target:"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:376
+msgid "Sync scope"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:383
+msgid "Repeat until within"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:390 astromate\gui\MainFrame.py:670
+#: astromate\gui\MainFrame.py:862
+msgid "Capture and Solve"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:397
+msgid "Solver"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:411
+msgid "Solver configuration"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:437
+msgid "Re-slew to target"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:561
+msgid "Previous solution"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:573
+msgid "Flipped"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:586 astromate\gui\MainFrame.py:741
+msgid "Last error: %s"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:604 astromate\gui\PolarAlignFrame.py:233
+msgid "Camera error"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:645
+msgid "Aborting..."
+msgstr ""
+
+#: astromate\gui\MainFrame.py:647 astromate\gui\MainFrame.py:856
+#: astromate\gui\PolarAlignFrame.py:187 astromate\gui\PolarAlignFrame.py:188
+msgid "Abort solver"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:759
+msgid "Invalid data"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:764
+msgid "Load settings"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:767 astromate\gui\MainFrame.py:780
+msgid "Config files"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:777
+msgid "Save settings"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:804 astromate\gui\MainFrame.py:821
+msgid "Drifting: %.2f seconds"
+msgstr ""
+
+#: astromate\gui\MainFrame.py:833
+msgid "Drifting done."
+msgstr ""
+
+#: astromate\gui\MainFrame.py:852
+msgid "Image files"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:50
+msgid "Polar Alignment"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:61
+msgid "Observer Hemisphere:"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:75
+msgid "Mount altitude"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:80
+msgid "Mount azimuth"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:84
+msgid "East"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:84
+msgid "West"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:94
+msgid "Measurement side:"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:99 astromate\gui\PolarAlignFrame.py:241
+msgid "Measure altitude error"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:112 astromate\gui\PolarAlignFrame.py:242
+msgid "Measure azimuth error"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:120
+msgid "Point the telescope to the meridian before measuring!"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:126
+msgid "Point the telescope to the east or west before measuring!"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:131
+msgid "Measured altitude error:"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:138 astromate\gui\PolarAlignFrame.py:151
+msgid "N/A"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:144
+msgid "Measured azimuth error:"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:183
+msgid "Telescope not connected"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:198
+msgid "Exposing %.2f seconds"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:226
+msgid "Camera did not produce an image to solve."
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:247
+msgid "Solution found."
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:250
+msgid "Solution not found."
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:269 astromate\gui\PolarAlignFrame.py:277
+msgid "Slewing..."
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:279
+msgid "Done!"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:290 astromate\gui\PolarAlignFrame.py:327
+msgid "An error occurred!"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:298 astromate\gui\PolarAlignFrame.py:306
+#: astromate\gui\PolarAlignFrame.py:314 astromate\gui\PolarAlignFrame.py:318
+msgid "too low"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:300 astromate\gui\PolarAlignFrame.py:304
+#: astromate\gui\PolarAlignFrame.py:312 astromate\gui\PolarAlignFrame.py:320
+msgid "too high"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:321 astromate\gui\PolarAlignFrame.py:342
+msgid "%.2f degrees"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:333 astromate\gui\PolarAlignFrame.py:341
+msgid "too east"
+msgstr ""
+
+#: astromate\gui\PolarAlignFrame.py:335 astromate\gui\PolarAlignFrame.py:339
+msgid "too west"
+msgstr ""
+

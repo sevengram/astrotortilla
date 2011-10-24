@@ -11,8 +11,9 @@ import ConfigParser
 import os, os.path
 from time import time, sleep
 from astromate import CameraState
+from astromate.engine import TortillaEngine, Status
 from astromate.units import Coordinate, Separation, deg2dms, deg2hms
-t = gettext.translation('mainframe', 'locale', fallback=True)
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 def create(parent):
@@ -29,13 +30,14 @@ def create(parent):
  wxID_MAINFRAMELBLSCOPECURRENT, wxID_MAINFRAMELBLSCOPETARGET, 
  wxID_MAINFRAMELBLSECONDS, wxID_MAINFRAMEMAINCAMERA, 
  wxID_MAINFRAMENUMCTRLACCURACY, wxID_MAINFRAMENUMCTRLEXPOSURE, 
- wxID_MAINFRAMESTATICBOX1, wxID_MAINFRAMESTATICBOX2, wxID_MAINFRAMESTATUSBAR1, 
- wxID_MAINFRAMETELESCOPE, wxID_MAINFRAMETXTCAM, wxID_MAINFRAMETXTCAMDEC, 
- wxID_MAINFRAMETXTCAMRA, wxID_MAINFRAMETXTCAMSTATUS, wxID_MAINFRAMETXTDEC, 
- wxID_MAINFRAMETXTFIELD, wxID_MAINFRAMETXTRA, wxID_MAINFRAMETXTROTATION, 
- wxID_MAINFRAMETXTSCOPESLEWING, wxID_MAINFRAMETXTSCOPETARGETDEC, 
- wxID_MAINFRAMETXTSCOPETARGETRA, wxID_MAINFRAMETXTSCOPETRACKING, 
-] = [wx.NewId() for _init_ctrls in range(44)]
+ wxID_MAINFRAMEPROGRESS, wxID_MAINFRAMESTATICBOX1, wxID_MAINFRAMESTATICBOX2, 
+ wxID_MAINFRAMESTATUSBAR1, wxID_MAINFRAMETELESCOPE, wxID_MAINFRAMETXTCAM, 
+ wxID_MAINFRAMETXTCAMDEC, wxID_MAINFRAMETXTCAMRA, wxID_MAINFRAMETXTCAMSTATUS, 
+ wxID_MAINFRAMETXTDEC, wxID_MAINFRAMETXTFIELD, wxID_MAINFRAMETXTRA, 
+ wxID_MAINFRAMETXTROTATION, wxID_MAINFRAMETXTSCOPESLEWING, 
+ wxID_MAINFRAMETXTSCOPETARGETDEC, wxID_MAINFRAMETXTSCOPETARGETRA, 
+ wxID_MAINFRAMETXTSCOPETRACKING, 
+] = [wx.NewId() for _init_ctrls in range(45)]
 
 CFGFILE = "astrotortilla.cfg" 
 
@@ -78,8 +80,9 @@ def disable(ctrl):
  wxID_MAINFRAMEMENUFILEITEMS2, 
 ] = [wx.NewId() for _init_coll_menuFile_Items in range(3)]
 
-[wxID_MAINFRAMEMENUTOOLSDRIFTSHOT, wxID_MAINFRAMEMENUTOOLSPOLARALIGN, 
-] = [wx.NewId() for _init_coll_menuTools_Items in range(2)]
+[wxID_MAINFRAMEMENUTOOLSDRIFTSHOT, wxID_MAINFRAMEMENUTOOLSITEMS2, 
+ wxID_MAINFRAMEMENUTOOLSPOLARALIGN, 
+] = [wx.NewId() for _init_coll_menuTools_Items in range(3)]
 
 [wxID_MAINFRAMEMENUHELPHELPABOUT] = [wx.NewId() for _init_coll_menuHelp_Items in range(1)]
 
@@ -123,14 +126,18 @@ class mainFrame(wx.Frame):
     def _init_coll_menuTools_Items(self, parent):
         # generated method, don't edit
 
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSITEMS2,
+              kind=wx.ITEM_NORMAL, text=_('Goto Image'))
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN,
+              kind=wx.ITEM_NORMAL, text=_('Polar alignment'))
         parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
               kind=wx.ITEM_NORMAL, text=_(u'Drift shot'))
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN,
-              kind=wx.ITEM_NORMAL, text=u'Polar alignment')
         self.Bind(wx.EVT_MENU, self.OnMenuToolsDriftshotMenu,
               id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT)
         self.Bind(wx.EVT_MENU, self.OnMenuToolsPolaralignMenu,
               id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN)
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsGotoImage,
+              id=wxID_MAINFRAMEMENUTOOLSITEMS2)
 
     def _init_coll_statusBar1_Fields(self, parent):
         # generated method, don't edit
@@ -142,9 +149,9 @@ class mainFrame(wx.Frame):
 
     def _init_utils(self):
         # generated method, don't edit
-        self.menuFile = wx.Menu(title=_(''))
+        self.menuFile = wx.Menu(title='')
 
-        self.menuHelp = wx.Menu(title=_(''))
+        self.menuHelp = wx.Menu(title='')
 
         self.menuBar1 = wx.MenuBar()
 
@@ -163,7 +170,7 @@ class mainFrame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_MAINFRAME, name='mainFrame',
-              parent=prnt, pos=wx.Point(481, 126), size=wx.Size(410, 373),
+              parent=prnt, pos=wx.Point(481, 126), size=wx.Size(410, 380),
               style=wx.DEFAULT_FRAME_STYLE, title='AstroTortilla')
         self._init_utils()
         self.SetClientSize(wx.Size(402, 346))
@@ -233,7 +240,7 @@ class mainFrame(wx.Frame):
         self.btnScopePark = wx.Button(id=wxID_MAINFRAMEBTNSCOPEPARK,
               label=_('Unpark'), name='btnScopePark', parent=self,
               pos=wx.Point(16, 48), size=wx.Size(96, 23), style=0)
-        self.btnScopePark.SetToolTipString(_('(Un)park'))
+        self.btnScopePark.SetToolTipString(_('Unpark telescope'))
         self.btnScopePark.Bind(wx.EVT_BUTTON, self.OnBtnScopeParkButton,
               id=wxID_MAINFRAMEBTNSCOPEPARK)
 
@@ -262,7 +269,7 @@ class mainFrame(wx.Frame):
 
         self.lblActions = wx.StaticText(id=wxID_MAINFRAMELBLACTIONS,
               label=_('After solve:'), name='lblActions', parent=self,
-              pos=wx.Point(264, 184), size=wx.Size(57, 13), style=0)
+              pos=wx.Point(264, 184), size=wx.Size(120, 13), style=0)
         self.lblActions.SetToolTipString('')
 
         self.numCtrlAccuracy = wx.lib.masked.numctrl.NumCtrl(id=wxID_MAINFRAMENUMCTRLACCURACY,
@@ -365,19 +372,12 @@ class mainFrame(wx.Frame):
               label='0', name='txtScopeTargetDec', parent=self,
               pos=wx.Point(304, 40), size=wx.Size(71, 13), style=0)
 
-        self.chkSync = wx.CheckBox(id=wxID_MAINFRAMECHKSYNC, label='Sync scope',
-              name='chkSync', parent=self, pos=wx.Point(264, 200),
-              size=wx.Size(120, 13), style=0)
-        self.chkSync.SetValue(False)
+        self.chkSync = wx.CheckBox(id=wxID_MAINFRAMECHKSYNC,
+              label=_('Sync scope'), name='chkSync', parent=self,
+              pos=wx.Point(264, 200), size=wx.Size(120, 13), style=0)
+        self.chkSync.SetValue(True)
         self.chkSync.Bind(wx.EVT_CHECKBOX, self.OnChkSyncCheckbox,
               id=wxID_MAINFRAMECHKSYNC)
-
-        self.chkSlewTarget = wx.CheckBox(id=wxID_MAINFRAMECHKSLEWTARGET,
-              label='Re-slew to target', name='chkSlewTarget', parent=self,
-              pos=wx.Point(264, 216), size=wx.Size(120, 13), style=0)
-        self.chkSlewTarget.SetValue(False)
-        self.chkSlewTarget.Bind(wx.EVT_CHECKBOX, self.OnChkSlewTargetCheckbox,
-              id=wxID_MAINFRAMECHKSLEWTARGET)
 
         self.chkRepeat = wx.CheckBox(id=wxID_MAINFRAMECHKREPEAT,
               label=_('Repeat until within'), name='chkRepeat', parent=self,
@@ -428,70 +428,41 @@ class mainFrame(wx.Frame):
         self.choiceCam.Bind(wx.EVT_CHOICE, self.OnChoiceCamChoice,
               id=wxID_MAINFRAMECHOICECAM)
 
+        self.progress = wx.Gauge(id=wxID_MAINFRAMEPROGRESS, name='progress',
+              parent=self.statusBar1, pos=wx.Point(300, 1), range=100,
+              size=wx.Size(100, 22), style=wx.GA_HORIZONTAL)
+        self.progress.SetToolTipString('')
+
+        self.chkSlewTarget = wx.CheckBox(id=wxID_MAINFRAMECHKSLEWTARGET,
+              label=_('Re-slew to target'), name='chkSlewTarget', parent=self,
+              pos=wx.Point(264, 216), size=wx.Size(120, 13), style=0)
+        self.chkSlewTarget.SetValue(True)
+        self.chkSlewTarget.Bind(wx.EVT_CHECKBOX, self.OnChkSlewTargetCheckbox,
+              id=wxID_MAINFRAMECHKSLEWTARGET)
+
     def __init__(self, parent):
         self._init_ctrls(parent)
+        self.progress.Hide()
         self.configGrid.CreateGrid(1,2)
-        self.telescope = None           # handle to current telescope object
-        self.telescopeName = None       # string representation of telescope
-        self.camera = None              # handle to current camera object
-        self.cameraName = None          # string representation of camera
-        self.solver = None              # handle to current solver object
-        self.solverName = None          # string representation of solver
-        self.solution = None            # current solution object or None
-        self.lastSolution = 0           # time stamp of current solution solving time
-        self.config = ConfigParser.SafeConfigParser() # Python 2.7: allow_no_value = True)
-        self.config.read(CFGFILE)
-        try:
-            default_path = self.config.get("AstroTortilla", "settings_path")
-        except:
-            if not self.config.has_section("AstroTortilla"):
-                self.config.add_section("AstroTortilla")
-            self.config.set("AstroTortilla", "settings_path", os.getcwdu())
+        self.engine = TortillaEngine()
+        self.engine.subscribeStatus(self.__statusUpdater)
+        self.engine.subscribeProgress(self.__progressUpdater)
         self.prev_rowcol = [None, None] # helper for solver config matrix tooltip
         # set default null values everywhere
         self.txtDec.SetLabel(deg2dms(0))
         self.txtScopeTargetDec.SetLabel(deg2dms(0))
         self.txtCamDec.SetLabel(deg2dms(0))
-        self.__solving = False      # status of current solver
-        self.__abortSolve = False   # did user want to abort current operation?
 
         # Bind self.OnClose to window closing event
         self.Bind(wx.EVT_CLOSE, self.OnClose)
+
     
     def OnClose(self, event):
         "Save settings on exit"
-        try:
-            if self.telescope and self.telescopeName:
-                self.__saveObjConfig(self.telescope, self.telescopeName)
-            if self.camera and self.cameraName:
-                self._saveCameraConfig()
-            if self.solver and self.solverName:
-                self.__saveObjConfig(self.solver, self.solverName)
-            self.config.write(file(CFGFILE, "w"))
-        except:
-            import traceback
-            traceback.print_exc() 
+        self.engine.saveConfig()
         event.Skip()
 
 
-    def __configure(self, obj, name):
-        "Configure `obj` from config if `name` is found as a section"
-        if obj and self.config.has_section(name):
-            for k,v in self.config.items(name):
-                try:
-                    obj.setProperty(k,v)
-                except:
-                    pass
-                    
-    def __saveObjConfig(self, obj, name):
-        "Save `obj` properties as section `name` in config structure"
-        if not self.config.has_section(name):
-            self.config.add_section(name)
-                
-        defaultConfig = obj.configuration
-        for k,v in defaultConfig.items():
-            self.config.set(name, k, unicode(v).replace("%", "%%"))
-                
     def OnMenuFileFileexitMenu(self, event):
         self.Close()
 
@@ -506,30 +477,15 @@ class mainFrame(wx.Frame):
         event.Skip()
 
     def OnChoiceSolverChoice(self, event):
-        self._selectSolver(event.GetEventObject().GetSelection())
-
-    def _selectSolver(self, n):
-        "Select solver index `n` from the choice dropdown."
-        if self.solver:
-            self.__saveObjConfig(self.solver, self.solverName)
-            del self.solver
-            self.configGrid.Hide()
-        self.solver = None
-        self.solverName = None
-        solver = self.choiceSolver.GetClientData(n)
-        if solver:
-            self.solver = solver()
-            # update config data structure                    
-            self.solver = self.choiceSolver.GetClientData(n)()
-            self.solverName = "Solver-%s"%(self.choiceSolver.GetStringSelection())
+        self.engine.selectSolver(self.choiceSolver.GetStringSelection())
+        if self.engine.getSolver():
             self._updateSolverGrid()
-            
+
     def _updateSolverGrid(self):
         "Update solver configuration grid"
-        solverProps = self.solver.propertyList
-        self.__configure(self.solver, self.solverName)
+        solverProps = self.engine.getSolver().propertyList
         self.configGrid.ClearGrid()
-        solverConfig = self.solver.configuration
+        solverConfig = self.engine.getSolver().configuration
         cfgSize = len(solverConfig)
         gridSize = self.configGrid.GetNumberRows()
         if gridSize > cfgSize:
@@ -563,7 +519,7 @@ class mainFrame(wx.Frame):
         col = grid.XToCol(x)
         if (row,col) != self.prev_rowcol and row >= 0 and col >= 0:
             self.prev_rowcol[:] = [row,col]
-            hinttext = self.solver.propertyList[grid.GetRowLabelValue(row)][col+2]
+            hinttext = self.engine.getSolver().propertyList[grid.GetRowLabelValue(row)][col+2]
             if hinttext is None:
                 hinttext = ''
             grid.GetGridWindow().SetToolTipString(hinttext)
@@ -571,111 +527,76 @@ class mainFrame(wx.Frame):
 
     def OnChoiceScopeChoice(self, event):
         n = event.GetEventObject().GetSelection()
-        if self.telescope:
-            self.__saveObjConfig(self.telescope, self.telescopeName)
         if n == 0:
-            del self.telescope
-            self.telescope = None
-            self.telescopeName = None
+            self.engine.deselectTelescope()
         else:
-            self.telescope = self.choiceScope.GetClientData(n)()
-            self.telescopeName = "Telescope-%s"%(self.choiceScope.GetStringSelection())
-            if self.telescope:
-                self.telescope.connected = True
+            self.engine.selectTelescope(self.choiceScope.GetStringSelection())
+            if self.engine.getTelescope():
                 self.scopePollTimer.Start(300)
-
-
-    def _loadCameraConfig(self):
-        "Assign camera specific configuration to current camera"
-        self.__configure(self.camera, self.cameraName)
-        if self.config.has_option(self.cameraName, "binning"):
-            self.camera.binning = self.config.getint(self.cameraName, "binning")
-        if self.config.has_option(self.cameraName, "camera"):
-            self.camera.camera = self.config.get(self.cameraName, "camera")
-    
-    def _saveCameraConfig(self):
-        "Save current camera properties and other settings"
-        if self.camera and self.cameraName:
-            self.__saveObjConfig(self.camera, self.cameraName)
-            self.config.set(self.cameraName, "binning", str(self.camera.binning))
-            if self.camera.camera:
-                self.config.set(self.cameraName, "camera", str(self.camera.camera))
 
 
     def OnChoiceCamChoice(self, event):
         n = event.GetEventObject().GetSelection()
-        if self.camera:
-            self._saveCameraConfig()
-        if n == 0 or self.choiceCam.GetClientData(n) is not type(self.camera):
-            if self.camera and self.camera.connected:
-                self.camera.connected = False
-            del self.camera
-            self.camera = None
-            self.cameraName = None
+        if n == 0 or self.choiceCam.GetClientData(n) is not type(self.engine.getCamera()):
+            self.engine.deselectCamera()
         if n == 0: 
-            self.camSetup.Disable()
             self.txtCam.SetLabel(_("No camera"))
             self._updateCamera()
             return
-        self.camera = self.choiceCam.GetClientData(n)()
-        self.cameraName = "Camera-%s"%(self.choiceCam.GetStringSelection())
-        self._loadCameraConfig()
-        self.camSetup.Enable()
+        self.engine.selectCamera(self.choiceCam.GetStringSelection())
         self._updateCamera()
 
     def _updateCamera(self):
         "Update camera status display"
-        if not self.camera:
+        if not self.engine.getCamera():
             self.txtCamStatus.SetLabel(_("Not connected"))
             self.btnGO.Disable()
         else:
+            self.camSetup.Enable()
             self.btnGO.Enable()
-            self.txtCamStatus.SetLabel(CameraState.State[self.camera.cameraState])
+            self.txtCamStatus.SetLabel(CameraState.State[self.engine.getCamera().cameraState])
 
-        if not self.solution:
-            if self.camera:
-                self.txtCam.SetLabel(_("No solution"))
+        if not self.engine.solution:
+            if self.engine.getCamera():
+                self.txtCam.SetLabel(_("Previous solution"))
         else:
-            self.txtCamRA.SetLabel(deg2hms(self.solution.center.RA))
-            self.txtCamDec.SetLabel(deg2dms(self.solution.center.dec))
-            hFov, vFov = self.solution.fieldOfView
-            fovUnit = _(u"\xb0")
+            self.txtCamRA.SetLabel(deg2hms(self.engine.solution.center.RA))
+            self.txtCamDec.SetLabel(deg2dms(self.engine.solution.center.dec))
+            hFov, vFov = self.engine.solution.fieldOfView
+            fovUnit = u"\xb0"
             if hFov < 1.0 or vFov < 1.0:
                 hFov *= 60.
                 vFov *= 60.
-                fovUnit = _("'")
+                fovUnit = "'"
             self.txtField.SetLabel("%01.2f%s x %01.2f%s"%(hFov, fovUnit, vFov, fovUnit))
-            if int(self.solution.parity) == 1:
+            if int(self.engine.solution.parity) == 1:
                 self.lblMirror.SetLabel(_("Flipped"))
             else:
                 self.lblMirror.SetLabel(_("Normal"))
-            self.txtRotation.SetLabel("%.2f"%(self.solution.rotation))
-            if self.lastSolution:
-                if self.telescope:
-                    separation = self.telescope.position - self.solution.center
-                    separationString = ""
-                    if separation.degrees > 1:
-                        separationString = u"%.2fxb0"%(separation.degrees)
-                    elif separation.arcminutes>1:
-                        separationString = u"%.2f'"%(separation.arcminutes)
-                    else:
-                        separationString = u"%.2f\""%(separation.arcseconds)
-                    self.txtCam.SetLabel(_("Distance: %s (%ds old)"%(separationString, time() - self.lastSolution)))
+            self.txtRotation.SetLabel("%.2f"%(self.engine.solution.rotation))
+            if self.engine.lastCorrection:
+                separation = self.engine.lastCorrection
+                separationString = ""
+                if separation.degrees > 1:
+                    separationString = u"%.2f\xb0"%(separation.degrees)
+                elif separation.arcminutes>1:
+                    separationString = u"%.2f'"%(separation.arcminutes)
                 else:
-                    self.txtCam.SetLabel(_("Age: %ds"%(time() - self.lastSolution)))
+                    separationString = u"%.2f\""%(separation.arcseconds)
+                self.txtCam.SetLabel(_("Last error: %s")%(separationString))
         
 
     def OnConfigGridMouseEvents(self, event):
         event.Skip()
 
     def OnCamSetupButton(self, event):
-        if not self.camera:
+        if not self.engine.getCamera():
             event.Skip()
             return
-        if self.camera.hasSetupDialog:
-            if not self.camera.connected: 
+        if self.engine.getCamera().hasSetupDialog:
+            if not self.engine.getCamera().connected: 
                 try:
-                    self.camera.connected = True
+                    self.engine.getCamera().connected = True
                 except Exception, detail:
                     import traceback
                     diag = wx.MessageDialog(parent=self, 
@@ -688,7 +609,7 @@ class mainFrame(wx.Frame):
                     except:
                         diag.Destroy()
                     return
-            self.camera.setup()
+            self.engine.getCamera().setup()
             return
         dlg = DlgCameraSetup.DlgCameraSetup(self)
         try:
@@ -698,9 +619,9 @@ class mainFrame(wx.Frame):
         
 
     def OnBtnScopeParkButton(self, event):
-        if self.telescope == None:
+        if self.engine.getTelescope() == None:
             return
-        self.telescope.parked = not self.telescope.parked
+        self.engine.getTelescope().parked = not self.engine.getTelescope().parked
 
     def OnChkSlewTargetCheckbox(self, event):
         state = event.GetEventObject().IsChecked()
@@ -716,112 +637,38 @@ class mainFrame(wx.Frame):
             self.chkSync.SetValue(True)
 
     def OnBtnGOButton(self, event):
-        if not self.camera or not self.solver:
+        if not self.engine.getCamera() or not self.engine.getSolver():
             event.Skip()
             return
-        if self.__solving:
-            self.solver.abort()
-            self.__abortSolve = True
+        if self.engine.isBusy:
+            self.engine.abort()
             self.btnGO.SetLabel(_("Aborting..."))
             return
-        self.__solving = True
         self.btnGO.SetLabel(_("Abort solver"))
         try:
-            while True:
-                distance = self.__captureSolve()
-                if not distance:
-                    break
-                if not self.chkRepeat.IsChecked():
-                    break
-                if distance.arcminutes <= self.numCtrlAccuracy.GetValue() :
-                    break
+            arcminLimit = self.numCtrlAccuracy.GetValue()
+            exposeTime = self.numCtrlExposure.GetValue()
+            self.engine.setExposure(exposeTime)
+            if self.chkSlewTarget.IsChecked():
+                if self.chkRepeat.IsChecked():
+                    limit = 0
+                else:
+                    limit = 1
+                self.engine.gotoCurrentTarget(limit=limit, threshold=arcminLimit)
+            else:
+                self.engine.solveCamera()
+                if self.chkSync.IsChecked() and self.engine.solution:
+                    self.engine.telescope.position = self.engine.solution.center
         finally:
+            self._updateCamera()
             # update solver configuration grid from solver properties
             for row in range(self.configGrid.GetNumberRows()):
                 key = self.configGrid.GetRowLabelValue(row)
-                self.configGrid.SetCellValue(row,1,str(self.solver.getProperty(key)))
+                self.configGrid.SetCellValue(row,1,str(self.engine.getSolver().getProperty(key)))
                 
-            self.__solving = False
-            self.__abortSolve = False
+            self.engine.clearStatus()
             self.btnGO.SetLabel(_("Capture and Solve"))
                 
-
-    def __captureSolve(self):
-        "Capture and solve a single image"
-        pointError = None
-        targetPos = None
-        if self.telescope:  # @todo: add slew settle wait here if slewing
-            self.SetStatusText(_("Waiting for scope to stop"))
-            while self.telescope.slewing:
-                sleep(0.2)
-            targetPos = self.telescope.position
-        # clear current solution data
-        self.lastSolution = 0
-        self.solution = None
-        try:
-            try:
-                self.SetStatusText(_("Connecting to camera..."))
-                if not self.camera.canAutoConnect and not self.camera.connected:
-                    self.camera.connected = True
-                if self.camera.needsCameraName and not self.camera.camera:
-                    self.camera.camera = self.camera.cameraList[0]
-                self.SetStatusText(_("Exposing: %.2f seconds")%self.numCtrlExposure.GetValue())
-                self.camera.capture(self.numCtrlExposure.GetValue())
-                tEnd = time() + self.numCtrlExposure.GetValue()
-                while not self.camera.imageReady and self.camera.cameraState not in (CameraState.Error, ):
-                    sleep(0.1)
-                    tLeft = tEnd - time()
-                    if tLeft >= 0:
-                        self.SetStatusText(_("Exposing: %.2f seconds")%tLeft)
-                    else:
-                        self.SetStatusText(_("Waiting for camera"))
-                    wx.SafeYield()
-                    if self.__abortSolve: break;
-                if self.camera.imageReady and not self.__abortSolve:
-                    self.SetStatusText(_("Reading image from camera"))
-                    img = self.camera.getImage()
-                    self.SetStatusText(_("Solving..."))
-                    # solve based on current location if telescope is tracking, otherwise pure blind solve
-                    if self.telescope and self.telescope.tracking:
-                        self.solution = self.solver.solve(img, target=self.telescope.position, targetRadius=None, callback=self.__statusUpdater)
-                    else:
-                        self.solution = self.solver.solve(img, callback=self.__statusUpdater)
-                elif self.__abortSolve:
-                    self.SetStatusText(_("Aborted."))
-                else:
-                    self.SetStatusText(_("Camera did not produce an image to solve"))
-            except Exception, detail:
-                import traceback
-                diag = wx.MessageDialog(parent=self, 
-                    message=traceback.format_exc(), 
-                    caption=_("Camera error"),
-                    style = wx.OK
-                    )
-                try:
-                    diag.ShowModal()
-                except:
-                    diag.Destroy()
-                
-            if self.solution:
-                self.lastSolution = time()
-        finally:
-            self._updateCamera()
-            if self.solution:
-                self.SetStatusText(_("Solution found."))
-                
-                if targetPos:
-                    pointError = self.solution.center - targetPos
-                    self.SetStatusText(_("Separation: %s")%deg2dms(pointError.degrees))
-
-                # Sync and re-slew if requested and we have a telescope tracking
-                if self.telescope and self.telescope.tracking:
-                    if self.chkSync.IsChecked():
-                        self.telescope.position = self.solution.center
-                    if self.chkSlewTarget.IsChecked():
-                        self.telescope.slewToAsync(targetPos)
-            else:
-                self.SetStatusText(_("Solution not found."))
-        return pointError
 
     def __statusUpdater(self, status=None):
         "Update status bar and process UI events safely"
@@ -830,7 +677,7 @@ class mainFrame(wx.Frame):
         wx.SafeYield(self)
 
     def OnScopePollTimer(self, event):
-        if not self.telescope:
+        if not self.engine.getTelescope():
             self.scopePollTimer.Stop()
             map(hide, (self.txtScopeTracking, self.txtScopeSlewing))
             self.txtScopeTracking.Update()
@@ -842,11 +689,11 @@ class mainFrame(wx.Frame):
                 self.chkRepeat
                 ))
             return
-        if self.telescope.parked:
+        if self.engine.getTelescope().parked:
                 enable(self.btnScopePark)
         else:
                 disable(self.btnScopePark)
-        if self.telescope.tracking:
+        if self.engine.getTelescope().tracking:
             show(self.txtScopeTracking)
             map(enable, (
                 self.chkSync,
@@ -860,7 +707,7 @@ class mainFrame(wx.Frame):
                 self.chkSlewTarget,
                 self.chkRepeat
                 ))
-        if self.telescope.slewing:
+        if self.engine.getTelescope().slewing:
             show(self.txtScopeSlewing)
             disable(self.btnGO)
         else:
@@ -868,9 +715,9 @@ class mainFrame(wx.Frame):
             enable(self.btnGO)
         self.txtScopeTracking.Update()
         self.txtScopeSlewing.Update()
-        if self.telescope and self.telescope.position:
-            curPos = self.telescope.position
-            targetPos = self.telescope.target
+        if self.engine.getTelescope() and self.engine.getTelescope().position:
+            curPos = self.engine.getTelescope().position
+            targetPos = self.engine.getTelescope().target
             self.txtRA.SetLabel(deg2hms(curPos.RA))
             self.txtDec.SetLabel(deg2dms(curPos.dec))
 
@@ -881,10 +728,9 @@ class mainFrame(wx.Frame):
             self.txtScopeTargetRA.SetLabel(deg2hms(targetPos.RA))
             self.txtScopeTargetDec.SetLabel(deg2dms(targetPos.dec))
 
-            # Calculate and show separation from solution to current assumed position
-            # technically this is meaningful only after telescope sync
-            if self.lastSolution and self.solution:
-                separation = self.telescope.position - self.solution.center
+            # Show goto-error on the last solution
+            if self.engine.lastCorrection:
+                separation = self.engine.lastCorrection
                 separationString = ""
                 if separation.degrees > 1:
                     separationString = u"%.2f\xb0"%(separation.degrees)
@@ -892,7 +738,7 @@ class mainFrame(wx.Frame):
                     separationString = u"%.2f'"%(separation.arcminutes)
                 else:
                     separationString = u"%.2f\""%(separation.arcseconds)
-                self.txtCam.SetLabel(_("Distance: %s (%ds old)"%(separationString, time() - self.lastSolution)))
+                self.txtCam.SetLabel(_("Last error: %s")%(separationString))
 
 
     def OnChkSyncCheckbox(self, event):
@@ -904,72 +750,60 @@ class mainFrame(wx.Frame):
     def OnConfigGridGridCellChange(self, event):
         col, row =event.GetCol(), event.GetRow()
         key = self.configGrid.GetRowLabelValue(row)
-        validator = self.solver.propertyList[key][1]
+        validator = self.engine.getSolver().propertyList[key][1]
         data = self.configGrid.GetCellValue(row,col)
         try:
             validator(data) # test validity
-            self.solver.setProperty(key, data)
+            self.engine.getSolver().setProperty(key, data)
         except:
-            self.SetStatusText("Invalid data")
-            self.configGrid.SetCellValue(row,col,str(self.solver.getProperty(key)))
+            self.SetStatusText(_("Invalid data"))
+            self.configGrid.SetCellValue(row,col,str(self.engine.getSolver().getProperty(key)))
 
     def OnMenuFileLoadSettingsMenu(self, event):
         fileName = wx.FileSelector(
                 message=_("Load settings"),
-                default_path = self.config.get("AstroTortilla", "settings_path"),
+                default_path = self.engine.config.get("AstroTortilla", "settings_path"),
                 flags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST,
-                wildcard="Config file(*.cfg)|*.cfg",
+                wildcard=_("Config files")+" (*.cfg)|*.cfg",
                 )
 
         if fileName:
-            self.config.read(fileName)
-            self.config.set("AstroTortilla", "settings_path", os.path.dirname(fileName))
-            self.__configure(self.telescope, self.telescopeName)
-            self._loadCameraConfig()
-            self.__configure(self.solver, self.solverName)
+            self.engine.loadConfig(fileName)
             self._updateSolverGrid()
-            
 
 
     def OnMenuFileSaveSettingsMenu(self, event):
         fileName = wx.FileSelector(
                 message=_("Save settings"),
-                default_path = self.config.get("AstroTortilla", "settings_path"),
+                default_path = self.engine.config.get("AstroTortilla", "settings_path"),
                 flags = wx.FD_SAVE,
-                wildcard="Config file(*.cfg)|*.cfg",
+                wildcard=_("Config files")+" (*.cfg)|*.cfg",
                 )
         if not fileName:
             return
         try:
-            self.config.set("AstroTortilla", "settings_path", os.path.dirname(fileName))
-            if self.telescope and self.telescopeName:
-                self.__saveObjConfig(self.telescope, self.telescopeName)
-            if self.camera and self.cameraName:
-                self._saveCameraConfig()
-            if self.solver and self.solverName:
-                self.__saveObjConfig(self.solver, self.solverName)
-            self.config.write(file(fileName, "w"))
+            self.engine.saveConfig(fileName)
         except:
             import traceback
             traceback.print_exc() 
 
     def OnMenuToolsDriftshotMenu(self, event):
-        if not (self.camera and self.telescope and self.telescope.tracking):
+        if not self.engine.isReady:
             event.Skip()
             return
         disable(self.btnGO)
         self.SetStatusText(_("Connecting to camera..."))
-        if self.camera.canAutoConnect:
-            autoDisco = self.camera.disconnectAfterCapture
-            self.camera.disconnectAfterCapture = False
-        self.camera.connected = True
-        if self.camera.needsCameraName and not self.camera.camera:
-            self.camera.camera = self.camera.cameraList[0]
+        if self.engine.getCamera().canAutoConnect:
+            autoDisco = self.engine.getCamera().disconnectAfterCapture
+            self.engine.getCamera().disconnectAfterCapture = False
+        self.engine.getCamera().connected = True
+        if self.engine.getCamera().needsCameraName and not self.engine.getCamera().camera:
+            self.engine.getCamera().camera = self.engine.getCamera().cameraList[0]
         exposeTime = self.numCtrlExposure.GetValue()
         if exposeTime < 30.0: exposeTime = 30.0
         self.SetStatusText(_("Drifting: %.2f seconds")%exposeTime)
-        self.camera.capture(exposeTime)
-        self.telescope.tracking=True
+        self.engine.getCamera().capture(exposeTime)
+        self.engine.getTelescope().tracking=True
         if exposeTime < 60:
                 stillTime = 5
         else:
@@ -979,25 +813,51 @@ class mainFrame(wx.Frame):
         tLeft = tEnd - time()
         while tLeft>0:
             if rateQueue and tLeft<rateQueue[0][1]:
-                self.telescope.RightAscensionRate = rateQueue[0][0]
+                self.engine.getTelescope().RightAscensionRate = rateQueue[0][0]
                 del rateQueue[0]
             sleep(0.1)
             tLeft = tEnd - time()
             if tLeft >= 0:
                 self.SetStatusText(_("Drifting: %.2f seconds")%tLeft)
             wx.SafeYield()
-        self.telescope.RightAscensionRate = 0.0
-        self.telescope.tracking=True
-        if self.camera.canAutoConnect:
-            self.camera.disconnectAfterCapture = autoDisco
+        self.engine.getTelescope().RightAscensionRate = 0.0
+        self.engine.getTelescope().tracking=True
+        if self.engine.getCamera().canAutoConnect:
+            self.engine.getCamera().disconnectAfterCapture = autoDisco
         self.SetStatusText(_("Waiting for camera"))
-        if self.camera.disconnectAfterCapture:
-            while not self.camera.imageReady and self.camera.cameraState not in (CameraState.Error, ):
+        if self.engine.getCamera().disconnectAfterCapture:
+            while not self.engine.getCamera().imageReady and self.engine.getCamera().cameraState not in (CameraState.Error, ):
                 sleep(0.2)
-            self.camera.connected = False
+            self.engine.getCamera().connected = False
         enable(self.btnGO)
         self.SetStatusText(_("Drifting done."))
 
     def OnMenuToolsPolaralignMenu(self, event):
         alignFrame = PolarAlignFrame.PolarAlignFrame(self)
         alignFrame.Show(True)
+
+    def __progressUpdater(self, pct, readable=None):
+        if pct < 0:
+            hide(self.progress)
+        else:
+            show(self.progress)
+            self.progress.SetValue(pct)
+            wx.SafeYield()
+
+    def OnMenuToolsGotoImage(self, event):
+        fileName = wx.FileSelector(
+                message=_("Goto Image"),
+                default_path = self.engine.config.get("AstroTortilla", "settings_path"),
+                flags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST,
+                wildcard=_("Image files")+" (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm",
+                )
+
+        if fileName:
+            self.btnGO.SetLabel(_("Abort solver"))
+            try:
+                self.engine.gotoImage(fileName)
+            except:
+                import traceback
+                traceback.print_exc() 
+            self.btnGO.SetLabel(_("Capture and Solve"))
+            self._updateCamera()

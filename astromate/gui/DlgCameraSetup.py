@@ -4,7 +4,7 @@ import wx
 import wx.grid
 
 import gettext
-t = gettext.translation('camerasetup', 'locale', fallback=True)
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 def create(parent):
@@ -77,7 +77,7 @@ class DlgCameraSetup(wx.Dialog):
     def __init__(self, parent):
         self._init_ctrls(parent)
         self.__parent = parent
-        self.camera = parent.camera
+        self.camera = parent.engine.getCamera()
         if not self.camera:
             self.Destroy()
         self.gridCameraConf.ClearGrid()

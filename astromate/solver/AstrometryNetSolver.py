@@ -4,7 +4,7 @@ import subprocess, os, os.path, time, tempfile, shutil, threading
 # vim: set fileencoding=UTF-8 : ts=4 sts=4 sw=4 et si
 # -*- coding: UTF-8 -*-
 
-DEBUG = 0 # 1 to enable some debug prints
+DEBUG = 1 # 1 to enable some debug prints
 
 PROPERTYLIST = {
         "downscale":("Downscaling", int, "Image downscaling factor" ,"", 2),
@@ -136,7 +136,7 @@ class AstrometryNetSolver(IPlateSolver):
             else:
                 t_radius = float(self.getProperty("searchradius"))
             options.append("-3 %f -4 %f -5 %f"%(target.RA, target.dec, t_radius))
-        options.append("-b `cygpath %s`"%(self.getProperty("configfile").replace("\\", "/")))
+        options.append("-b %s"%(self.getProperty("configfile").replace("\\", "/")))
         options.append("%s"%(self.getProperty("xtra")))
         options.append("-L %s"%(minFov or self.getProperty("scale_low")))
         options.append("-H %s"%(maxFov or self.getProperty("scale_max")))
@@ -150,7 +150,7 @@ class AstrometryNetSolver(IPlateSolver):
             pass
 
 
-        r=self.__execute('solve-field %s --no-plot -D `cygpath %s` `cygpath %s`'%(" ".join(options), workDir, imagePath))
+        r=self.__execute('solve-field %s --no-plot -D \\"`cygpath -a \\"%s\\"`\\" \\"`cygpath -a \\"%s\\"`\\"'%(" ".join(options), workDir, imagePath))
 
         if r and len(r)>1 and r[1]: print(r[1])
         wcsInfo=[]
@@ -222,7 +222,10 @@ class AstrometryNetSolver(IPlateSolver):
             self.__solution = None
 
         # Clean up and return
-        shutil.rmtree(workDir)
+        try:
+            shutil.rmtree(workDir)
+        except:
+            pass
         self.__counter += 1
         self.__abort = False
         return self.__solution

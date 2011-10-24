@@ -22,22 +22,26 @@ class BoaApp(wx.App):
     def OnInit(self):
         self.main = MainFrame.create(None)
         self.main.choiceSolver.Clear()
-        self.__populateChoiceList(self.main.choiceSolver, astromate.solver, IPlateSolver)
-        if len(astromate.solver.__all__) == 1:
+        #self.__populateChoiceList(self.main.choiceSolver, astromate.solver, IPlateSolver)
+        self.__populateChoiceList(self.main.choiceSolver, self.main.engine.listSolvers())
+        #if len(astromate.solver.__all__) == 1:
+        if len(self.main.engine.listSolvers()) == 1:
             self.main.choiceSolver.SetSelection(0)
             self.main.choiceSolver.Disable()
-            self.main._selectSolver(0)
+            self.main._updateSolverGrid()
         else:
             self.main.configGrid.Show(False)
         self.main.choiceCam.Clear()
         self.main.choiceCam.Append("Disconnected")
         self.main.choiceCam.SetSelection(0)
-        self.__populateChoiceList(self.main.choiceCam, astromate.camera, ICamera)
+        #self.__populateChoiceList(self.main.choiceCam, astromate.camera, ICamera)
+        self.__populateChoiceList(self.main.choiceCam, self.main.engine.listCameras())
         
         self.main.choiceScope.Clear()
         self.main.choiceScope.Append("Disconnected")
         self.main.choiceScope.SetSelection(0)
-        self.__populateChoiceList(self.main.choiceScope, astromate.telescope, ITelescope)
+        #self.__populateChoiceList(self.main.choiceScope, astromate.telescope, ITelescope)
+        self.__populateChoiceList(self.main.choiceScope, self.main.engine.listTelescopes())
         
         self.main.scopePollTimer.Start(1, False)
         self.main.chkSync.SetValue(False)
@@ -46,15 +50,26 @@ class BoaApp(wx.App):
         self.main._updateCamera()
         self.main.Show()
         self.SetTopWindow(self.main)
+        # update GUI on engine status
+        if self.main.engine.getCamera():
+            self.main.choiceCam.SetStringSelection(self.main.engine.getCameraName())
+            self.main._updateCamera()
+        if self.main.engine.getSolver():
+            self.main.choiceSolver.SetStringSelection(self.main.engine.getSolverName())
+            self.main._updateSolverGrid()
         return True
 
-    def __populateChoiceList(self, choiceList, moduleRef, baseClass):
-        for module in moduleRef.__all__:
-            fqmn = moduleRef.__name__+"."+module
-            mod_ = __import__(fqmn, globals(), locals())
-            solvers = getmembers(sys.modules[fqmn], lambda m: isclass(m) and issubclass(m, baseClass) and m is not baseClass)
-            for className, classRef in solvers:
-                choiceList.Append(className, classRef)
+    def __populateChoiceList(self, choiceList, choices):
+        for className in choices:
+            choiceList.Append(className, className)
+
+    #def __populateChoiceList(self, choiceList, moduleRef, baseClass):
+    #    for module in moduleRef.__all__:
+    #        fqmn = moduleRef.__name__+"."+module
+    #        mod_ = __import__(fqmn, globals(), locals())
+    #        solvers = getmembers(sys.modules[fqmn], lambda m: isclass(m) and issubclass(m, baseClass) and m is not baseClass)
+    #        for className, classRef in solvers:
+    #            choiceList.Append(className, classRef)
 
 def main():
     application = BoaApp(0)

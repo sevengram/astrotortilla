@@ -1,8 +1,8 @@
-AstroMate
-=========
+AstroTortilla
+=============
 Copyright 2010-2011 Antti Kuntsi <mickut@gmail.com>
 
-The AstroMate project aims to automate repetitive tasks during a modern day
+The AstroTortilla project aims to automate repetitive tasks during a modern day
 astrophotography session using plate-solving software to speed up the mount
 alignment and GoTo error corrections.
 
@@ -17,18 +17,23 @@ fit for any purpose.
 
 Version history
 ---------------
-v0.1.0 First test release packaged as an executable
-v0.1.1 Binning setting comparison fix in camera implementations
+v0.2.1 Major bugfixes in goto correction, localisation added for Finnish,
+       documentation added
+v0.2.0 Refactored the main functionality into separate module
+v0.1.3 MaximDL support, Astrometry.net web-interface solver, bug-fixes,
+       Nebulosity 2.4 support
 v0.1.2 Nebulosity2 scripting support improved, bugfixes for image capture
        Support for drift-shot added, moves mount in RA during exposure (>=30s)
-v0.1.3 MaximDL support, Astrometry.net web-interface solver, bug-fixes, Nebulosity 2.4 support
+v0.1.1 Binning setting comparison fix in camera implementations
+v0.1.0 First test release packaged as an executable
 
-Using AstroMate
+
+Using AstroTortilla
 ---------------
 
 To be written in more detail later on.
 
-Intent of AstroMate is to enable using the imaging camera for determining the
+Intent of AstroTortilla is to enable using the imaging camera for determining the
 need for slew corrections.  Using the imaging camera ensures that the GoTo is
 slewed dead-on on the camera view.
 
@@ -61,18 +66,18 @@ execution, make sure to disable the bash autocomplete package in Cygwin.
 ASCOM
 -----
 
-The AstroMate is tested on the latest available ASCOM platform available on
+The AstroTortilla is tested on the latest available ASCOM platform available on
 the release date. ASCOM support requires the Python win32all extensions [5].
 
 
 Nebulosity2
 -----------
 
-If you are using Nebulosity 2.4, you might want to use it with AstroMate to make
-sure your imaging camera is pointing to the correct location. AstroMate
-depends on the new TCP/IP based scripting feature, win32 extensions and
-SendKeys package for automating the interactions.
-Note: Nebulosity 2.3 is no longer supported.
+If you are using Nebulosity 2.4, you might want to use it with AstroTortilla to
+make sure your imaging camera is pointing to the correct location.
+AstroTortilla depends on the new TCP/IP based scripting feature, win32
+extensions and SendKeys package for automating the interactions.  Note:
+Nebulosity 2.3 is no longer supported.
 
 References
 ----------

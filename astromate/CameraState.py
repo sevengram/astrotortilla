@@ -1,6 +1,9 @@
 """CameraState
 Constants for camera state
 """
+import gettext
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
+_ = t.gettext
 Idle = 0
 Waiting = 1
 Exposing = 2
@@ -8,4 +11,4 @@ Reading = 3
 Downloading = 4
 Error = 5
 
-State = ("Idle", "Waiting", "Exposing", "Reading", "Downloading", "Error")
+State = (_("Idle"), _("Waiting"), _("Exposing"), _("Reading"), _("Downloading"), _("Error"))

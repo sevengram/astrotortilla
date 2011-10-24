@@ -6,7 +6,7 @@ from math import cos, radians, fabs
 from time import time, sleep
 from astromate import CameraState
 from astromate.units import Coordinate
-t = gettext.translation('mainframe', 'locale', fallback=True)
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 def create(parent):
@@ -47,7 +47,7 @@ class PolarAlignFrame(wx.Frame):
               name=u'PolarAlignFrame', parent=prnt, pos=wx.Point(685, 201),
               size=wx.Size(310, 384),
               style=wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX,
-              title=u'Polar Alignment')
+              title=_(u'Polar Alignment'))
         self.SetClientSize(wx.Size(302, 357))
         self.SetMaxSize(wx.Size(-1, -1))
         self.SetMinSize(wx.Size(-1, -1))
@@ -58,7 +58,7 @@ class PolarAlignFrame(wx.Frame):
         self.AlignFrame.SetToolTipString(u'')
 
         self.HemisphereStaticText = wx.StaticText(id=wxID_POLARALIGNFRAMEHEMISPHERESTATICTEXT,
-              label=u'Observer Hemisphere:', name=u'HemisphereStaticText',
+              label=_(u'Observer Hemisphere:'), name=u'HemisphereStaticText',
               parent=self.AlignFrame, pos=wx.Point(16, 11), size=wx.Size(109,
               16), style=0)
         self.HemisphereStaticText.SetToolTipString(u'')
@@ -72,16 +72,16 @@ class PolarAlignFrame(wx.Frame):
               id=wxID_POLARALIGNFRAMEHEMISPHERECHOICE)
 
         self.AltitudeStaticBox = wx.StaticBox(id=wxID_POLARALIGNFRAMEALTITUDESTATICBOX,
-              label=u'Mount altitude', name=u'AltitudeStaticBox',
+              label=_(u'Mount altitude'), name=u'AltitudeStaticBox',
               parent=self.AlignFrame, pos=wx.Point(8, 40), size=wx.Size(288,
               160), style=0)
 
         self.AzimuthStaticBox = wx.StaticBox(id=wxID_POLARALIGNFRAMEAZIMUTHSTATICBOX,
-              label=u'Mount azimuth', name=u'AzimuthStaticBox',
+              label=_(u'Mount azimuth'), name=u'AzimuthStaticBox',
               parent=self.AlignFrame, pos=wx.Point(8, 208), size=wx.Size(288,
               128), style=0)
 
-        self.AltitudeSideChoice = wx.Choice(choices=["East", "West"],
+        self.AltitudeSideChoice = wx.Choice(choices=[_("East"), _("West")],
               id=wxID_POLARALIGNFRAMEALTITUDESIDECHOICE,
               name=u'AltitudeSideChoice', parent=self.AlignFrame,
               pos=wx.Point(128, 96), size=wx.Size(130, 21), style=0)
@@ -91,12 +91,12 @@ class PolarAlignFrame(wx.Frame):
               id=wxID_POLARALIGNFRAMEALTITUDESIDECHOICE)
 
         self.AltitudeSideStaticText = wx.StaticText(id=wxID_POLARALIGNFRAMEALTITUDESIDESTATICTEXT,
-              label=u'Measurement side:', name=u'AltitudeSideStaticText',
+              label=_(u'Measurement side:'), name=u'AltitudeSideStaticText',
               parent=self.AlignFrame, pos=wx.Point(24, 99), size=wx.Size(92,
               13), style=0)
 
         self.AltitudeMeasureButton = wx.Button(id=wxID_POLARALIGNFRAMEALTITUDEMEASUREBUTTON,
-              label=u'Measure altitude error', name=u'AltitudeMeasureButton',
+              label=_(u'Measure altitude error'), name=u'AltitudeMeasureButton',
               parent=self.AlignFrame, pos=wx.Point(64, 168), size=wx.Size(184,
               23), style=0)
         self.AltitudeMeasureButton.Bind(wx.EVT_BUTTON,
@@ -109,7 +109,7 @@ class PolarAlignFrame(wx.Frame):
         self.SetStatusBar(self.StatusBar)
 
         self.AzimuthMeasureButton = wx.Button(id=wxID_POLARALIGNFRAMEAZIMUTHMEASUREBUTTON,
-              label=u'Measure azimuth error', name=u'AzimuthMeasureButton',
+              label=_(u'Measure azimuth error'), name=u'AzimuthMeasureButton',
               parent=self.AlignFrame, pos=wx.Point(88, 304), size=wx.Size(144,
               23), style=0)
         self.AzimuthMeasureButton.Bind(wx.EVT_BUTTON,
@@ -117,38 +117,38 @@ class PolarAlignFrame(wx.Frame):
               id=wxID_POLARALIGNFRAMEAZIMUTHMEASUREBUTTON)
 
         self.AzimuthHelpText = wx.StaticText(id=wxID_POLARALIGNFRAMEAZIMUTHHELPTEXT,
-              label=u'Point the telescope to the meridian before measuring!',
+              label=_(u'Point the telescope to the meridian before measuring!'),
               name=u'AzimuthHelpText', parent=self.AlignFrame, pos=wx.Point(20,
               232), size=wx.Size(259, 13), style=0)
         self.AzimuthHelpText.SetToolTipString(u'')
 
         self.AltitudeHelpText = wx.StaticText(id=wxID_POLARALIGNFRAMEALTITUDEHELPTEXT,
-              label=u'Point the telescope to the east or west before\nmeasuring!',
+              label=_(u'Point the telescope to the east or west before measuring!'),
               name=u'AltitudeHelpText', parent=self.AlignFrame, pos=wx.Point(32,
               64), size=wx.Size(223, 26), style=0)
 
         self.AltitudeErrorLabel = wx.StaticText(id=wxID_POLARALIGNFRAMEALTITUDEERRORLABEL,
-              label=u'Measured altitude error:', name=u'AltitudeErrorLabel',
+              label=_(u'Measured altitude error:'), name=u'AltitudeErrorLabel',
               parent=self.AlignFrame, pos=wx.Point(32, 136), size=wx.Size(138,
               13), style=0)
         self.AltitudeErrorLabel.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD,
               False, u'Tahoma'))
 
         self.AltitudeErrorResult = wx.StaticText(id=wxID_POLARALIGNFRAMEALTITUDEERRORRESULT,
-              label=u'N/A', name=u'AltitudeErrorResult', parent=self.AlignFrame,
+              label=_(u'N/A'), name=u'AltitudeErrorResult', parent=self.AlignFrame,
               pos=wx.Point(184, 136), size=wx.Size(22, 13), style=0)
         self.AltitudeErrorResult.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL,
               wx.BOLD, False, u'Tahoma'))
 
         self.AzimuthErrorLabel = wx.StaticText(id=wxID_POLARALIGNFRAMEAZIMUTHERRORLABEL,
-              label=u'Measured azimuth error:', name=u'AzimuthErrorLabel',
+              label=_(u'Measured azimuth error:'), name=u'AzimuthErrorLabel',
               parent=self.AlignFrame, pos=wx.Point(32, 264), size=wx.Size(140,
               13), style=0)
         self.AzimuthErrorLabel.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD,
               False, u'Tahoma'))
 
         self.AzimuthErrorResult = wx.StaticText(id=wxID_POLARALIGNFRAMEAZIMUTHERRORRESULT,
-              label=u'N/A', name=u'AzimuthErrorResult', parent=self.AlignFrame,
+              label=_(u'N/A'), name=u'AzimuthErrorResult', parent=self.AlignFrame,
               pos=wx.Point(184, 264), size=wx.Size(22, 13), style=0)
         self.AzimuthErrorResult.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD,
               False, u'Tahoma'))
@@ -157,9 +157,9 @@ class PolarAlignFrame(wx.Frame):
         self._init_ctrls(parent)
         # 0 for north/east, 1 for south/west
         self._parent = parent
-        self._camera = self._parent.camera
-        self._telescope = self._parent.telescope
-        self._solver = self._parent.solver
+        self._camera = self._parent.engine.getCamera()
+        self._telescope = self._parent.engine.getTelescope()
+        self._solver = self._parent.engine.getSolver()
         self._hemisphere = self.HemisphereChoice.GetSelection()
         self._altitudeSide = self.AltitudeSideChoice.GetSelection()
         self.__solving = False
@@ -202,7 +202,7 @@ class PolarAlignFrame(wx.Frame):
                     sleep(0.1)
                     tLeft = tEnd - time()
                     if tLeft >= 0:
-                        self.SetStatusText(_("Exposing: %.2f seconds"%tLeft))
+                        self.SetStatusText(_("Exposing: %.2f seconds")%tLeft)
                     else:
                         self.SetStatusText(_("Waiting for camera"))
                     wx.SafeYield()
@@ -295,30 +295,30 @@ class PolarAlignFrame(wx.Frame):
             if self._altitudeSide == 0:
                 # East side
                 if poleError < 0:
-                    direction = "too low"
+                    direction = _("too low")
                 elif poleError > 0:
-                    direction = "too high"
+                    direction = _("too high")
             else:
                 # West side
                 if poleError < 0:
-                    direction = "too high"
+                    direction = _("too high")
                 elif poleError > 0:
-                    direction = "too low"
+                    direction = _("too low")
         else:
             # Southern hemisphere
             if self._altitudeSide == 0:
                 # East side
                 if poleError < 0:
-                    direction = "too high"
+                    direction = _("too high")
                 elif poleError > 0:
-                    direction = "too low"
+                    direction = _("too low")
             else:
                 # West side
                 if poleError < 0:
-                    direction = "too low"
+                    direction = _("too low")
                 elif poleError > 0:
-                    direction = "too high"
-        self.AltitudeErrorResult.SetLabel(_("%.2f degrees\n%s"%(fabs(poleError), direction)))
+                    direction = _("too high")
+        self.AltitudeErrorResult.SetLabel((_("%.2f degrees")+"\n%s")%(fabs(poleError), direction))
 
     def OnAzimuthMeasureButtonButton(self, event):
         "Determine azimuth error direction and size"
@@ -330,16 +330,16 @@ class PolarAlignFrame(wx.Frame):
         if self._hemisphere == 0:
             # Northern hemisphere
             if poleError < 0:
-                direction = "too east"
+                direction = _("too east")
             elif poleError > 0:
-                direction = "too west"
+                direction = _("too west")
         else:
             # Southern hemisphere
             if poleError < 0:
-                direction = "too west"
+                direction = _("too west")
             elif poleError > 0:
-                direction = "too east"
-        self.AzimuthErrorResult.SetLabel(_("%.2f degrees\n%s"%(fabs(poleError), direction)))
+                direction = _("too east")
+        self.AzimuthErrorResult.SetLabel((_("%.2f degrees")+"\n%s")%(fabs(poleError), direction))
         
     def __statusUpdater(self, status=None):
         "Update status bar and process UI events safely"

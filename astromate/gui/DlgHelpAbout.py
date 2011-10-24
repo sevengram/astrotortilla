@@ -3,7 +3,7 @@
 import wx
 import wx.richtext
 import gettext
-t = gettext.translation('helpabout', 'locale', fallback=True)
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 
@@ -32,7 +32,7 @@ class DlgHelpAbout(wx.Dialog):
               id=wxID_DLGHELPABOUTCLOSE)
 
         self.staticText1 = wx.StaticText(id=wxID_DLGHELPABOUTSTATICTEXT1,
-              label='AstroTorilla v0.1', name='staticText1', parent=self,
+              label='AstroTorilla v0.2', name='staticText1', parent=self,
               pos=wx.Point(16, 16), size=wx.Size(79, 13), style=0)
 
         self.richTextCtrl1 = wx.richtext.RichTextCtrl(id=wxID_DLGHELPABOUTRICHTEXTCTRL1,

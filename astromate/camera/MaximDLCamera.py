@@ -19,7 +19,7 @@ class MaximDLCamera(ICamera):
     
     @property
     def imageTypes(self):
-        return ["jpg"]
+        return ["jpg", "fit"]
 
     @property
     def hasSetupDialog(self):
@@ -36,6 +36,7 @@ class MaximDLCamera(ICamera):
         if not self.__cam:
             raise Exception("Dispatching Maxim.CCDCamera failed")
         self.__cam.LinkEnabled = True
+        self.__cam.DisableAutoShutdown = True
         
 
     @property
@@ -55,7 +56,7 @@ class MaximDLCamera(ICamera):
         if self.__cam:
             return self.__cam.MaxBinX
         else:
-            return 1
+            return 64
 
     @property
     def connected(self):
@@ -113,8 +114,10 @@ class MaximDLCamera(ICamera):
         if not self.__cam.ImageReady:
             return None
         self.__camState = CameraState.Idle
-        imgName = os.path.join(self.workingDirectory, "Maxim.jpg")
+        #imgName = os.path.join(self.workingDirectory, "Maxim.jpg")
+        imgName = os.path.join(self.workingDirectory, "Maxim.fit")
         doc = self.__cam.Document
-        doc.SaveFile(imgName, 6, True) # jpg, auto stretch
+        #doc.SaveFile(imgName, 6, True) # jpg, auto stretch
+        doc.SaveFile(imgName, 3, True, 1) # fits, auto stretch
         return imgName
 

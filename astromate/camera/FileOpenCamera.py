@@ -35,6 +35,7 @@ class FileOpenCamera(ICamera):
         super(FileOpenCamera, self).__init__()
         self.__openedFile = None
         self.__bin = 1
+        self.__selected = False
         if PROPERTYLIST:
             self.propertyList = PROPERTYLIST
     
@@ -96,7 +97,13 @@ class FileOpenCamera(ICamera):
     @property
     def cameraState(self):
         "Current camera state, see ASCOM cameraState parameter"
-        return CameraState.Idle
+        if self.__selected:
+            if self.__openedFile:
+                return CameraState.Idle
+            else:
+                return CameraState.Error
+        else:
+            return CameraState.Idle
 
     @property
     def errorMessage(self):
@@ -115,16 +122,18 @@ class FileOpenCamera(ICamera):
     @property
     def imageReady(self):
         "Returns True if a captured image is available"
-        return self.__openedFile != None
+        return self.__selected
     
     def capture(self, duration):
         "Open file open dialog"
+        self.__selected = False
         fileName = wx.FileSelector(
                 message="Choose file to solve",
                 default_path = os.path.dirname(self.__openedFile or ""),
                 flags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST,
-		wildcard="Image files (*.fit; *.fits; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.jpg; *.tiff; *.tif; *.pnm"
+		wildcard="Image files (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm"
                 )
+        self.__selected = True
         if not fileName:
             self.__openedFile = None
         else:
