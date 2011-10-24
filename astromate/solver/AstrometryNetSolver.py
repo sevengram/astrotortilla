@@ -4,7 +4,7 @@ import subprocess, os, os.path, time, tempfile, shutil, threading
 # vim: set fileencoding=UTF-8 : ts=4 sts=4 sw=4 et si
 # -*- coding: UTF-8 -*-
 
-DEBUG = 1 # 1 to enable some debug prints
+DEBUG = 0 # 1 to enable some debug prints
 
 PROPERTYLIST = {
         "downscale":("Downscaling", int, "Image downscaling factor" ,"", 2),
@@ -62,8 +62,12 @@ class AstrometryNetSolver(IPlateSolver):
             stderrPipe = subprocess.PIPE
         cygShell = self.getProperty("shell")
 
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        si.wShowWindow = subprocess.SW_HIDE
         shell = subprocess.Popen(cygShell%command, shell=False, bufsize=1,
-                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=stderrPipe)
+                stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                stderr=stderrPipe, startupinfo=si)
 
         if self.__callback:
             # Loop until child exits

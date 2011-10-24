@@ -317,7 +317,7 @@ msgstr "Edellinen ratkaisu"
 
 #: astromate\gui\MainFrame.py:573
 msgid "Flipped"
-msgstr "Nurin"
+msgstr "Peilikuva"
 
 #: astromate\gui\MainFrame.py:586 astromate\gui\MainFrame.py:740
 msgid "Last error: %s"

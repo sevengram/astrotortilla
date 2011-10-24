@@ -216,7 +216,6 @@ class TortillaEngine(object):
     
     def setStatus(self, status):
         if type(status) not in (str, unicode): return
-        sys.stderr.write(status)
         failed = []
         for callback in self.__statusCB:
             try:

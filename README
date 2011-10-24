@@ -17,6 +17,7 @@ fit for any purpose.
 
 Version history
 ---------------
+v0.2.2 Minor bugfixes in localisation, updates in manuals
 v0.2.1 Major bugfixes in goto correction, localisation added for Finnish,
        documentation added
 v0.2.0 Refactored the main functionality into separate module
