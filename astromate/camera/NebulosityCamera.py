@@ -15,6 +15,10 @@ except:
 import socket, glob, time
 from astromate.automation import SendKeys
 import threading
+import gettext
+t = gettext.translation('nebulositycamera', 'locale', fallback=True)
+_ = t.gettext
+
 
 CAMERAS = (
         "No Camera",
@@ -66,11 +70,14 @@ def str2bool(string):
 # key: (readable name, validation function, name tooltip, value tooltip, default value)
 # The values can be set as strings by the using application.
 PROPERTYLIST = {
-        "port":("Nebulosity ListenPort", int, "", "0 for script connection", 0),
-        "path":("Nebulosity Path", os.path.isdir, "", "", "C:\\Program Files\\Nebulosity2\\"),
-        "mapColon":("Colon escape", str, "", "", "+."),
-        "mapBackslash":("Backslash escape", str, "", "", "^%\\"),
-        "setCamera":("Set camera", str2bool, "Set camera model on capture", "True or False", "False"),
+        "port":(_("Nebulosity ListenPort"), int, "", _("0 for script connection"), 0),
+        "path":(_("Nebulosity Path"), os.path.isdir, "", "", "C:\\Program Files\\Nebulosity2\\"),
+        "mapColon":(_("Colon escape"), str, "", "", "+."),
+        "mapBackslash":(_("Backslash escape"), str, "", "", "^%\\"),
+        "setCamera":(_("Set camera"), str2bool, _("Set camera model on capture"), _("True or False"), "False"),
+        "setExtFilterWheel":(_("Set ext filter"), int, _("Set ext filter before solving"), _("Filter index or -1"), "-1"),
+        "setFilterWheel":(_("Set filter"), int, _("Set filter before solving"), _("Filter index or -1"), "-1"),
+        "resetPath":(_("Reset directory to"), str, _("After capture directory"), _("%(date)s = current date, %(night)s = current date at dusk"), ""),
         }
 
 class NebulosityCamera(ICamera):
@@ -269,10 +276,33 @@ class NebulosityCamera(ICamera):
             "SetDuration %d"%(int(duration*1000)),
             "SetDirectory %s"%self.workingDirectory,
 #            "SetName %s"%(self.__basename),
-            "SetBinning %d"%(self.__bin-1),
-            "CaptureSingle %s"%(self.__basename)]
+            "SetBinning %d"%(self.__bin-1)]
+
         if str2bool(self.getProperty("setCamera")) and self.__camera:
             cmd.insert(0, "ConnectName %s"%(self.__camera))
+
+        if self.getProperty("setExtFilterWheel") != "-1":
+            cmd.append("SetExtFilter %s"%self.getProperty("setExtFilterWheel"))
+
+        if self.getProperty("setFilterWheel") != "-1":
+            cmd.append("SetFilter %s"%self.getProperty("setFilterWheel"))
+
+
+        cmd.append( "CaptureSingle %s"%(self.__basename))
+
+        if self.getProperty("resetPath") != "":
+            pathDict={
+                "date":time.strftime("%Y-%m-%d"),
+                "night":time.strftime("%Y-%m-%d", time.gmtime(time.time()-86400/2))
+                }
+            resetPath = "%s"%(self.getProperty("resetPath")%pathDict)
+            try:
+                if not os.path.exists(resetPath):
+                    os.mkdir(resetPath)
+            except:
+                pass
+            cmd.append("SetDirectory %s"%resetPath)
+
         self.__cmd(cmd)
         
         if self.__autoDisco:
@@ -306,7 +336,7 @@ class NebulosityCamera(ICamera):
         win32gui.EnumWindows(_hwndCallback, hwndList)
         windows = [window for window in hwndList if window[1].startswith("Nebulosity v2.4.")]
         if not windows:
-            raise Exception("Nebulosity window not found")
+            raise Exception(_("Nebulosity window not found"))
         hwnd = windows[0][0]
         win32gui.ShowWindow(hwnd,win32con.SW_RESTORE)
         win32gui.SetForegroundWindow(hwnd)
@@ -324,7 +354,7 @@ class NebulosityCamera(ICamera):
             win32gui.EnumWindows(_hwndCallback, hwndList)
             scriptWin = [window for window in hwndList if window[1] == "Load script"]
         if not scriptWin:
-            raise "Script loading failed"
+            raise _("Script loading failed")
         win32gui.SetForegroundWindow(scriptWin[0][0])
         time.sleep(0.1)
         fname = fname.replace(":", self.getProperty("mapColon"))

@@ -12,7 +12,7 @@ import os, os.path
 from time import time, sleep
 from astromate import CameraState
 from astromate.engine import TortillaEngine, Status
-from astromate.units import Coordinate, Separation, deg2dms, deg2hms
+from astromate.units import Coordinate, Separation, deg2dms, deg2hms, deg2str
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
@@ -576,13 +576,7 @@ class mainFrame(wx.Frame):
             self.txtRotation.SetLabel("%.2f"%(self.engine.solution.rotation))
             if self.engine.lastCorrection:
                 separation = self.engine.lastCorrection
-                separationString = ""
-                if separation.degrees > 1:
-                    separationString = u"%.2f\xb0"%(separation.degrees)
-                elif separation.arcminutes>1:
-                    separationString = u"%.2f'"%(separation.arcminutes)
-                else:
-                    separationString = u"%.2f\""%(separation.arcseconds)
+                separationString = deg2str(separation.degrees)
                 self.txtCam.SetLabel(_("Last error: %s")%(separationString))
         
 
@@ -731,13 +725,7 @@ class mainFrame(wx.Frame):
             # Show goto-error on the last solution
             if self.engine.lastCorrection:
                 separation = self.engine.lastCorrection
-                separationString = ""
-                if separation.degrees > 1:
-                    separationString = u"%.2f\xb0"%(separation.degrees)
-                elif separation.arcminutes>1:
-                    separationString = u"%.2f'"%(separation.arcminutes)
-                else:
-                    separationString = u"%.2f\""%(separation.arcseconds)
+                separationString = deg2str(separation.degrees)
                 self.txtCam.SetLabel(_("Last error: %s")%(separationString))
 
 
@@ -782,6 +770,8 @@ class mainFrame(wx.Frame):
         if not fileName:
             return
         try:
+            if lower(fileName[-4:]) != ".cfg":
+                fileName += ".cfg"
             self.engine.saveConfig(fileName)
         except:
             import traceback
@@ -847,12 +837,13 @@ class mainFrame(wx.Frame):
     def OnMenuToolsGotoImage(self, event):
         fileName = wx.FileSelector(
                 message=_("Goto Image"),
-                default_path = self.engine.config.get("AstroTortilla", "settings_path"),
+                default_path = self.engine.config.get("AstroTortilla", "last_gotoimage"),
                 flags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST,
                 wildcard=_("Image files")+" (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm",
                 )
 
         if fileName:
+            self.engine.config.set("AstroTortilla", "last_gotoimage", fileName)
             self.btnGO.SetLabel(_("Abort solver"))
             try:
                 self.engine.gotoImage(fileName)

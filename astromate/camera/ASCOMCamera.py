@@ -6,6 +6,17 @@ from win32com.client import Dispatch
 from array import array
 import Image, os, os.path
 
+import gettext
+t = gettext.translation('ascomcamera', 'locale', fallback=True)
+_ = t.gettext
+
+
+# Property dict structure:
+# key: (readable name, validation function, name tooltip, value tooltip, default value)
+# The values can be set as strings by the using application.
+PROPERTYLIST = {
+		"lastCamera":(_("Default camera"), str, "", "", "")
+		}
 class ASCOMCamera(ICamera):
     """ASCOMCamera()
     """
@@ -48,10 +59,11 @@ class ASCOMCamera(ICamera):
                 return
         if not self.__camname:
             self.__initChooser()
-            self.__camname = self.__chooser.Choose()
+            self.__camname = self.__chooser.Choose(self.getProperty("lastCamera"))
             if not self.__camname: # End-user cancel
                 self.__camname = None
                 return
+	self.setProperty("lastCamera", self.__camname)
         self.__cam = Dispatch(self.__camname)
         if not self.__cam:
             raise Exception("Dispatching %s failed"%self.__camname)
@@ -104,7 +116,7 @@ class ASCOMCamera(ICamera):
     def errorMessage(self):
         "Last error message from camera"
         if not self.connected:
-            return "Not connected"
+            return _("Not connected")
         return None
     
     def capture(self, duration):

@@ -210,6 +210,16 @@ def deg2dms(deg, separator=None):
 		return sign + separator.join(("%02d"%degs,"%02d"%amin,"%05.2f"%asec))
 	return u"%s%02d\xb0%02d'%05.2f\""%(sign,degs,amin,asec)
 
+def deg2str(deg, prec=2):
+    "return a string with wanted precision in highest non-zero unit"
+    if abs(deg) > 1:
+        return u"%.*f\xb0"%(prec, deg)
+    amin = deg*60
+    if abs(amin) > 1:
+        return u"%.*f'"%(prec, amin)
+    asec = deg*3600
+    return u"%.*f\""%(prec, asec)
+
 def isFloat(value):
 	try:
 		float(value)

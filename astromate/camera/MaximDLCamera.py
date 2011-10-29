@@ -1,9 +1,22 @@
+# vim:st=4 sts=4 sw=4 et si
 "Maxim DL Camera interface"
 
 from ..ICamera import ICamera
 from .. import CameraState
 from win32com.client import Dispatch
 import os, os.path
+
+import gettext
+t = gettext.translation('maximdlcamera', 'locale', fallback=True)
+_ = t.gettext
+
+
+# Property dict structure:
+# key: (readable name, validation function, name tooltip, value tooltip, default value)
+# The values can be set as strings by the using application.
+PROPERTYLIST = {
+        "filter":(_("Filter"), int, _("Filter index for plate solve capture"), _("-1 for none"), "0"),
+    }
 
 class MaximDLCamera(ICamera):
     def __init__(self):
@@ -12,6 +25,7 @@ class MaximDLCamera(ICamera):
         #self.__app = None
         self.__cam = None
         self.__camState = CameraState.Idle
+        self.propertyList = PROPERTYLIST
     
     def __del__(self):
         del self.__cam
@@ -34,7 +48,7 @@ class MaximDLCamera(ICamera):
                 return
         self.__cam = Dispatch("Maxim.CCDCamera")
         if not self.__cam:
-            raise Exception("Dispatching Maxim.CCDCamera failed")
+            raise Exception(_("Dispatching Maxim.CCDCamera failed"))
         self.__cam.LinkEnabled = True
         self.__cam.DisableAutoShutdown = True
         
@@ -99,7 +113,10 @@ class MaximDLCamera(ICamera):
             self.connect()
             self.__cam.BinX = self.__bin
             self.__cam.BinY = self.__bin
-            self.__cam.Expose(duration, 1) # 1 for lightframe
+            if self.getProperty("filter") != "-1":
+                self.__cam.Expose(duration, 1, int(self.getProperty("filter")))
+            else:
+                self.__cam.Expose(duration, 1) # 1 for lightframe
         except:
             self.__camState = CameraState.Error
     

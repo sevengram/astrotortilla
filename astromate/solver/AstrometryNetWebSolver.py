@@ -3,19 +3,30 @@ from ..units import Coordinate
 import os, os.path, time
 import urllib2, sys, os, string, re, random, mimetypes, time, urllib
 import binascii
+import gettext
+t = gettext.translation('astrometrynetwebsolver', 'locale', fallback=True)
+_ = t.gettext
+
 # vim: set fileencoding=UTF-8 : ts=4 sts=4 sw=4 et si
 # -*- coding: UTF-8 -*-
 
 DEBUG = 0 # 1 to enable some debug prints
 
 PROPERTYLIST = {
-"username":("Username", str, "Web solver username", "", ""),
-"email":("E-mail", str, "E-mail address",  "", ""),
-"scale_low":("Scale minimum", float, "Image scale lower bound", "", 0),
-"scale_max":("Scale maximum", float, "Image scale upper bound", "", 179),
+"username":(_("Username"), str, _("Web solver username"), "", ""),
+"email":(_("E-mail"), str, _("E-mail address"),  "", ""),
+"scale_low":(_("Scale minimum"), float, _("Image scale lower bound"), "", 0),
+"scale_max":(_("Scale maximum"), float, _("Image scale upper bound"), "", 179),
 }
 
-class AstrometryNetWebSolver(IPlateSolver):
+
+# This feature is under development, inherit from IPlateSolver only when
+# developing the feature
+baseclass = object
+if DEBUG:
+	baseclass = IPlateSolver
+
+class AstrometryNetWebSolver(baseclass):
     def __init__(self, workDirectory=None):
         super(AstrometryNetWebSolver, self).__init__()
         self.propertyList = PROPERTYLIST

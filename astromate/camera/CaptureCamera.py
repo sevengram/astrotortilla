@@ -14,6 +14,10 @@ except:
 	import win32gui
 import Image
 
+import gettext
+t = gettext.translation('capturecamera', 'locale', fallback=True)
+_ = t.gettext
+
 
 """dict of properties
 Each property is structured in a tuple:
@@ -26,12 +30,12 @@ handle: (name, validation-func, help, value help, default)
 	default = default value (not necessarily current)"""
 
 PROPERTYLIST = {
-	"leftmargin":("Left margin", int, "", "", 3),
-	"rightmargin":("Right margin", int, "", "", 48),
-	"topmargin":("Top margin", int, "", "", 49),
-	"bottommargin":("Bottom margin", int, "", "", 70),
-	"classname":("Window class", re.compile, "Regex match filter", "", ".*"),
-	"windowtitle":("Window title", re.compile, "Regex match filter", "", "^PHD Guiding.*"),
+	"leftmargin":(_("Left margin"), int, "", "", 3),
+	"rightmargin":(_("Right margin"), int, "", "", 48),
+	"topmargin":(_("Top margin"), int, "", "", 49),
+	"bottommargin":(_("Bottom margin"), int, "", "", 70),
+	"classname":(_("Window class"), re.compile, _("Regex match filter"), "", ".*"),
+	"windowtitle":(_("Window title"), re.compile, _("Regex match filter"), "", "^PHD Guiding.*"),
 		}
 
 def _hwndCallback(hwnd, extra):
@@ -94,7 +98,7 @@ class CaptureCamera(ICamera):
 			self.__camera = filter(lambda x, title=value: x[1]==title, self.__windowList)[0]
 			self.__cameraName = value
 		else:
-			raise NameError("'%s' is not a known window"%str(value))
+			raise NameError(_("'%s' is not a known window")%str(value))
 
 	@property
 	def connected(self):

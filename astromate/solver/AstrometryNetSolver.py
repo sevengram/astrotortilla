@@ -1,21 +1,25 @@
 from ..IPlateSolver import IPlateSolver, Solution
 from ..units import Coordinate
 import subprocess, os, os.path, time, tempfile, shutil, threading
+import gettext
+t = gettext.translation('astrometrynetsolver', 'locale', fallback=True)
+_ = t.gettext
+
 # vim: set fileencoding=UTF-8 : ts=4 sts=4 sw=4 et si
 # -*- coding: UTF-8 -*-
 
 DEBUG = 0 # 1 to enable some debug prints
 
 PROPERTYLIST = {
-        "downscale":("Downscaling", int, "Image downscaling factor" ,"", 2),
-        "configfile":("Backend config", str, "Cygwin path to backend config file", "", "/usr/local/astrometry/etc/backend.cfg"),
-        "searchradius":("Search radius", float, "Radius of search area in degrees", "0..180", 180),
-        "scale_low":("Scale minimum", float, "Image scale lower bound", "", 0),
-        "scale_max":("Scale maximum", float, "Image scale upper bound", "", 179),
-        "scale_units":("Scale units", str, "View scale size units", "arcminwidth, degwidth, arcsecperpix", "degwidth"),
-        "scale_xrefine":("Scale refinement", float, "Image scale refinement factor", "0 to turn off", 0.1),
-        "xtra":("Custom options", str, "Additional custom options", "", ""),
-        "shell":("Cygwin shell", str, "Shell command for Cygwin execution", "", 'C:\\cygwin\\bin\\bash --login -c "%s"'),
+        "downscale":(_("Downscaling"), int, _("Image downscaling factor") ,"", 2),
+        "configfile":(_("Backend config"), str, _("Cygwin path to backend config file"), "", "/usr/local/astrometry/etc/backend.cfg"),
+        "searchradius":(_("Search radius"), float, _("Radius of search area in degrees"), "0..180", 180),
+        "scale_low":(_("Scale minimum"), float, _("Image scale lower bound"), "", 0),
+        "scale_max":(_("Scale maximum"), float, _("Image scale upper bound"), "", 179),
+        "scale_units":(_("Scale units"), str, _("View scale size units"), _("arcminwidth, degwidth, arcsecperpix"), "degwidth"),
+        "scale_xrefine":(_("Scale refinement"), float, _("Image scale refinement factor"), _("0 to turn off"), 0.1),
+        "xtra":(_("Custom options"), str, _("Additional custom options"), "", ""),
+        "shell":(_("Cygwin shell"), str, _("Shell command for Cygwin execution"), "", 'C:\\cygwin\\bin\\bash --login -c "%s"'),
         }
 
 def ThreadedReader(pipe, outputList, terminator):
@@ -163,7 +167,7 @@ class AstrometryNetSolver(IPlateSolver):
         if os.path.exists(resultRoot+".solved") and\
                 open(resultRoot+".solved", "rb").read()==b'\x01':
             # inform a waiting user
-            if self.__callback: self.__callback("Parsing results...")
+            if self.__callback: self.__callback(_("Parsing results..."))
             self.__callback = None # clear callback, we want to capture output from the next
 
             output, errors = self.__execute('wcsinfo `cygpath %s`/%s.wcs'%(workDir, imageBase))

@@ -7,6 +7,10 @@ from .. import CameraState
 import os.path, os
 import wx
 
+import gettext
+t = gettext.translation('fileopencamera', 'locale', fallback=True)
+_ = t.gettext
+
 try:
     import winxpgui as win32gui
 except:
@@ -24,7 +28,11 @@ handle: (name, validation-func, help, value help, default)
     value help = tool-tip for the value entry
     default = default value (not necessarily current)"""
 
+# Property dict structure:
+# key: (readable name, validation function, name tooltip, value tooltip, default value)
+# The values can be set as strings by the using application.
 PROPERTYLIST = {
+		"directory":(_("Directory"), str, "", "", "")
         }
 
 class FileOpenCamera(ICamera):
@@ -128,16 +136,17 @@ class FileOpenCamera(ICamera):
         "Open file open dialog"
         self.__selected = False
         fileName = wx.FileSelector(
-                message="Choose file to solve",
-                default_path = os.path.dirname(self.__openedFile or ""),
+                message=_("Choose file to solve"),
+                default_path = os.path.dirname(self.__openedFile or self.getProperty("directory")),
                 flags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST,
-		wildcard="Image files (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm"
+		wildcard=_("Image files") + " (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm"
                 )
         self.__selected = True
         if not fileName:
             self.__openedFile = None
         else:
             self.__openedFile = fileName
+	    self.setProperty("directory", os.path.dirname(fileName))
         return
 
     def getImage(self):
