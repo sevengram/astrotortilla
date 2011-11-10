@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AstroTortilla 0.2.1\n"
-"POT-Creation-Date: 2011-10-24 21:27+Kesäaika\n"
+"POT-Creation-Date: 2011-11-10 20:25+FLE Standard Time\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,10 +47,6 @@ msgstr ""
 msgid "ERROR: No solver selected."
 msgstr ""
 
-#: astromate\engine.py:306 astromate\gui\PolarAlignFrame.py:214
-msgid "Solving..."
-msgstr ""
-
 #: astromate\engine.py:319
 msgid "Solved in %.1fs"
 msgstr ""
@@ -61,29 +57,6 @@ msgstr ""
 
 #: astromate\engine.py:328
 msgid "ERROR: No camera connected."
-msgstr ""
-
-#: astromate\engine.py:334 astromate\gui\MainFrame.py:795
-#: astromate\gui\PolarAlignFrame.py:192
-msgid "Connecting to camera..."
-msgstr ""
-
-#: astromate\engine.py:340 astromate\engine.py:347
-#: astromate\gui\PolarAlignFrame.py:205
-msgid "Exposing: %.2f seconds"
-msgstr ""
-
-#: astromate\engine.py:350 astromate\gui\MainFrame.py:827
-#: astromate\gui\PolarAlignFrame.py:207
-msgid "Waiting for camera"
-msgstr ""
-
-#: astromate\engine.py:356 astromate\gui\PolarAlignFrame.py:212
-msgid "Reading image from camera"
-msgstr ""
-
-#: astromate\engine.py:359 astromate\gui\PolarAlignFrame.py:224
-msgid "Aborted."
 msgstr ""
 
 #: astromate\engine.py:361
@@ -100,10 +73,6 @@ msgstr ""
 
 #: astromate\engine.py:378 astromate\engine.py:390
 msgid "ERROR: No telescope connected."
-msgstr ""
-
-#: astromate\engine.py:393 astromate\gui\PolarAlignFrame.py:179
-msgid "Waiting for scope to stop"
 msgstr ""
 
 #: astromate\engine.py:420
@@ -323,17 +292,8 @@ msgstr ""
 msgid "Last error: %s"
 msgstr ""
 
-#: astromate\gui\MainFrame.py:604 astromate\gui\PolarAlignFrame.py:233
-msgid "Camera error"
-msgstr ""
-
 #: astromate\gui\MainFrame.py:645
 msgid "Aborting..."
-msgstr ""
-
-#: astromate\gui\MainFrame.py:647 astromate\gui\MainFrame.py:856
-#: astromate\gui\PolarAlignFrame.py:187 astromate\gui\PolarAlignFrame.py:188
-msgid "Abort solver"
 msgstr ""
 
 #: astromate\gui\MainFrame.py:759
@@ -364,113 +324,118 @@ msgstr ""
 msgid "Image files"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:50
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:50
 msgid "Polar Alignment"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:61
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:61
 msgid "Observer Hemisphere:"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:75
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:66
+msgid "North"
+msgstr ""
+
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:66
+msgid "South"
+msgstr ""
+
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:75
 msgid "Mount altitude"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:80
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:80
 msgid "Mount azimuth"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:84
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:84
 msgid "East"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:84
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:84
 msgid "West"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:94
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:94
 msgid "Measurement side:"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:99 astromate\gui\PolarAlignFrame.py:241
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:99
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:219
 msgid "Measure altitude error"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:112 astromate\gui\PolarAlignFrame.py:242
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:112
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:262
 msgid "Measure azimuth error"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:120
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:120
 msgid "Point the telescope to the meridian before measuring!"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:126
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:126
 msgid "Point the telescope to the east or west before measuring!"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:131
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:131
 msgid "Measured altitude error:"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:138 astromate\gui\PolarAlignFrame.py:151
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:138
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:151
 msgid "N/A"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:144
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:144
 msgid "Measured azimuth error:"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:183
-msgid "Telescope not connected"
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:183
+msgid "Telescope error!"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:198
-msgid "Exposing %.2f seconds"
-msgstr ""
-
-#: astromate\gui\PolarAlignFrame.py:226
-msgid "Camera did not produce an image to solve."
-msgstr ""
-
-#: astromate\gui\PolarAlignFrame.py:247
-msgid "Solution found."
-msgstr ""
-
-#: astromate\gui\PolarAlignFrame.py:250
-msgid "Solution not found."
-msgstr ""
-
-#: astromate\gui\PolarAlignFrame.py:269 astromate\gui\PolarAlignFrame.py:277
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:196
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:204
 msgid "Slewing..."
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:279
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:206
 msgid "Done!"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:290 astromate\gui\PolarAlignFrame.py:327
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:215
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:258
+msgid "Abort solver!"
+msgstr ""
+
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:223
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:266
 msgid "An error occurred!"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:298 astromate\gui\PolarAlignFrame.py:306
-#: astromate\gui\PolarAlignFrame.py:314 astromate\gui\PolarAlignFrame.py:318
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:231
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:239
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:247
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:251
 msgid "too low"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:300 astromate\gui\PolarAlignFrame.py:304
-#: astromate\gui\PolarAlignFrame.py:312 astromate\gui\PolarAlignFrame.py:320
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:233
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:237
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:245
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:253
 msgid "too high"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:321 astromate\gui\PolarAlignFrame.py:342
-msgid "%.2f degrees"
-msgstr ""
-
-#: astromate\gui\PolarAlignFrame.py:333 astromate\gui\PolarAlignFrame.py:341
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:272
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:280
 msgid "too east"
 msgstr ""
 
-#: astromate\gui\PolarAlignFrame.py:335 astromate\gui\PolarAlignFrame.py:339
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:274
+#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:278
 msgid "too west"
 msgstr ""
+
 

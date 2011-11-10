@@ -6,6 +6,7 @@ from math import cos, radians, fabs
 from time import time, sleep
 from astromate import CameraState
 from astromate.units import Coordinate
+from astromate.units import deg2str
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
@@ -59,13 +60,13 @@ class PolarAlignFrame(wx.Frame):
 
         self.HemisphereStaticText = wx.StaticText(id=wxID_POLARALIGNFRAMEHEMISPHERESTATICTEXT,
               label=_(u'Observer Hemisphere:'), name=u'HemisphereStaticText',
-              parent=self.AlignFrame, pos=wx.Point(16, 11), size=wx.Size(109,
-              16), style=0)
+              parent=self.AlignFrame, pos=wx.Point(16, 12), size=wx.Size(128,
+              20), style=0)
         self.HemisphereStaticText.SetToolTipString(u'')
 
-        self.HemisphereChoice = wx.Choice(choices=["North", "South"],
+        self.HemisphereChoice = wx.Choice(choices=[_("North"), _("South")],
               id=wxID_POLARALIGNFRAMEHEMISPHERECHOICE, name=u'HemisphereChoice',
-              parent=self.AlignFrame, pos=wx.Point(128, 8), size=wx.Size(130,
+              parent=self.AlignFrame, pos=wx.Point(152, 8), size=wx.Size(130,
               21), style=0)
         self.HemisphereChoice.SetSelection(0)
         self.HemisphereChoice.Bind(wx.EVT_CHOICE, self.OnHemisphereChoiceChoice,
@@ -73,8 +74,8 @@ class PolarAlignFrame(wx.Frame):
 
         self.AltitudeStaticBox = wx.StaticBox(id=wxID_POLARALIGNFRAMEALTITUDESTATICBOX,
               label=_(u'Mount altitude'), name=u'AltitudeStaticBox',
-              parent=self.AlignFrame, pos=wx.Point(8, 40), size=wx.Size(288,
-              160), style=0)
+              parent=self.AlignFrame, pos=wx.Point(8, 32), size=wx.Size(288,
+              168), style=0)
 
         self.AzimuthStaticBox = wx.StaticBox(id=wxID_POLARALIGNFRAMEAZIMUTHSTATICBOX,
               label=_(u'Mount azimuth'), name=u'AzimuthStaticBox',
@@ -125,7 +126,7 @@ class PolarAlignFrame(wx.Frame):
         self.AltitudeHelpText = wx.StaticText(id=wxID_POLARALIGNFRAMEALTITUDEHELPTEXT,
               label=_(u'Point the telescope to the east or west before measuring!'),
               name=u'AltitudeHelpText', parent=self.AlignFrame, pos=wx.Point(32,
-              64), size=wx.Size(223, 26), style=0)
+              56), size=wx.Size(223, 26), style=0)
 
         self.AltitudeErrorLabel = wx.StaticText(id=wxID_POLARALIGNFRAMEALTITUDEERRORLABEL,
               label=_(u'Measured altitude error:'), name=u'AltitudeErrorLabel',
@@ -135,8 +136,9 @@ class PolarAlignFrame(wx.Frame):
               False, u'Tahoma'))
 
         self.AltitudeErrorResult = wx.StaticText(id=wxID_POLARALIGNFRAMEALTITUDEERRORRESULT,
-              label=_(u'N/A'), name=u'AltitudeErrorResult', parent=self.AlignFrame,
-              pos=wx.Point(184, 136), size=wx.Size(22, 13), style=0)
+              label=_(u'N/A'), name=u'AltitudeErrorResult',
+              parent=self.AlignFrame, pos=wx.Point(184, 136), size=wx.Size(21,
+              13), style=0)
         self.AltitudeErrorResult.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL,
               wx.BOLD, False, u'Tahoma'))
 
@@ -148,8 +150,9 @@ class PolarAlignFrame(wx.Frame):
               False, u'Tahoma'))
 
         self.AzimuthErrorResult = wx.StaticText(id=wxID_POLARALIGNFRAMEAZIMUTHERRORRESULT,
-              label=_(u'N/A'), name=u'AzimuthErrorResult', parent=self.AlignFrame,
-              pos=wx.Point(184, 264), size=wx.Size(22, 13), style=0)
+              label=_(u'N/A'), name=u'AzimuthErrorResult',
+              parent=self.AlignFrame, pos=wx.Point(184, 264), size=wx.Size(21,
+              13), style=0)
         self.AzimuthErrorResult.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD,
               False, u'Tahoma'))
 
@@ -163,7 +166,6 @@ class PolarAlignFrame(wx.Frame):
         self._hemisphere = self.HemisphereChoice.GetSelection()
         self._altitudeSide = self.AltitudeSideChoice.GetSelection()
         self.__solving = False
-        self.__abortSolve = False
         
 
     def OnHemisphereChoiceChoice(self, event):
@@ -171,96 +173,24 @@ class PolarAlignFrame(wx.Frame):
 
     def OnAltitudeSideChoice(self, event):
         self._altitudeSide = self.AltitudeSideChoice.GetSelection()
-    
-    def __captureSolve(self):
-        "Captures an image and returns the platesolve solution"
-        disable(self._parent.btnGO) # Disable the main window button
-        if self._telescope:
-            self.SetStatusText(_("Waiting for scope to stop"))
-            while self._telescope.slewing:
-                sleep(0.2)
-        else:
-            self.SetStatusText(_("Telescope not connected"))
-            enable(self._parent.btnGO)
-            return None
-        self.__solving = True
-        self.AltitudeMeasureButton.SetLabel(_("Abort solver"))
-        self.AzimuthMeasureButton.SetLabel(_("Abort solver"))
-        solution = None
-        try:
-            try:
-                self.SetStatusText(_("Connecting to camera..."))
-                if not self._camera.canAutoConnect and not self._camera.connected:
-                    self._camera.connected = True
-                if self._camera.needsCameraName and not self._camera.camera:
-                    self._camera.camera = self._camera.cameraList[0]
-                exposureTime = self._parent.numCtrlExposure.GetValue()
-                self.SetStatusText(_("Exposing %.2f seconds")%exposureTime)
-                self._camera.capture(exposureTime) # Start exposing
-                tEnd = time() + exposureTime
-                while not self._camera.imageReady and self._camera.cameraState not in (CameraState.Error, ):
-                    sleep(0.1)
-                    tLeft = tEnd - time()
-                    if tLeft >= 0:
-                        self.SetStatusText(_("Exposing: %.2f seconds")%tLeft)
-                    else:
-                        self.SetStatusText(_("Waiting for camera"))
-                    wx.SafeYield()
-                    if self.__abortSolve:
-                        break;
-                if self._camera.imageReady and not self.__abortSolve:
-                    self.SetStatusText(_("Reading image from camera"))
-                    img = self._camera.getImage()
-                    self.SetStatusText(_("Solving..."))
-                    # If tracking, use current position as a starting point,
-                    # else blind solve
-                    if self._telescope and self._telescope.tracking:
-                        solution = self._solver.solve(img,
-                            target=self._telescope.position, targetRadius = None,
-                            callback=self.__statusUpdater)
-                    else:
-                        solution = self._solver.solve(img, callback=self.__statusUpdater)
-                elif self.__abortSolve:
-                    self.SetStatusText(_("Aborted."))
-                else:
-                    self.SetStatusText(_("Camera did not produce an image to solve."))
-                if solution:
-                    self._parent.solution = solution
-            except Exception, detail:
-                import traceback
-                diag = wx.MessageDialog(parent=self,
-                    message=traceback.format_exc(),
-                    caption=_("Camera error"),
-                    style = wx.OK)
-                try:
-                    diag.ShowModal()
-                except:
-                    diag.Destroy()
-        finally:
-            self._parent._updateCamera()
-            self.AltitudeMeasureButton.SetLabel(_("Measure altitude error"))
-            self.AzimuthMeasureButton.SetLabel(_("Measure azimuth error"))
-            enable(self._parent.btnGO)
-            self.__solving = False
-            self.__abortSolve = False
-            if solution:
-                self.SetStatusText(_("Solution found."))
-                return solution
-            else:
-                self.SetStatusText(_("Solution not found."))
-                return None
 
     def __poleError(self):
         "Calculate pole error by platesolving"
         solution = None
+        if not self._telescope:
+            return None
         if not self._telescope.tracking:
-            self._telescope.tracking = True
+            try:
+                self._telescope.tracking = True
+            except:
+                self.SetStatusText(_("Telescope error!"))
+                return None
         if self.__solving:
-            self._solver.abort()
-            self.__abortSolve = True
+            self._parent.engine.abort()
+            self.__solving = False
         else:
             # Take first exposure
-            solution = self.__captureSolve()
+            solution = self._parent.engine.solveCamera()
         if not solution:
             return None
         movement = 0.5 # Amount of degrees to slew
@@ -269,7 +199,7 @@ class PolarAlignFrame(wx.Frame):
         self.SetStatusText(_("Slewing..."))
         targetPos = Coordinate(startPos.RA - movement, startPos.dec)
         self._telescope.slewTo(targetPos) # Slew to the west
-        solution = self.__captureSolve()
+        solution = self._parent.engine.solveCamera()
         if not solution:
             return
         secondSolve = solution.center # Center of the second platesolve
@@ -285,7 +215,13 @@ class PolarAlignFrame(wx.Frame):
             
     def OnAltitudeMeasureButtonButton(self, event):
         "Determine altitude error direction and size"
+        self.AltitudeMeasureButton.SetLabel(_("Abort solver!"))
+        disable(self._parent.btnGO)
+        disable(self.AzimuthMeasureButton)
         poleError = self.__poleError()
+        self.AltitudeMeasureButton.SetLabel(_("Measure altitude error"))
+        enable(self._parent.btnGO)
+        enable(self.AzimuthMeasureButton)
         if poleError == None:
             self.SetStatusText(_("An error occurred!"))
             return
@@ -318,11 +254,17 @@ class PolarAlignFrame(wx.Frame):
                     direction = _("too low")
                 elif poleError > 0:
                     direction = _("too high")
-        self.AltitudeErrorResult.SetLabel((_("%.2f degrees")+"\n%s")%(fabs(poleError), direction))
+        self.AltitudeErrorResult.SetLabel(deg2str(fabs(poleError)).encode("iso-8859-15")+"\n%s"%direction)
 
     def OnAzimuthMeasureButtonButton(self, event):
         "Determine azimuth error direction and size"
+        self.AzimuthMeasureButton.SetLabel(_("Abort solver!"))
+        disable(self._parent.btnGO)
+        disable(self.AltitudeMeasureButton)
         poleError = self.__poleError()
+        self.AzimuthMeasureButton.SetLabel(_("Measure azimuth error"))
+        enable(self._parent.btnGO)
+        enable(self.AltitudeMeasureButton)
         if poleError == None:
             self.SetStatusText(_("An error occurred!"))
             return        
@@ -339,7 +281,7 @@ class PolarAlignFrame(wx.Frame):
                 direction = _("too west")
             elif poleError > 0:
                 direction = _("too east")
-        self.AzimuthErrorResult.SetLabel((_("%.2f degrees")+"\n%s")%(fabs(poleError), direction))
+        self.AzimuthErrorResult.SetLabel(deg2str(fabs(poleError)).encode("iso-8859-15")+"\n%s"%direction)
         
     def __statusUpdater(self, status=None):
         "Update status bar and process UI events safely"
