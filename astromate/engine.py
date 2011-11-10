@@ -1,5 +1,5 @@
 "AstroMate main engine classes"
-# vim: set fileencoding=UTF-8 encoding=UTF-8 :
+# vim: set fileencoding=UTF-8 encoding=UTF-8
 # -*- coding: UTF-8 -*-
 
 import gettext, sys
