@@ -96,7 +96,7 @@ class MaximDLCamera(ICamera):
             if state == 7 or state == 8 or state == 15 or state ==20: return CameraState.Waiting
             if state == 3: return CameraState.Exposing
             if state == 4: return CameraState.Reading
-            if state == 5: return CameraState.Download
+            if state == 5: return CameraState.Downloading
             if state == 1: return CameraState.Error
         return self.__camState # Idle?
 

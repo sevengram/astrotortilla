@@ -1,6 +1,8 @@
 from ..IPlateSolver import IPlateSolver, Solution
 from ..units import Coordinate
 import subprocess, os, os.path, time, tempfile, shutil, threading
+import win32process
+import win32con
 import gettext
 t = gettext.translation('astrometrynetsolver', 'locale', fallback=True)
 _ = t.gettext
@@ -67,8 +69,8 @@ class AstrometryNetSolver(IPlateSolver):
         cygShell = self.getProperty("shell")
 
         si = subprocess.STARTUPINFO()
-        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        si.wShowWindow = subprocess.SW_HIDE
+        si.dwFlags |= win32process.STARTF_USESHOWWINDOW
+        si.wShowWindow = win32con.SW_HIDE
         shell = subprocess.Popen(cygShell%command, shell=False, bufsize=1,
                 stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                 stderr=stderrPipe, startupinfo=si)
