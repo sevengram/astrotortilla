@@ -652,7 +652,7 @@ class mainFrame(wx.Frame):
             else:
                 self.engine.solveCamera()
                 if self.chkSync.IsChecked() and self.engine.solution:
-                    self.engine.telescope.position = self.engine.solution.center
+                    self.engine.getTelescope().position = self.engine.solution.center
         finally:
             self._updateCamera()
             # update solver configuration grid from solver properties
