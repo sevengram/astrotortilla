@@ -483,6 +483,8 @@ class mainFrame(wx.Frame):
 
     def _updateSolverGrid(self):
         "Update solver configuration grid"
+	if not self.engine.getSolver():
+		return
         solverProps = self.engine.getSolver().propertyList
         self.configGrid.ClearGrid()
         solverConfig = self.engine.getSolver().configuration
