@@ -835,6 +835,9 @@ class mainFrame(wx.Frame):
             wx.SafeYield()
 
     def OnMenuToolsGotoImage(self, event):
+        if not self.engine.config.has_option("AstroTortilla", "last_gotoimage"):
+            self.engine.config.set("AstroTortilla", "last_gotoimage", "")
+
         fileName = wx.FileSelector(
                 message=_("Goto Image"),
                 default_path = self.engine.config.get("AstroTortilla", "last_gotoimage"),
