@@ -26,6 +26,7 @@ class BoaApp(wx.App):
         self.__populateChoiceList(self.main.choiceSolver, self.main.engine.listSolvers())
         #if len(astromate.solver.__all__) == 1:
         if len(self.main.engine.listSolvers()) == 1:
+            self.main.engine.selectSolver(self.main.engine.listSolvers()[0])
             self.main.choiceSolver.SetSelection(0)
             self.main.choiceSolver.Disable()
             self.main._updateSolverGrid()
