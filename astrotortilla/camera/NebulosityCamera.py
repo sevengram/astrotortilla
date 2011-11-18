@@ -13,7 +13,8 @@ try:
 except:
     import win32gui
 import socket, glob, time
-from astromate.automation import SendKeys
+from pywinauto import Application
+from pywinauto.timings import WaitUntil
 import threading
 import gettext
 t = gettext.translation('nebulositycamera', 'locale', fallback=True)
@@ -72,8 +73,6 @@ def str2bool(string):
 PROPERTYLIST = {
         "port":(_("Nebulosity ListenPort"), int, "", _("0 for script connection"), 0),
         "path":(_("Nebulosity Path"), os.path.isdir, "", "", "C:\\Program Files\\Nebulosity2\\"),
-        "mapColon":(_("Colon escape"), str, "", "", "+."),
-        "mapBackslash":(_("Backslash escape"), str, "", "", "^%\\"),
         "setCamera":(_("Set camera"), str2bool, _("Set camera model on capture"), _("True or False"), "False"),
         "setExtFilterWheel":(_("Set ext filter"), int, _("Set ext filter before solving"), _("Filter index or -1"), "-1"),
         "setFilterWheel":(_("Set filter"), int, _("Set filter before solving"), _("Filter index or -1"), "-1"),
@@ -88,7 +87,6 @@ class NebulosityCamera(ICamera):
         self.__bin = 1
         self.__basename = "Capture"
         self.propertyList = PROPERTYLIST
-        self.__autoDisco = True
         self.__state = CameraState.Idle
 
     def __del__(self):
@@ -110,26 +108,7 @@ class NebulosityCamera(ICamera):
         elif type(cmd) in (list, tuple):
             cmd = "\n".join(cmd)
             cmd += "\n"
-        if int(self.getProperty("port"))>0: # socket communications
-            if not self.__sock:
-                try:
-                    self.connected = True
-                except:
-                    raise IOError("Not connected")
-            self.__sock.send(cmd.encode())
-        else: # direct script communication
-            self.__nebulositySendSript(cmd)
-
-    def __asyncDisconnect(self):
-        "Disconnect asynchronously without blocking"
-        def disconnector(obj):
-            obj.connected=False
-            obj.__state = CameraState.Idle
-
-        worker = threading.Thread(target=disconnector, args=(self,))
-        worker.start()
-        #self.connected=False
-        #self.__state = CameraState.Idle
+        self.__nebulositySendSript(cmd)
 
     @property
     def imageTypes(self):
@@ -156,48 +135,13 @@ class NebulosityCamera(ICamera):
 
     @property
     def connected(self):
-        "@return True when connection to Nebulosity exists"
-        return int(self.getProperty("port")) <= 0 or self.__sock != None
+        "@return True, Nebulosity is autoconnected"
+        return True
 
     @connected.setter
     def connected(self, value):
-        "Connect to Nebulosity when value == True, disconnect when value == False"
-        if int(self.getProperty("port")) <=0:
-            return
-
-        if value == True:
-            if self.__sock:
-                return
-            try:
-                # set Nebulosity to script listening mode
-                self.__nebulosityScriptMode()
-                # connect to server socket, retry for 20s
-                now = startTime = time.time()
-                while not self.__sock:
-                    try:
-                        self.__sock = socket.create_connection(("127.0.0.1", int(self.getProperty("port"))), 1)
-                    except (Exception, socket.error) as error:
-                        now = time.time()
-                        if now - startTime > 20: # re-raise error after 20s
-                            raise error
-                        time.sleep(0.5)
-                        del self.__sock
-                        self.__sock = None
-            except:
-                self.__sock = None
-                raise IOError("Connection failed")
-        else:
-            if self.__sock == None:
-                return
-            try:
-                self.__cmd("ListenPort 0")
-                # Wait for Nebulosity to close the socket first
-                self.__sock.recv(1)
-                self.__sock.close()
-            except:
-                pass
-            del self.__sock
-            self.__sock = None
+        "Do nothing, autoconnected"
+        return
     
     @property
     def canAutoConnect(self):
@@ -207,12 +151,12 @@ class NebulosityCamera(ICamera):
     @property
     def disconnectAfterCapture(self):
         "@return True if Nebulosity connection is closed after capture."
-        return self.__autoDisco
+        return True
 
     @disconnectAfterCapture.setter
     def disconnectAfterCapture(self, value):
         "If value == True, connection to Nebulosity is closed after capture."
-        self.__autoDisco = value == True
+        return
 
     @property
     def binning(self):
@@ -269,13 +213,10 @@ class NebulosityCamera(ICamera):
         except Exception as detail:
             raise IOError("Failed to clear cache: %s"%detail)
 
-        if not self.connected:
-            self.connected = True
 
         cmd = [
             "SetDuration %d"%(int(duration*1000)),
             "SetDirectory %s"%self.workingDirectory,
-#            "SetName %s"%(self.__basename),
             "SetBinning %d"%(self.__bin-1)]
 
         if str2bool(self.getProperty("setCamera")) and self.__camera:
@@ -304,9 +245,7 @@ class NebulosityCamera(ICamera):
             cmd.append("SetDirectory %s"%resetPath)
 
         self.__cmd(cmd)
-        
-        if self.__autoDisco:
-            self.__asyncDisconnect()
+        self.__state = CameraState.Idle
 
 
     def getImage(self):
@@ -326,41 +265,29 @@ class NebulosityCamera(ICamera):
         Send <enter> to dialog
         Throws an exception if anything fails.
         """
-        def _hwndCallback(hwnd, extra):
-            extra.append((hwnd,
-                win32gui.GetWindowText(hwnd),
-                win32gui.GetClassName(hwnd)
-                ))
-
-        hwndList = []
-        win32gui.EnumWindows(_hwndCallback, hwndList)
-        windows = [window for window in hwndList if window[1].startswith("Nebulosity v2.4.")]
-        if not windows:
-            raise Exception(_("Nebulosity window not found"))
-        hwnd = windows[0][0]
-        win32gui.ShowWindow(hwnd,win32con.SW_RESTORE)
-        win32gui.SetForegroundWindow(hwnd)
-        time.sleep(0.2) # give time for Nebulosity to get focus
-        SendKeys("^r")
+        app = Application()
+        nebu_path = os.path.join(self.getProperty("path"), "nebulosity.exe")
+        print nebu_path
+        try:
+            app.connect_(path=nebu_path)
+        except:
+            app.start_(nebu_path)
         # Create script file
         fname = os.path.join(self.getProperty("path"), "capture.neb")
         f = file(fname, "w")
         f.write(script)
         f.close()
-        scriptWin = None
-        start = time.time()
-        while not scriptWin and time.time()-start < 5:
-            hwndList = []
-            win32gui.EnumWindows(_hwndCallback, hwndList)
-            scriptWin = [window for window in hwndList if window[1] == "Load script"]
-        if not scriptWin:
-            raise _("Script loading failed")
-        win32gui.SetForegroundWindow(scriptWin[0][0])
-        time.sleep(0.1)
-        fname = fname.replace(":", self.getProperty("mapColon"))
-        fname = fname.replace("\\", self.getProperty("mapBackslash"))
-        SendKeys(fname, pause=0.001, with_spaces=True)
-        SendKeys("{ENTER}")
+        fname = fname.replace("~", "{~}")
+        app.Nebulosity.Wait("visible")
+        app.Nebulosity.SetFocus()
+        app.Nebulosity.TypeKeys("^r")
+        try:
+            WaitUntil(10.5, 0.5, app.LoadScript.Exists, True)
+        except:
+            raise _("Nebulosity not responding to script loading")
+        dlg = app.LoadScript.Wait("visible")
+        dlg.SetFocus()
+        dlg.TypeKeys(fname+"{ENTER}", pause=0.001, with_spaces=True)
 
 
     def __nebulosityScriptMode(self):

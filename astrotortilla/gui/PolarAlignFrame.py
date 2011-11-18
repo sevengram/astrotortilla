@@ -4,9 +4,9 @@ import wx
 import gettext
 from math import cos, radians, fabs
 from time import time, sleep
-from astromate import CameraState
-from astromate.units import Coordinate
-from astromate.units import deg2str
+from astrotortilla import CameraState
+from astrotortilla.units import Coordinate
+from astrotortilla.units import deg2str
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 

@@ -50,9 +50,9 @@ All copyrights and trademarks are recognized and respected.
 Python
 ------
 
-The application AstroTortilla and the astromate library are written in Python
+The application AstroTortilla and the associated library are written in Python
 2.6, using WxPython [5] , Python win32all extension [6] and Python Imaging
-Library 1.1.7 [7].
+Library 1.1.7 [7]. Python 2.7 is also supported.
 
 Running astrometry.net
 ----------------------

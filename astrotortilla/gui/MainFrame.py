@@ -10,9 +10,9 @@ import gettext
 import ConfigParser
 import os, os.path
 from time import time, sleep
-from astromate import CameraState
-from astromate.engine import TortillaEngine, Status
-from astromate.units import Coordinate, Separation, deg2dms, deg2hms, deg2str
+from astrotortilla import CameraState
+from astrotortilla.engine import TortillaEngine, Status
+from astrotortilla.units import Coordinate, Separation, deg2dms, deg2hms, deg2str
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 

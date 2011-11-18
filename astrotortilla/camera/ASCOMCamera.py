@@ -1,3 +1,4 @@
+# vim:st=4 sts=4 sw=4 et si
 "ASCOM camera interface"
 
 from ..ICamera import ICamera
@@ -15,13 +16,14 @@ _ = t.gettext
 # key: (readable name, validation function, name tooltip, value tooltip, default value)
 # The values can be set as strings by the using application.
 PROPERTYLIST = {
-		"lastCamera":(_("Default camera"), str, "", "", "")
-		}
+        "lastCamera":(_("Default camera"), str, "", "", "")
+        }
 class ASCOMCamera(ICamera):
     """ASCOMCamera()
     """
     def __init__(self):
         super(ASCOMCamera, self).__init__()
+        self.propertyList = PROPERTYLIST
         self.__initChooser()
         self.__bin = 1
         self.__camname = None
@@ -64,7 +66,7 @@ class ASCOMCamera(ICamera):
             if not self.__camname: # End-user cancel
                 self.__camname = None
                 return
-	    self.setProperty("lastCamera", self.__camname)
+        self.setProperty("lastCamera", self.__camname)
         self.__cam = Dispatch(self.__camname)
         if not self.__cam:
             raise Exception("Dispatching %s failed"%self.__camname)

@@ -11,8 +11,8 @@ from inspect import isclass, getmembers
 import ConfigParser
 import os, os.path
 from time import time, sleep
-from astromate import CameraState
-from astromate.units import Coordinate, Separation, deg2dms, deg2hms
+from astrotortilla import CameraState
+from astrotortilla.units import Coordinate, Separation, deg2dms, deg2hms
 
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
