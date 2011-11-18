@@ -71,7 +71,6 @@ def str2bool(string):
 # key: (readable name, validation function, name tooltip, value tooltip, default value)
 # The values can be set as strings by the using application.
 PROPERTYLIST = {
-        "port":(_("Nebulosity ListenPort"), int, "", _("0 for script connection"), 0),
         "path":(_("Nebulosity Path"), os.path.isdir, "", "", "C:\\Program Files\\Nebulosity2\\"),
         "setCamera":(_("Set camera"), str2bool, _("Set camera model on capture"), _("True or False"), "False"),
         "setExtFilterWheel":(_("Set ext filter"), int, _("Set ext filter before solving"), _("Filter index or -1"), "-1"),
@@ -289,6 +288,3 @@ class NebulosityCamera(ICamera):
         dlg.SetFocus()
         dlg.TypeKeys(fname+"{ENTER}", pause=0.001, with_spaces=True)
 
-
-    def __nebulosityScriptMode(self):
-        self.__nebulositySendSript("ListenPort %d\n"%int(self.getProperty("port")))

@@ -22,7 +22,7 @@ class DlgCameraSetup(wx.Dialog):
         # generated method, don't edit
         wx.Dialog.__init__(self, id=wxID_DLGCAMERASETUP, name='', parent=prnt,
               pos=wx.Point(316, 126), size=wx.Size(304, 342),
-              style=wx.DEFAULT_DIALOG_STYLE, title='Camera Setup')
+              style=wx.DEFAULT_DIALOG_STYLE, title=_('Camera Setup'))
         self.SetClientSize(wx.Size(296, 308))
 
         self.gridCameraConf = wx.grid.Grid(id=wxID_DLGCAMERASETUPGRIDCAMERACONF,
@@ -43,7 +43,7 @@ class DlgCameraSetup(wx.Dialog):
               id=wxID_DLGCAMERASETUPBTNCLOSE)
 
         self.lblCameraName = wx.StaticText(id=wxID_DLGCAMERASETUPLBLCAMERANAME,
-              label='Camera Setup', name='lblCameraName', parent=self,
+              label=_('Camera Setup'), name='lblCameraName', parent=self,
               pos=wx.Point(16, 8), size=wx.Size(68, 13), style=0)
 
         self.chCamName = wx.Choice(choices=[], id=wxID_DLGCAMERASETUPCHCAMNAME,
@@ -86,7 +86,7 @@ class DlgCameraSetup(wx.Dialog):
         self.gridCameraConf.CreateGrid(len(camConfig),2)
         self.gridCameraConf.SetRowLabelSize(0)
         self.gridCameraConf.DisableDragGridSize()
-        self.gridCameraConf.SetColSize(1, 150)
+        self.gridCameraConf.SetColSize(1, 200)
         i = 0
         keyList = camConfig.keys()
         keyList.sort()
@@ -97,6 +97,7 @@ class DlgCameraSetup(wx.Dialog):
             self.gridCameraConf.SetRowLabelValue(i, key)
             i += 1
         wx.EVT_MOTION(self.gridCameraConf.GetGridWindow(), self.OnGridCameraConfMotion)
+        self.gridCameraConf.AutoSizeColumns()
         self.gridCameraConf.ForceRefresh()
         self.gridCameraConf.Show()
         self.spinBinning.SetRange(1, self.camera.maxBin)
