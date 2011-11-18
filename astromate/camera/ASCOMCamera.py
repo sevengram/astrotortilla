@@ -27,6 +27,7 @@ class ASCOMCamera(ICamera):
         self.__camname = None
         self.__cam = None
         self.__camState = CameraState.Idle
+        self.propertyList = PROPERTYLIST
 
     def __initChooser(self):
         self.__chooser = Dispatch("DriverHelper.Chooser")
@@ -63,7 +64,7 @@ class ASCOMCamera(ICamera):
             if not self.__camname: # End-user cancel
                 self.__camname = None
                 return
-	self.setProperty("lastCamera", self.__camname)
+	    self.setProperty("lastCamera", self.__camname)
         self.__cam = Dispatch(self.__camname)
         if not self.__cam:
             raise Exception("Dispatching %s failed"%self.__camname)
