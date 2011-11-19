@@ -14,7 +14,7 @@ DEBUG = 0 # 1 to enable some debug prints
 
 PROPERTYLIST = {
         "downscale":(_("Downscaling"), int, _("Image downscaling factor") ,"", 2),
-        "configfile":(_("Backend config"), str, _("Cygwin path to backend config file"), "", "/usr/share/astrometry/etc/backend.cfg"),
+        "configfile":(_("Backend config"), str, _("Cygwin path to backend config file"), "", "/etc/astrometry/backend.cfg"),
         "searchradius":(_("Search radius"), float, _("Radius of search area in degrees"), "0..180", 180),
         "scale_low":(_("Scale minimum"), float, _("Image scale lower bound"), "", 0),
         "scale_max":(_("Scale maximum"), float, _("Image scale upper bound"), "", 179),
