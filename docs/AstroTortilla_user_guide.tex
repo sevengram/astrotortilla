@@ -1,0 +1,406 @@
+\documentclass[english]{article}
+\usepackage{sansseriftitles}
+\usepackage{1inchmargins}
+\usepackage[iso]{isodate}
+\usepackage{hyperref}
+\usepackage{color}
+
+
+\hypersetup{
+    colorlinks=true,
+    urlcolor=blue,
+}
+
+\newcommand{\surl}[1]{{\small \url{#1}}}
+
+\begin{document}
+
+
+\centerline{\sf \Huge AstroTortilla User Guide}
+\centerline{Latest update: \today}
+
+\tableofcontents
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex}
+
+
+\section{Introduction}
+
+AstroTortilla automates repetitive tasks in astrophotography by plate solving
+acquired images and making it possible for the necessary software to
+communicate with each other. By blind plate solving it is possible to snap a
+picture from anywhere on the sky, identify the direction and sync the GoTo
+mount to that position.
+
+When doing GoTo-slewing over large distances on the sky the target normally
+ends up somewhere else than the center of the camera view, if not completely
+out of the frame. AstroTortilla is capable of applying iterative corrections
+for the initial slew and getting the target object spot on the center of the
+frame, often with one or two slews - no matter how bad the GoTo-calibration.
+
+Plate solving combined with goto control also provides a very fast and
+convenient way of polar aligning the mount. Just let AstroTortilla look around
+and take a few images and then apply the alignment corrections on your mount’s
+alignment knobs as suggested by AstroTortilla. In addition, with the ability of
+controlling the mount and camera, AstroTortilla includes a clever photographic
+aid for traditional drift alignment with no need for plate solving.
+
+\emph{Mexican tortillas} are commonly prepared with meat to make dishes such as
+tacos, burritos, and enchiladas. \emph{AstroTortilla} wraps itself around a
+bunch of useful software for a tasty nocturnal snack under the starry night
+sky. 
+
+\section{Compatibility with other software and equipment} \subsection{Camera
+control}
+
+AstroTortilla is able to control any astronomical camera (CCD, DSLR etc.)
+through the remote interface of \textbf{\emph{Nebulosity 2}} by Stark Labs or
+\textbf{\emph{Maxim DL}} by Diffraction Limited. Additionally, though not very
+useful on the field, AstroTortilla can directly control any compatible camera
+with the \hbox{\textbf{\emph{ASCOM interface}}}.
+
+\emph{PHD Guiding} by Stark Labs or any other imaging software can be used via
+a \textbf{\emph{screenshot plugin}}. In case your camera can’t be supported in
+any of the above ways, AstroTortilla can \textbf{\emph{read your image files
+from the hard drive}}. In future versions directory monitoring will be
+available to automate the loading of new images.
+
+For users wishing to add support for other camera control software,
+encouragement and advice are available.
+
+\subsection{GoTo mount control}
+
+AstroTortilla currently supports any computerized tracking mount with an
+\hbox{\textbf{\emph{ASCOM interface}}}.  The field testing of AstroTortilla
+functions under the night sky is carried out with EQMOD software controlling
+Sky-Watcher HEQ5 and EQ6 mounts.
+
+The ASCOM interface currently limits the usage of AstroTortilla to a Microsoft
+Windows platform. Supporting the \emph{INDI} interface standard will hopefully
+be possible in the future and enable AstroTortilla to run under Linux/Unix
+environments too.
+
+\subsection{Plate solver software}
+
+AstroTortilla currently uses the \textbf{\emph{Astrometry.net}} plate solver
+engine. The engine can either be run locally trough the linux-like CygWin
+environment for Windows or through the Astrometry.net online plate solve
+service. In the future support for using your own local area solver server
+might be available.
+
+Another possible engine for plate solving the images is \emph{PinPoint
+Astrometric Engine} by DC-3 Dreams, but support for this is not yet
+implemented.  Unfortunately AstroTortilla is unable to support the free
+\emph{PinPoint LE} since it can not be controlled trough a remote interface.
+
+\section{Plate solving}
+
+Plate solving is the sport of identifying the shapes drawn by the locations of
+stars in an astronomical image. Once the stars are identified, this astrometric
+solution can be used to work out the coordinates of the center of the frame,
+the width an height of the field of view, the rotational angle of the image
+with respect to celestial coordinate axes, the angular resolution of one pixel
+in the imaging setup and, by knowing the pixel size of the sensor, the exact
+focal length of the imaging objective used.
+
+Normally, a stellar catalog, that is, a database of star locations and a rough
+estimate of where the telescope was pointed at during exposure are needed to
+successfully plate solve an image.
+
+\subsection{Astrometry.net}
+
+The Astrometry.net project is a revolutionary effort of developing means of
+working out the astrometric solution of any astronomical image with no initial
+knowledge of the imaging parameters \emph{whatsoever}. The project will make
+its engine, algorithms and code freely avaible to the public. The key to
+blindfolded fast plate solving is reducing the calculation time by prebuilding
+huge catalogs of four-star patterns of the whole sky.
+
+At the time of writing Astrometry.net is in beta testing phase. An online user
+interface for plate solving your images is at
+\surl{http://nova.astrometry.net}.  Astrometry.net can also be run locally in a
+Linux, Unix, Mac box or Cygwin for Windows environment.
+
+AstroTortilla is compatible with both of these two ways of using
+Astrometry.net. {\color{red}(not true yet, the online API is still unsupported
+for now)} For using the online solver with AstroTortilla you need to get
+yourself an API key by signing in. You don’t need to sign up in order to sign
+in, you can use any OpenID account (Google etc.) instead.
+
+Using the online solver plugin requires your imaging PC to be connected to the
+internet and will be slower than local solving. However, it saves you the
+trouble from installing Cygwin and keeping a few gigabytes of indices on your
+hard drive. The online solver plugin might be especially useful for trying out
+AstroTortilla.
+
+\subsubsection{Installing Cygwin and Astrometry.net}
+
+Installing the Linux based Astrometry.net engine locally on a Windows platform,
+the Cygwin emulator environment is needed. A single executable Cygwin installer
+preconfigured to install Astrometry.net is provided by the AstroTortilla team.
+
+The Cygwin installation will take up some 350 MB of hard disk space and it will
+contain many linux-like tools probably not very useful to you.
+
+The indices (databases) needed for plate solving however will use up even more
+space. Solving fields shot with camera optics, short refractors etc.
+fortunately only require a few small sets of indices, about 1 GB in total.
+Indices for solving fields smaller than this grow exponentially in size with
+the rest indices taking up about 24 GB in total.
+
+\textbf{1. Getting the installer}
+
+You’ll find the installer at
+\surl{http://astrotortilla.sourceforge.net/cygwin-custom/}. Download and run
+\\\texttt{cygwin-astrometry-setup.exe}. After running, just repeatedly click
+Next until the installer asks you to "Choose A Download Site".
+
+\textbf{2. Choosing downloading sites}
+
+Now you need to select our site for downloading Astrometry.net and another site
+for downloading the rest of Cygwin. In the list of the sites, our
+\surl{http://astrotortilla.sourceforge.net} site is preselected. Select one
+additional site by clicking it holding down the Ctrl key. Any one of them will
+do, but a server close to your location might be faster.
+
+Before continuing, \textbf{make sure you have two sites selected!} After that,
+keep clicking Next. In any popups that appear, click OK. Finally, after
+downloading and installing, click Finish.
+
+\textbf{3. Downloading indices}
+
+Currently obtaining the indices for local plate solving involves accepting the
+conditions for using them and sending an email to the Astrometry.net staff as
+described in \surl{http://trac.astrometry.net/
+browser/trunk/src/GETTING-INDICES}.  Note that for now redistributing the
+indices to anyone is forbidden and in the meantime this is the only way to get
+them. For "stating clearly your intended use of the indices" in the request
+email, it’s fine to explain you like to try out AstroTortilla. The staff will
+then shortly contact you with a download link.
+
+\textbf{4. Extracting indices}
+
+After downloading the indices you want, place them in
+\texttt{C:\textbackslash cygwin\textbackslash usr\textbackslash
+share\textbackslash astrometry\textbackslash data\textbackslash } or wherever
+your Cygwin directory is. Now open your Cygwin shell (a shortcut on your
+desktop), enter the command \texttt{cd /usr/share/astrometry/data} and then the
+command \texttt{tar xjf *.bz2}. Now the FITS-files inside the bz2-files should
+be extracted in the data-directory. You can make sure this is done, and then
+remove the bz2-files to save space by commanding \texttt{rm *.bz2}. You can
+also delete them by hand in Windows. Make sure not to delete the FITS-files!
+
+\textbf{5. Using AstroTortilla to solve images}
+
+If everything went fine, you should now be able to solve images with the
+\texttt{solve-field} command in the Cygwin shell. For further info on its
+usage, refer to the Astrometry.net documentation.
+
+Now it’s just a matter of choosing \texttt{AstrometryNetSolver} as the solver
+engine in AstroTortilla. Be sure to modify the Cygwin path in the settings
+table (see below). After this you don’t have to do anything on the command
+line.
+
+\section{AstroTortilla usage}
+
+\subsection{Main screen}
+
+The main screen consists of four panels: Telescope, Camera, Solver and Actions.
+
+
+
+\textbf{\emph{The Telescope panel}} lets you select a telescope/mount.
+Currently, only ASCOMTelescope is available. You can connect to all
+ASCOM-compliant telescopes and mounts.
+
+For useful operation, the ASCOM driver of your mount should work as a hub,
+i.e., allow several programs to connect to the mount driver simultaneously.
+This is the normal operation of, for instance, EQMOD and Astro-Physics
+ASCOM-drivers. In case your driver only supports one software at a time,
+consider trying out Plain Old Telescope Handset (POTH) at the ASCOM Standards
+website, or try some other ASCOM hub.
+
+\textbf{\emph{The Camera panel}} is used to connect to the camera you use.
+Depending on your camera control application, select \texttt{MaximDLCamera} or
+\texttt{NebulosityCamera}.  
+
+For trying out some other software through a live view on the screen, select
+\texttt{CaptureCamera}.  Working settings for PHD Guiding are provided. For
+other software, configure the capture area yourself.
+
+For manual GoTo-correction, or other testing purposes, \texttt{FileOpenCamera}
+lets you select an image file from the hard drive once you hit Capture and
+Solve at the Actions panel.  
+
+\textbf{\emph{The Solver panel}} is where you choose the plate solver software
+to use. If you have Cygwin and Astrometry.net installed locally, use
+\texttt{AstrometryNetSolver}.
+
+If you plan to use the online-version of Astrometry.net, select
+\\\texttt{AstrometryNetWebSolver}. Be sure to enter your personal API-key in
+the settings table below.
+
+\textbf{\emph{The Actions panel}} lets you decide what actions to take after
+exposing the image and getting a successful plate solution. You can choose only
+to Sync the scope (tell it where it’s pointing), Re-slew the scope (turn the
+scope where it thought it was pointing before) and even Repeat the cycle until
+your within a tolerance of your choice from the desired coordinates.
+
+In the \textbf{\emph{Tools menu}} you can select Goto image or use
+AstroTortilla to polar align your mount (see below).
+
+\subsection{Normal workflow}
+
+When you’ve got the telescope, camera and solver selected, slew to your target
+with your favourite planetarium software. Now "Target" shows the coordinates of
+the object you selected, and "Current" shows the same coordinates since this is
+where the mount thinks it pointing at at this stage. This might however be more
+or less incorrect.
+
+Select the actions of your choice in the Actions panel (e.g. all three to be
+safe), a suitable exposure time in the Camera panel and hit \emph{Capture and
+Solve} in the Actions panel. AstroTortilla now uses the camera to expose a
+frame and delivers it to the solver engine. Once the engine has solved the
+field, AstroTortilla is aware of the true pointing direction of the scope and
+indicates the coordinates in the Camera panel.
+
+If the \emph{Sync Scope} option was checked, the true coordinates are indicated
+in "Current" at the Telescope panel, too, and the GoTo of your telescope is now
+properly calibrated.  
+
+If the \emph{Re-slew to target} option was checked, AstroTortilla applies a new
+slew command to the mount, to the coordinates your mount assumed it was
+pointing at earlier. Usually your object will now be very close to the center
+of your frame.
+
+In case your mount calibration was way off to start with or the object still
+isn’t quite centered yet, you can choose to have AstroTortilla repeat the
+previous actions automatically until the target is centered. Check the Repeat
+until within box and enter your desired tolerance in arc minutes in the numeric
+box.
+
+\subsection{Future workflow}
+
+In the future the workflow described above will be greatly simplified when
+AstroTortilla will act as an ASCOM-compatible telescope. This means you can
+choose AstroTortilla as the telescope driver in your planetarium software. You
+can then choose to slew to an object in the planetarium software and
+AstroTortilla will automatically apply its plate solving GoTo corrections and
+get your object in the center of the frame with one click.
+
+You can also choose not to apply the iterative corrections for slews shorter
+than a treshold of your choice, say five degrees. This makes AstroTortilla pass
+the slew commands from your planetarium software directly to the ASCOM driver
+of your mount to ensure small slews for, e.g., object framing purposes are
+executed without delay.
+
+\subsection{Goto image tool}
+
+The Goto image tool solves an image from your hard drive and slews the
+telescope to its central coordinates. You can use it to return to the exact
+framing of a previous night’s exposing session, or mimic the framing of your
+favourite Hubble Space Telescope shot, for example.
+
+To use it, select \emph{Tools $\rightarrow$ Goto image} and select the image to
+solve in the appearing dialog.  AstroTortilla then solves it and slew the
+telescope to the coordinates of its center. The image has to be in FITS, JPEG,
+TIFF or PNM format.
+
+When using the Goto image tool, AstroTortilla ignores any check marks you’ve
+entered in the Actions panel and always does iterative centering with the
+treshold you entered in the bottom of the panel. The search radius parameter in
+your Solver panel is also ignored - the Goto image is always a blind solve.
+
+\subsection{Polar aligning your mount with AstroTortilla}
+
+AstroTortilla provides two ways to help your polar alignment task. You can
+access the tools via the Tools menu at the top.
+
+The plate solver based \textbf{Polar Alignment} tool invites you to point the
+telescope first in the south and then in the east/west direction. After
+pointing, it moves your telescope around a bit and plate solves the directions.
+After this, it tells you the amount of your polar alignment error in degrees,
+which you then can adjust for.
+
+The \textbf{Drift shot} tool will automate a clever technique for traditional
+drift aligning, described below. For this you don’t even need to install a
+plate solver, only a camera and a mount supported by AstroTortilla is enough.
+
+In the future, AstroTortilla will employ a fully automatic plate solver
+algorithm which takes three images around the sky and leaves you nothing but
+the job of turning the alignment knobs. Stay tuned.
+
+\subsection{Polar Alignment tool}
+
+The Polar Alignment tool exposes two pairs of frames with a half a degree
+offset in right ascension between the the images of the pair. Their plate
+solved coordinates are then used to calculate the polar alignment errors by
+detecting the amount of declination error when the mount was only moved along
+the RA axis.
+
+A pair of frames shot at the east/west meridian is used to determine the
+altitude error of the polar axis, and a pair shot at the southern meridian
+(assuming northern hemisphere observation) gets you the azimuthal error.
+
+To use the tool, select \emph{Tools $\rightarrow$ Polar Alignment}. Choose the
+correct hemisphere and point your mount roughly at the meridian to measure
+azimuth error or to the east or west to measure altitude error (also select
+which way you’re pointing in the drop down menu).
+
+Then press the according button to let AstroTortilla shoot and solve the pair
+of frames. When done, your polar alignment error in degrees is shown on the
+screen. Use this to correct your alignment by turning the alignment knobs on
+your mount.
+
+When measuring azimuthal error, be sure not to point within a half a degree or
+closer to the meridian to avoid meridian flips! Pointing on the west (right)
+side of the southern meridian is the safest bet.
+
+\subsection{Drift shot tool}
+
+Drift alignment is an accurate but tedious way to adjust the polar alignment of
+your tracking mount, and it’s easiest to accomplish by using a CCD camera. The
+fundamental idea of drift alignment is that polar alignment error will show up
+with stars drifting in the declination direction.
+
+When imaging a star close to the \textbf{southern meridian} (assuming northern
+hemisphere observation), the error of the polar axis elevation adjustment
+contributes is zero and all observed drift is because of \textbf{azimuthal}
+misalignment. Similarly when imaging at the \textbf{eastern/western} direction,
+only \textbf{elevation} misalignment is responsible for the drift.  These
+observations are then used to correct the alignment.
+
+AstroTortilla makes it easier to observe the amount and direction of drift by
+employing a technique introduced by Robert Vice in the September 2005 issue of
+AstroPhoto Insight magazine. It involves slewing the mount eastward for a
+specified amount of time, after which an equally long westward slew is done.
+
+If there’s any declination drift present, the star will trace a horizontal V
+pattern. The image is exposed for a few seconds before starting the slews in
+order to create a small blob to the other arm of the V to distinguish the
+direction of drift.
+
+When the alignment is correct, the V will converge into just a horizontal line.
+For more information about the V-drift method, see
+\surl{http://www.astrophotoinsight.com/node/568}.  
+
+To use the tool, point your telescope at a reasonably bright star and select
+\emph{Tools $\rightarrow$ Drift shot}.  AstroTortilla then starts a 30 second
+exposure and moves the mount around during it. You can then examine the
+resulting image to see if your alignment causes any declination drift.
+
+\section{Credits}
+
+AstroTortilla is brought to you by
+
+\begin{tabular}{l l} 
+Antti Kuntsi (Mickut) &Main software development \\ 
+Lauri Kangas (Vostok) &Maxim DL plugin, documentation \\ 
+Samuli Vuorinen (naavis) &Polar alignment tool, Astrometry.net online plugin \\
+Jussi Kantola (ketarax) &Packaging Astrometry.net for easy installing \\ 
+\end{tabular}
+
+
+
+\end{document}
