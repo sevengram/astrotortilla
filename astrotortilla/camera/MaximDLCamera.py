@@ -7,7 +7,7 @@ from win32com.client import Dispatch
 import os, os.path
 
 import gettext
-t = gettext.translation('maximdlcamera', 'locale', fallback=True)
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 

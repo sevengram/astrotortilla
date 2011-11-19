@@ -15,7 +15,7 @@ except:
 import Image
 
 import gettext
-t = gettext.translation('capturecamera', 'locale', fallback=True)
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 

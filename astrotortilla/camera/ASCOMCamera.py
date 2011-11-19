@@ -8,7 +8,7 @@ from array import array
 import Image, os, os.path
 
 import gettext
-t = gettext.translation('ascomcamera', 'locale', fallback=True)
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 

@@ -9,476 +9,703 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: astromate\CameraState.py:14
+
+#: astrotortilla\CameraState.py:14
 msgid "Downloading"
 msgstr "Ladataan"
 
-#: astromate\CameraState.py:14
+#: astrotortilla\CameraState.py:14
 msgid "Error"
 msgstr "Virhe"
 
-#: astromate\CameraState.py:14
+#: astrotortilla\CameraState.py:14
 msgid "Exposing"
 msgstr "Valottaa"
 
-#: astromate\CameraState.py:14
+#: astrotortilla\CameraState.py:14
 msgid "Idle"
 msgstr "Vapaa"
 
-#: astromate\CameraState.py:14
+#: astrotortilla\CameraState.py:14
 msgid "Reading"
 msgstr "Luetaan"
 
-#: astromate\CameraState.py:14
+#: astrotortilla\CameraState.py:14
 msgid "Waiting"
-msgstr "Odotetaan"
+msgstr "Odottaa"
 
-#: astromate\engine.py:46
-#: astromate\engine.py:50
-#: astromate\engine.py:54
-msgid "Not selected"
-msgstr "Ei valittu"
+#: astrotortilla\camera\ASCOMCamera.py:19
+msgid "Default camera"
+msgstr "Oletuskamera"
 
-#: astromate\engine.py:302
-msgid "ERROR: No solver selected."
-msgstr "VIRHE: Ratkojaa ei ole valittu."
-
-#: astromate\engine.py:319
-msgid "Solved in %.1fs"
-msgstr "Ratkaistu %.1f sekunnissa"
-
-#: astromate\engine.py:321
-msgid "No solution in %.1fs"
-msgstr "Ei ratkennut, %.1fs"
-
-#: astromate\engine.py:328
-msgid "ERROR: No camera connected."
-msgstr "VIRHE: Kameraa ei ole yhdistetty."
-
-#: astromate\engine.py:361
-msgid "Camera did not produce an image to solve"
-msgstr "Kamera ei tuottanut kuvaa ratkottavaksi"
-
-#: astromate\engine.py:363
-msgid "An error occurred."
-msgstr "Tapahtui virhe"
-
-#: astromate\engine.py:378
-#: astromate\engine.py:390
-msgid "ERROR: No telescope connected."
-msgstr "VIRHE: Jalustaa ei ole yhdistetty"
-
-#: astromate\engine.py:420
-msgid "Re-centering..."
-msgstr "Keskitetään..."
-
-#: astromate\gui\DlgCameraSetup.py:40
-msgid "Close"
-msgstr "Sulje"
-
-#: astromate\gui\DlgCameraSetup.py:52
-msgid "Camera interface selection"
-msgstr "Kameran valinta"
-
-#: astromate\gui\DlgCameraSetup.py:57
-msgid "Camera:"
-msgstr "Kamera:"
-
-#: astromate\gui\DlgCameraSetup.py:61
-msgid "Refresh list"
-msgstr "Päivitä lista"
-
-#: astromate\gui\DlgCameraSetup.py:63
-msgid "Refresh camera selection list"
-msgstr "Päivitä kameravalintalista"
-
-#: astromate\gui\DlgCameraSetup.py:68
-msgid "Binning:"
-msgstr "Binnaus:"
-
-#: astromate\gui\DlgCameraSetup.py:75
-msgid "Camera binning"
-msgstr "Kameran binnaus"
-
-#: astromate\gui\MainFrame.py:95
-msgid "File"
-msgstr "Tiedosto"
-
-#: astromate\gui\MainFrame.py:96
-msgid "Tools"
-msgstr "Työkalut"
-
-#: astromate\gui\MainFrame.py:97
-msgid "Help"
-msgstr "Apua"
-
-#: astromate\gui\MainFrame.py:102
-msgid "Information about the application."
-msgstr "Tietoja sovelluksesta"
-
-#: astromate\gui\MainFrame.py:104
-msgid "About"
-msgstr "Tietoja"
-
-#: astromate\gui\MainFrame.py:112
-msgid "Load settings..."
-msgstr "Lataa asetukset..."
-
-#: astromate\gui\MainFrame.py:114
-msgid "Save settings..."
-msgstr "Tallenna asetukset..."
-
-#: astromate\gui\MainFrame.py:116
-msgid "Exit the application"
-msgstr "Poistu sovelluksesta"
-
-#: astromate\gui\MainFrame.py:118
-msgid "Exit"
-msgstr "Poistu"
-
-#: astromate\gui\MainFrame.py:130
-#: astromate\gui\MainFrame.py:849
-msgid "Goto Image"
-msgstr "Avaa kuva ja siirry"
-
-#: astromate\gui\MainFrame.py:132
-msgid "Polar alignment"
-msgstr "Napasuuntausavustaja"
-
-#: astromate\gui\MainFrame.py:134
-msgid "Drift shot"
-msgstr "Ota valuntasuuntauskuva"
-
-#: astromate\gui\MainFrame.py:191
-msgid "Telescope"
-msgstr "Jalusta"
-
-#: astromate\gui\MainFrame.py:199
-msgid "Camera"
-msgstr "Kamera"
-
-#: astromate\gui\MainFrame.py:204
-msgid "Actions"
-msgstr "Toiminnot"
-
-#: astromate\gui\MainFrame.py:208
-msgid "Setup"
-msgstr "Asetukset"
-
-#: astromate\gui\MainFrame.py:211
-msgid "Setup camera"
-msgstr "Kameran asetukset"
-
-#: astromate\gui\MainFrame.py:215
-#: astromate\gui\MainFrame.py:291
-msgid "RA:"
-msgstr "RA:"
-
-#: astromate\gui\MainFrame.py:220
-#: astromate\gui\MainFrame.py:300
-msgid "Dec:"
-msgstr "Dekl:"
-
-#: astromate\gui\MainFrame.py:228
-msgid "Right ascension"
-msgstr "Rektaskensio"
-
-#: astromate\gui\MainFrame.py:233
-msgid "Declination"
-msgstr "Deklinaatio"
-
-#: astromate\gui\MainFrame.py:236
-#: astromate\gui\MainFrame.py:543
-msgid "No camera"
-msgstr "Ei kameraa"
-
-#: astromate\gui\MainFrame.py:241
-msgid "Unpark"
-msgstr "Unpark"
-
-#: astromate\gui\MainFrame.py:243
-msgid "Unpark telescope"
-msgstr "(Un)park"
-
-#: astromate\gui\MainFrame.py:248
-msgid "Field size:"
-msgstr "Kentän koko:"
-
-#: astromate\gui\MainFrame.py:257
-msgid "Rotation:"
-msgstr "Kierto:"
-
-#: astromate\gui\MainFrame.py:266
-#: astromate\gui\MainFrame.py:575
-msgid "Normal"
-msgstr "Normaali"
-
-#: astromate\gui\MainFrame.py:271
-msgid "After solve:"
-msgstr "Ratkaisun jälkeen:"
-
-#: astromate\gui\MainFrame.py:288
-msgid "arcmin"
-msgstr "arcmin"
-
-#: astromate\gui\MainFrame.py:308
-msgid "Status:"
-msgstr "Tila:"
-
-#: astromate\gui\MainFrame.py:312
-#: astromate\gui\MainFrame.py:552
+#: astrotortilla\camera\ASCOMCamera.py:122 astrotortilla\gui\MainFrame.py:312
+#: astrotortilla\gui\MainFrame.py:554
 msgid "Not connected"
 msgstr "Ei yhdistetty"
 
-#: astromate\gui\MainFrame.py:316
+#: astrotortilla\camera\CaptureCamera.py:33
+msgid "Left margin"
+msgstr "Vasen reunus"
+
+#: astrotortilla\camera\CaptureCamera.py:34
+msgid "Right margin"
+msgstr "Oikea reunus"
+
+#: astrotortilla\camera\CaptureCamera.py:35
+msgid "Top margin"
+msgstr "Yläreunus"
+
+#: astrotortilla\camera\CaptureCamera.py:36
+msgid "Bottom margin"
+msgstr "Alareunus"
+
+#: astrotortilla\camera\CaptureCamera.py:37
+msgid "Window class"
+msgstr "Ikkunaluokka"
+
+#: astrotortilla\camera\CaptureCamera.py:37
+#: astrotortilla\camera\CaptureCamera.py:38
+msgid "Regex match filter"
+msgstr "Säännollinen lausekesuodin"
+
+#: astrotortilla\camera\CaptureCamera.py:38
+msgid "Window title"
+msgstr "Ikkunan otsake"
+
+#: astrotortilla\camera\CaptureCamera.py:101
+msgid "'%s' is not a known window"
+msgstr "'%s' ei ole tunnettu ikkuna"
+
+#: astrotortilla\camera\FileOpenCamera.py:35
+msgid "Directory"
+msgstr "Hakemisto"
+
+#: astrotortilla\camera\FileOpenCamera.py:139
+msgid "Choose file to solve"
+msgstr "Valitse tiedosto ratkottavaksi"
+
+#: astrotortilla\camera\FileOpenCamera.py:142
+#: astrotortilla\gui\MainFrame.py:847
+msgid "Image files"
+msgstr "Kuvatiedostot"
+
+#: astrotortilla\camera\MaximDLCamera.py:18
+msgid "-1 for none"
+msgstr "-1 = ei mikään"
+
+#: astrotortilla\camera\MaximDLCamera.py:18
+msgid "Filter"
+msgstr "Suodatin"
+
+#: astrotortilla\camera\MaximDLCamera.py:18
+msgid "Filter index for plate solve capture"
+msgstr "Ratkottavan kuvan ottamiseen käytettävän suotimen numero"
+
+#: astrotortilla\camera\MaximDLCamera.py:51
+msgid "Dispatching Maxim.CCDCamera failed"
+msgstr "Maxim.CCDCamera:n kutsuminen epäonnistui"
+
+#: astrotortilla\camera\NebulosityCamera.py:74
+msgid "Nebulosity Path"
+msgstr "Nebulosityn polku"
+
+#: astrotortilla\camera\NebulosityCamera.py:75
+msgid "Set camera"
+msgstr "Aseta kamera"
+
+#: astrotortilla\camera\NebulosityCamera.py:75
+msgid "Set camera model on capture"
+msgstr "Aseta kameramalli kuvatessa"
+
+#: astrotortilla\camera\NebulosityCamera.py:75
+msgid "True or False"
+msgstr "'True' tai 'False'"
+
+#: astrotortilla\camera\NebulosityCamera.py:76
+msgid "Set ext filter"
+msgstr "Aseta ExtFilter -suodin"
+
+#: astrotortilla\camera\NebulosityCamera.py:76
+msgid "Set ext filter before solving"
+msgstr "Aseta ExtFilter -suodin ennen ratkontaa"
+
+#: astrotortilla\camera\NebulosityCamera.py:76
+#: astrotortilla\camera\NebulosityCamera.py:77
+msgid "Filter index or -1"
+msgstr "Suotimen numero tai -1"
+
+#: astrotortilla\camera\NebulosityCamera.py:77
+msgid "Set filter"
+msgstr "Aseta Filter -suodin"
+
+#: astrotortilla\camera\NebulosityCamera.py:77
+msgid "Set filter before solving"
+msgstr "Aseta Filter -suodin ennen ratkontaa"
+
+#: astrotortilla\camera\NebulosityCamera.py:78
+msgid "%(date)s = current date, %(night)s = current date at dusk"
+msgstr "%(date)s = tarkka päivä, %(night)s = päivämäärä illalla"
+
+#: astrotortilla\camera\NebulosityCamera.py:78
+msgid "After capture directory"
+msgstr "Normaali kuvaushakemisto"
+
+#: astrotortilla\camera\NebulosityCamera.py:78
+msgid "Reset directory to"
+msgstr "Palauta kuvaushakemistoksi"
+
+#: astrotortilla\camera\NebulosityCamera.py:286
+msgid "Nebulosity not responding to script loading"
+msgstr "Nebulosity ei vastaa"
+
+#: astrotortilla\engine.py:46 astrotortilla\engine.py:50
+#: astrotortilla\engine.py:54
+msgid "Not selected"
+msgstr "Ei valittu"
+
+#: astrotortilla\engine.py:301
+msgid "ERROR: No solver selected."
+msgstr "VIRHE: Ratkojaa ei ole valittu."
+
+#: astrotortilla\engine.py:305
+msgid "Solving..."
+msgstr "Ratkotaan..."
+
+#: astrotortilla\engine.py:318
+msgid "Solved in %.1fs"
+msgstr "Ratkaistu %.1f sekunnissa"
+
+#: astrotortilla\engine.py:320
+msgid "No solution in %.1fs"
+msgstr "Ei ratkennut, %.1fs"
+
+#: astrotortilla\engine.py:327
+msgid "ERROR: No camera connected."
+msgstr "VIRHE: Kameraa ei ole yhdistetty."
+
+#: astrotortilla\engine.py:333 astrotortilla\gui\MainFrame.py:787
+msgid "Connecting to camera..."
+msgstr "Yhdistetään kameraan..."
+
+#: astrotortilla\engine.py:339 astrotortilla\engine.py:346
+msgid "Exposing: %.2f seconds"
+msgstr "Valotetaan: %.2f sekuntia"
+
+#: astrotortilla\engine.py:349 astrotortilla\gui\MainFrame.py:819
+msgid "Waiting for camera"
+msgstr "Odotetaan kameraa"
+
+#: astrotortilla\engine.py:355
+msgid "Reading image from camera"
+msgstr "Luetaan kuvaa kameralta"
+
+#: astrotortilla\engine.py:358
+msgid "Aborted."
+msgstr "Keskeytetty"
+
+#: astrotortilla\engine.py:360
+msgid "Camera did not produce an image to solve"
+msgstr "Kamera ei tuottanut kuvaa ratkottavaksi"
+
+#: astrotortilla\engine.py:362
+msgid "An error occurred."
+msgstr "Tapahtui virhe"
+
+#: astrotortilla\engine.py:365 astrotortilla\gui\MainFrame.py:193
+msgid ""
+msgstr ""
+
+#: astrotortilla\engine.py:377 astrotortilla\engine.py:389
+msgid "ERROR: No telescope connected."
+msgstr "VIRHE: Jalustaa ei ole yhdistetty"
+
+#: astrotortilla\engine.py:392
+msgid "Waiting for scope to stop"
+msgstr "Odotetaan jalustan pysähtymistä"
+
+#: astrotortilla\engine.py:419
+msgid "Re-centering..."
+msgstr "Keskitetään..."
+
+#: astrotortilla\gui\DlgCameraSetup.py:25
+#: astrotortilla\gui\DlgCameraSetup.py:46
+msgid "Camera Setup"
+msgstr "Kameran asetukset"
+
+#: astrotortilla\gui\DlgCameraSetup.py:40
+msgid "Close"
+msgstr "Sulje"
+
+#: astrotortilla\gui\DlgCameraSetup.py:52
+msgid "Camera interface selection"
+msgstr "Kameran valinta"
+
+#: astrotortilla\gui\DlgCameraSetup.py:57
+msgid "Camera:"
+msgstr "Kamera:"
+
+#: astrotortilla\gui\DlgCameraSetup.py:61
+msgid "Refresh list"
+msgstr "Päivitä lista"
+
+#: astrotortilla\gui\DlgCameraSetup.py:63
+msgid "Refresh camera selection list"
+msgstr "Päivitä kameravalintalista"
+
+#: astrotortilla\gui\DlgCameraSetup.py:68
+msgid "Binning:"
+msgstr "Binnaus:"
+
+#: astrotortilla\gui\DlgCameraSetup.py:75
+msgid "Camera binning"
+msgstr "Kameran binnaus"
+
+#: astrotortilla\gui\DlgHelpAbout.py:41
+msgid ""
+"AstroTortilla is aimed for automating telescope GoTo corrections using plate-solving. It uses a simple wrapper library for telescope control, image capture and plate-solving. See the files README and LICENSE for details.\n"
+"\n"
+"AstroTortilla and the library are licensed under the GNU General Public License v2.\n"
+"\n"
+"AstroTortilla and the library use:\n"
+msgstr ""
+"AstroTortilla on suunniteltu automaattisiin GoTo korjauksiin käyttäen kuvakentän ratkontaa. Se on toteutettu ohuena kirjastona kaukoputken, kameran ja ratkonnan hallintaan. Lue README ja LICENSE saadaksesi lisätietoja.\n"
+"\n"
+"AstroTortilla on lisensoitu GNU General Public License v2:llä.\n"
+"\n"
+"AstroTortilla käyttää seuraavia moduleja:\n"
+
+#: astrotortilla\gui\MainFrame.py:95
+msgid "File"
+msgstr "Tiedosto"
+
+#: astrotortilla\gui\MainFrame.py:96
+msgid "Tools"
+msgstr "Työkalut"
+
+#: astrotortilla\gui\MainFrame.py:97
+msgid "Help"
+msgstr "Ohje"
+
+#: astrotortilla\gui\MainFrame.py:102
+msgid "Information about the application."
+msgstr "Tietoja sovelluksesta"
+
+#: astrotortilla\gui\MainFrame.py:104
+msgid "About"
+msgstr "Tietoja"
+
+#: astrotortilla\gui\MainFrame.py:112
+msgid "Load settings..."
+msgstr "Lataa asetukset..."
+
+#: astrotortilla\gui\MainFrame.py:114
+msgid "Save settings..."
+msgstr "Tallenna asetukset..."
+
+#: astrotortilla\gui\MainFrame.py:116
+msgid "Exit the application"
+msgstr "Poistu sovelluksesta"
+
+#: astrotortilla\gui\MainFrame.py:118
+msgid "Exit"
+msgstr "Poistu"
+
+#: astrotortilla\gui\MainFrame.py:130 astrotortilla\gui\MainFrame.py:844
+msgid "Goto Image"
+msgstr "Avaa kuva ja siirry"
+
+#: astrotortilla\gui\MainFrame.py:132
+msgid "Polar alignment"
+msgstr "Napasuuntausavustaja"
+
+#: astrotortilla\gui\MainFrame.py:134
+msgid "Drift shot"
+msgstr "Ota valuntasuuntauskuva"
+
+#: astrotortilla\gui\MainFrame.py:191
+msgid "Telescope"
+msgstr "Jalusta"
+
+#: astrotortilla\gui\MainFrame.py:199
+msgid "Camera"
+msgstr "Kamera"
+
+#: astrotortilla\gui\MainFrame.py:204
+msgid "Actions"
+msgstr "Toiminnot"
+
+#: astrotortilla\gui\MainFrame.py:208
+msgid "Setup"
+msgstr "Asetukset"
+
+#: astrotortilla\gui\MainFrame.py:211
+msgid "Setup camera"
+msgstr "Kameran asetukset"
+
+#: astrotortilla\gui\MainFrame.py:215 astrotortilla\gui\MainFrame.py:291
+msgid "RA:"
+msgstr "RA:"
+
+#: astrotortilla\gui\MainFrame.py:220 astrotortilla\gui\MainFrame.py:300
+msgid "Dec:"
+msgstr "Dekl:"
+
+#: astrotortilla\gui\MainFrame.py:228
+msgid "Right ascension"
+msgstr "Rektaskensio"
+
+#: astrotortilla\gui\MainFrame.py:233
+msgid "Declination"
+msgstr "Deklinaatio"
+
+#: astrotortilla\gui\MainFrame.py:236 astrotortilla\gui\MainFrame.py:545
+msgid "No camera"
+msgstr "Ei kameraa"
+
+#: astrotortilla\gui\MainFrame.py:241
+msgid "Unpark"
+msgstr "Unpark"
+
+#: astrotortilla\gui\MainFrame.py:243
+msgid "Unpark telescope"
+msgstr "(Un)park"
+
+#: astrotortilla\gui\MainFrame.py:248
+msgid "Field size:"
+msgstr "Kentän koko:"
+
+#: astrotortilla\gui\MainFrame.py:257
+msgid "Rotation:"
+msgstr "Kierto:"
+
+#: astrotortilla\gui\MainFrame.py:266 astrotortilla\gui\MainFrame.py:577
+msgid "Normal"
+msgstr "Normaali"
+
+#: astrotortilla\gui\MainFrame.py:271
+msgid "After solve:"
+msgstr "Ratkaisun jälkeen:"
+
+#: astrotortilla\gui\MainFrame.py:288
+msgid "arcmin"
+msgstr "arcmin"
+
+#: astrotortilla\gui\MainFrame.py:308
+msgid "Status:"
+msgstr "Tila:"
+
+#: astrotortilla\gui\MainFrame.py:316
 msgid "Slewing"
 msgstr "Siirtyy"
 
-#: astromate\gui\MainFrame.py:324
+#: astrotortilla\gui\MainFrame.py:324
 msgid "Tracking"
 msgstr "Seuraa"
 
-#: astromate\gui\MainFrame.py:329
+#: astrotortilla\gui\MainFrame.py:329
 msgid "Exposure:"
 msgstr "Valotus:"
 
-#: astromate\gui\MainFrame.py:344
+#: astrotortilla\gui\MainFrame.py:344
 msgid "Exposure time in seconds"
 msgstr "Valotusaika sekunneissa"
 
-#: astromate\gui\MainFrame.py:353
+#: astrotortilla\gui\MainFrame.py:353
 msgid "Current:"
 msgstr "Nyt:"
 
-#: astromate\gui\MainFrame.py:360
+#: astrotortilla\gui\MainFrame.py:360
 msgid "Target:"
 msgstr "Kohde:"
 
-#: astromate\gui\MainFrame.py:376
+#: astrotortilla\gui\MainFrame.py:376
 msgid "Sync scope"
 msgstr "Synkronoi jalusta"
 
-#: astromate\gui\MainFrame.py:383
+#: astrotortilla\gui\MainFrame.py:383
 msgid "Repeat until within"
 msgstr "Toista kunnes alle"
 
-#: astromate\gui\MainFrame.py:390
-#: astromate\gui\MainFrame.py:670
-#: astromate\gui\MainFrame.py:862
+#: astrotortilla\gui\MainFrame.py:390 astrotortilla\gui\MainFrame.py:666
+#: astrotortilla\gui\MainFrame.py:858
 msgid "Capture and Solve"
 msgstr "Valota ja ratko"
 
-#: astromate\gui\MainFrame.py:397
+#: astrotortilla\gui\MainFrame.py:397
 msgid "Solver"
 msgstr "Ratkoja"
 
-#: astromate\gui\MainFrame.py:411
+#: astrotortilla\gui\MainFrame.py:411
 msgid "Solver configuration"
 msgstr "Ratkojan asetukset"
 
-#: astromate\gui\MainFrame.py:437
+#: astrotortilla\gui\MainFrame.py:437
 msgid "Re-slew to target"
 msgstr "Keskitä kohde"
 
-#: astromate\gui\MainFrame.py:561
+#: astrotortilla\gui\MainFrame.py:563
 msgid "Previous solution"
 msgstr "Edellinen ratkaisu"
 
-#: astromate\gui\MainFrame.py:573
+#: astrotortilla\gui\MainFrame.py:575
 msgid "Flipped"
 msgstr "Peilikuva"
 
-#: astromate\gui\MainFrame.py:586
-#: astromate\gui\MainFrame.py:741
+#: astrotortilla\gui\MainFrame.py:582 astrotortilla\gui\MainFrame.py:731
 msgid "Last error: %s"
 msgstr "Viimeisin virhe: %s"
 
-#: astromate\gui\MainFrame.py:645
+#: astrotortilla\gui\MainFrame.py:600
+msgid "Camera error"
+msgstr "Kameravirhe"
+
+#: astrotortilla\gui\MainFrame.py:641
 msgid "Aborting..."
 msgstr "Keskeytetään..."
 
-#: astromate\gui\MainFrame.py:759
+#: astrotortilla\gui\MainFrame.py:643 astrotortilla\gui\MainFrame.py:852
+msgid "Abort solver"
+msgstr "Keskeytä ratkoja"
+
+#: astrotortilla\gui\MainFrame.py:749
 msgid "Invalid data"
 msgstr "Virheellinen tietue"
 
-#: astromate\gui\MainFrame.py:764
+#: astrotortilla\gui\MainFrame.py:754
 msgid "Load settings"
 msgstr "Lataa asetukset"
 
-#: astromate\gui\MainFrame.py:767
-#: astromate\gui\MainFrame.py:780
+#: astrotortilla\gui\MainFrame.py:757 astrotortilla\gui\MainFrame.py:770
 msgid "Config files"
 msgstr "Asetustiedostot"
 
-#: astromate\gui\MainFrame.py:777
+#: astrotortilla\gui\MainFrame.py:767
 msgid "Save settings"
 msgstr "Tallenna asetukset"
 
-#: astromate\gui\MainFrame.py:804
-#: astromate\gui\MainFrame.py:821
+#: astrotortilla\gui\MainFrame.py:796 astrotortilla\gui\MainFrame.py:813
 msgid "Drifting: %.2f seconds"
 msgstr "Valutaan: %.2f sekuntia"
 
-#: astromate\gui\MainFrame.py:833
+#: astrotortilla\gui\MainFrame.py:825
 msgid "Drifting done."
 msgstr "Valunta tehty."
 
-#: astromate\gui\MainFrame.py:852
-msgid "Image files"
-msgstr "Kuvat"
-
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:50
+#: astrotortilla\gui\PolarAlignFrame.py:51
 msgid "Polar Alignment"
 msgstr "Napasuuntaus"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:61
+#: astrotortilla\gui\PolarAlignFrame.py:62
 msgid "Observer Hemisphere:"
 msgstr "Havaitsijan pallonpuolisko:"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:66
+#: astrotortilla\gui\PolarAlignFrame.py:67
 msgid "North"
 msgstr "Pohjoinen"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:66
+#: astrotortilla\gui\PolarAlignFrame.py:67
 msgid "South"
 msgstr "Etelä"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:75
+#: astrotortilla\gui\PolarAlignFrame.py:76
 msgid "Mount altitude"
 msgstr "Jalustan altitudi"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:80
+#: astrotortilla\gui\PolarAlignFrame.py:81
 msgid "Mount azimuth"
 msgstr "Jalustan atsimuutti"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:84
+#: astrotortilla\gui\PolarAlignFrame.py:85
 msgid "East"
 msgstr "Itä"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:84
+#: astrotortilla\gui\PolarAlignFrame.py:85
 msgid "West"
 msgstr "Länsi"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:94
+#: astrotortilla\gui\PolarAlignFrame.py:95
 msgid "Measurement side:"
 msgstr "Mittauksen puoli"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:99
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:219
+#: astrotortilla\gui\PolarAlignFrame.py:100
+#: astrotortilla\gui\PolarAlignFrame.py:222
 msgid "Measure altitude error"
 msgstr "Mittaa altitudivirhe"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:112
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:262
+#: astrotortilla\gui\PolarAlignFrame.py:113
+#: astrotortilla\gui\PolarAlignFrame.py:265
 msgid "Measure azimuth error"
 msgstr "Mittaa atsimuuttivirhe"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:120
+#: astrotortilla\gui\PolarAlignFrame.py:121
 msgid "Point the telescope to the meridian before measuring!"
 msgstr "Osoitan kaukoputki meridiaanin suuntaan ennen mittausta."
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:126
+#: astrotortilla\gui\PolarAlignFrame.py:127
 msgid "Point the telescope to the east or west before measuring!"
 msgstr "Osoita kaukoputki itään tai länteen ennen mittausta."
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:131
+#: astrotortilla\gui\PolarAlignFrame.py:132
 msgid "Measured altitude error:"
 msgstr "Mitattu altitudivirhe"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:138
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:151
+#: astrotortilla\gui\PolarAlignFrame.py:139
+#: astrotortilla\gui\PolarAlignFrame.py:153
 msgid "N/A"
 msgstr "N/A"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:144
+#: astrotortilla\gui\PolarAlignFrame.py:146
 msgid "Measured azimuth error:"
 msgstr "Mitattu atsimuuttivirhe"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:183
+#: astrotortilla\gui\PolarAlignFrame.py:186
 msgid "Telescope error!"
 msgstr "Jalustavirhe!"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:196
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:204
+#: astrotortilla\gui\PolarAlignFrame.py:199
+#: astrotortilla\gui\PolarAlignFrame.py:207
 msgid "Slewing..."
 msgstr "Siirrytään..."
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:206
+#: astrotortilla\gui\PolarAlignFrame.py:209
 msgid "Done!"
 msgstr "Valmis!"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:215
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:258
+#: astrotortilla\gui\PolarAlignFrame.py:218
+#: astrotortilla\gui\PolarAlignFrame.py:261
 msgid "Abort solver!"
 msgstr "Keskeytä ratkoja!"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:223
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:266
+#: astrotortilla\gui\PolarAlignFrame.py:226
+#: astrotortilla\gui\PolarAlignFrame.py:269
 msgid "An error occurred!"
 msgstr "Tapahtui virhe!"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:231
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:239
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:247
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:251
+#: astrotortilla\gui\PolarAlignFrame.py:234
+#: astrotortilla\gui\PolarAlignFrame.py:242
+#: astrotortilla\gui\PolarAlignFrame.py:250
+#: astrotortilla\gui\PolarAlignFrame.py:254
 msgid "too low"
 msgstr "alle"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:233
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:237
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:245
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:253
+#: astrotortilla\gui\PolarAlignFrame.py:236
+#: astrotortilla\gui\PolarAlignFrame.py:240
+#: astrotortilla\gui\PolarAlignFrame.py:248
+#: astrotortilla\gui\PolarAlignFrame.py:256
 msgid "too high"
 msgstr "yli"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:272
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:280
+#: astrotortilla\gui\PolarAlignFrame.py:275
+#: astrotortilla\gui\PolarAlignFrame.py:283
 msgid "too east"
 msgstr "idässä"
 
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:274
-#: D:\AstroTortillaSVN\trunk\astromate\gui\PolarAlignFrame.py:278
+#: astrotortilla\gui\PolarAlignFrame.py:277
+#: astrotortilla\gui\PolarAlignFrame.py:281
 msgid "too west"
 msgstr "lännessä"
 
-#~ msgid "%.2f degrees"
-#~ msgstr "%.2f astetta"
+#: astrotortilla\solver\AstrometryNetSolver.py:16
+msgid "Downscaling"
+msgstr "Pienennä"
 
-#~ msgid "Solving..."
-#~ msgstr "Ratkaistaan..."
+#: astrotortilla\solver\AstrometryNetSolver.py:16
+msgid "Image downscaling factor"
+msgstr "Pienennyskerroin"
 
-#~ msgid "Connecting to camera..."
-#~ msgstr "Yhdistetään kameraan..."
+#: astrotortilla\solver\AstrometryNetSolver.py:17
+msgid "Backend config"
+msgstr "Asetustiedosto"
 
-#~ msgid "Exposing: %.2f seconds"
-#~ msgstr "Valotetaan %.2f sekuntia"
+#: astrotortilla\solver\AstrometryNetSolver.py:17
+msgid "Cygwin path to backend config file"
+msgstr "Cygwin -polku asetustiedostoon"
 
-#~ msgid "Waiting for camera"
-#~ msgstr "Odotetaan kameraa"
+#: astrotortilla\solver\AstrometryNetSolver.py:18
+msgid "Radius of search area in degrees"
+msgstr "Hakualueen säde asteina"
 
-#~ msgid "Reading image from camera"
-#~ msgstr "Luetaan kuvaa kameralta"
+#: astrotortilla\solver\AstrometryNetSolver.py:18
+msgid "Search radius"
+msgstr "Hakusäde"
 
-#~ msgid "Aborted."
-#~ msgstr "Keskeytetty."
+#: astrotortilla\solver\AstrometryNetSolver.py:19
+#: astrotortilla\solver\AstrometryNetWebSolver.py:18
+msgid "Image scale lower bound"
+msgstr "Kuvaskaalan alaraja"
 
-#~ msgid "Waiting for scope to stop"
-#~ msgstr "Odotetaan jalustan pysähtymistä"
+#: astrotortilla\solver\AstrometryNetSolver.py:19
+#: astrotortilla\solver\AstrometryNetWebSolver.py:18
+msgid "Scale minimum"
+msgstr "Skaalan alaraja"
 
-#~ msgid "Camera error"
-#~ msgstr "Kameravirhe"
+#: astrotortilla\solver\AstrometryNetSolver.py:20
+#: astrotortilla\solver\AstrometryNetWebSolver.py:19
+msgid "Image scale upper bound"
+msgstr "Kuvaskaalan yläraja"
 
-#~ msgid "Telescope not connected"
-#~ msgstr "Jalustaa ei ole yhdistetty"
+#: astrotortilla\solver\AstrometryNetSolver.py:20
+#: astrotortilla\solver\AstrometryNetWebSolver.py:19
+msgid "Scale maximum"
+msgstr "Skaalan yläraja"
 
-#~ msgid "Exposing %.2f seconds"
-#~ msgstr "Valotetaan %.2f sekuntia"
+#: astrotortilla\solver\AstrometryNetSolver.py:21
+msgid "Scale units"
+msgstr "Skaalan yksikkö"
 
-#~ msgid "Camera did not produce an image to solve."
-#~ msgstr "Kamera ei tuottanut kuvaa ratkottavaksi."
+#: astrotortilla\solver\AstrometryNetSolver.py:21
+msgid "View scale size units"
+msgstr "Kuvaskaalan koon yksikkö"
 
-#~ msgid "Solution found."
-#~ msgstr "Ratkaisu löytyi."
+#: astrotortilla\solver\AstrometryNetSolver.py:21
+msgid "arcminwidth, degwidth, arcsecperpix"
+msgstr "arcminwidth, degwidth, arcsecperpix"
 
-#~ msgid "Solution not found."
-#~ msgstr "Ratkaisua ei löytynyt."
+#: astrotortilla\solver\AstrometryNetSolver.py:22
+msgid "0 to turn off"
+msgstr "0 = pois päältä"
+
+#: astrotortilla\solver\AstrometryNetSolver.py:22
+msgid "Image scale refinement factor"
+msgstr "Kuvaskaalan tarkennuskerroin"
+
+#: astrotortilla\solver\AstrometryNetSolver.py:22
+msgid "Scale refinement"
+msgstr "Skaalatarkennus"
+
+#: astrotortilla\solver\AstrometryNetSolver.py:23
+msgid "Additional custom options"
+msgstr "Lisättävät komentorivivivut"
+
+#: astrotortilla\solver\AstrometryNetSolver.py:23
+msgid "Custom options"
+msgstr "Lisävivut"
+
+#: astrotortilla\solver\AstrometryNetSolver.py:24
+msgid "Cygwin shell"
+msgstr "Komentorivi"
+
+#: astrotortilla\solver\AstrometryNetSolver.py:24
+msgid "Shell command for Cygwin execution"
+msgstr "Cygwin komentirivikäsky"
+
+#: astrotortilla\solver\AstrometryNetSolver.py:172
+msgid "Parsing results..."
+msgstr "Parsitaan tuloksia..."
+
+#: astrotortilla\solver\AstrometryNetWebSolver.py:16
+msgid "Username"
+msgstr "Tunnus"
+
+#: astrotortilla\solver\AstrometryNetWebSolver.py:16
+msgid "Web solver username"
+msgstr "Web ratkojan käyttäjänimi"
+
+#: astrotortilla\solver\AstrometryNetWebSolver.py:17
+msgid "E-mail"
+msgstr "S-posti"
+
+#: astrotortilla\solver\AstrometryNetWebSolver.py:17
+msgid "E-mail address"
+msgstr "Sähköpostiosoite"
+

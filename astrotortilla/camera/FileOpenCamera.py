@@ -8,7 +8,7 @@ import os.path, os
 import wx
 
 import gettext
-t = gettext.translation('fileopencamera', 'locale', fallback=True)
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 try:

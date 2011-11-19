@@ -4,7 +4,7 @@ import subprocess, os, os.path, time, tempfile, shutil, threading
 import win32process
 import win32con
 import gettext
-t = gettext.translation('astrometrynetsolver', 'locale', fallback=True)
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 # vim: set fileencoding=UTF-8 : ts=4 sts=4 sw=4 et si

@@ -17,6 +17,8 @@ fit for any purpose.
 
 Version history
 ---------------
+v0.2.4 Renamed library to astrotortilla, improved Nebulosity integration,
+       Support for explicit filter selection added to MaximDL and Nebulosity,
 v0.2.3 Updates for Python 2.7 compatibility, documentation updates
 v0.2.2 Minor bugfixes in localisation, updates in manuals
 v0.2.1 Major bugfixes in goto correction, localisation added for Finnish,
@@ -52,7 +54,7 @@ Python
 
 The application AstroTortilla and the associated library are written in Python
 2.6, using WxPython [5] , Python win32all extension [6] and Python Imaging
-Library 1.1.7 [7]. Python 2.7 is also supported.
+Library 1.1.7 [7], pywinauto 0.4.0 [9]. Python 2.7 is also supported.
 
 Running astrometry.net
 ----------------------
@@ -91,3 +93,4 @@ References
 [6] http://python.net/crew/skippy/win32/Downloads.html
 [7] http://www.pythonware.com/products/pil/
 [8] http://www.cygwin.com/
+[9] https://sourceforge.net/projects/pywinauto/

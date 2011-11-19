@@ -17,7 +17,7 @@ from pywinauto import Application
 from pywinauto.timings import WaitUntil
 import threading
 import gettext
-t = gettext.translation('nebulositycamera', 'locale', fallback=True)
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 

@@ -4,7 +4,7 @@ import os, os.path, time
 import urllib2, sys, os, string, re, random, mimetypes, time, urllib
 import binascii
 import gettext
-t = gettext.translation('astrometrynetwebsolver', 'locale', fallback=True)
+t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 # vim: set fileencoding=UTF-8 : ts=4 sts=4 sw=4 et si
