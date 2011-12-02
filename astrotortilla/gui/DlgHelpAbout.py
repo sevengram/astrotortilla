@@ -19,12 +19,12 @@ class DlgHelpAbout(wx.Dialog):
         # generated method, don't edit
         wx.Dialog.__init__(self, id=wxID_DLGHELPABOUT, name='', parent=prnt,
               pos=wx.Point(568, 131), size=wx.Size(292, 315),
-              style=wx.DEFAULT_DIALOG_STYLE, title='Help About')
+              style=wx.DEFAULT_DIALOG_STYLE, title=_('About AstroTortilla'))
         self.SetClientSize(wx.Size(284, 281))
 
-        self.close = wx.Button(id=wxID_DLGHELPABOUTCLOSE, label='Close',
+        self.close = wx.Button(id=wxID_DLGHELPABOUTCLOSE, label=_('Close'),
               name='close', parent=self, pos=wx.Point(104, 240),
-              size=wx.Size(75, 23), style=0)
+              size=wx.Size(-1, 23), style=0)
         self.close.Center(wx.HORIZONTAL)
         self.close.SetToolTipString('Close')
         self.close.SetHelpText('Close')
@@ -32,8 +32,8 @@ class DlgHelpAbout(wx.Dialog):
               id=wxID_DLGHELPABOUTCLOSE)
 
         self.staticText1 = wx.StaticText(id=wxID_DLGHELPABOUTSTATICTEXT1,
-              label='AstroTortilla v0.2', name='staticText1', parent=self,
-              pos=wx.Point(16, 16), size=wx.Size(79, 13), style=0)
+              label='AstroTortilla %s'%(prnt.engine.version), name='staticText1', parent=self,
+              pos=wx.Point(16, 16), size=wx.Size(-1, 13), style=0)
 
         self.richTextCtrl1 = wx.richtext.RichTextCtrl(id=wxID_DLGHELPABOUTRICHTEXTCTRL1,
               parent=self, pos=wx.Point(16, 32), size=wx.Size(248, 200),

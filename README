@@ -19,6 +19,7 @@ Version history
 ---------------
 v0.2.4 Renamed library to astrotortilla, improved Nebulosity integration,
        Support for explicit filter selection added to MaximDL and Nebulosity,
+       Added Cygwin setup step as an option to installer.
 v0.2.3 Updates for Python 2.7 compatibility, documentation updates
 v0.2.2 Minor bugfixes in localisation, updates in manuals
 v0.2.1 Major bugfixes in goto correction, localisation added for Finnish,

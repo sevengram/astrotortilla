@@ -6,6 +6,7 @@ import py2exe
 from glob import glob
 import os.path
 
+VERSION = "0.2.4"
 
 data_files = [
 	("", [r"c:\Python26\lib\site-packages\wx-2.8-msw-unicode\wx\gdiplus.dll"]),
@@ -18,10 +19,13 @@ setup(
         windows = [
             {
                 "script":"AstroTortillaGUI.py",
+		"other_resources":[
+			(u"VERSION", 1, VERSION)
+			],
 #                "icon_resources":[(0, "astrotortilla.ico")],
                 "dest_base":"AstroTortilla",
 			}],
-        version = "0.2.4",
+        version = VERSION,
         packages = ["astrotortilla",
                     "astrotortilla.gui", 
                     "astrotortilla.camera",
@@ -49,3 +53,7 @@ setup(
 
 # Make a copy of readme as readme.txt for installer
 file("README.txt", "w").write(file("README").read())
+if not os.path.exists("setup.exe"):
+	import urllib
+	print "Fetching Cygwin setup.exe"
+	urllib.urlretrieve("http://cygwin.com/setup.exe", "setup.exe")

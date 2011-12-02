@@ -15,7 +15,7 @@ _ = t.gettext
 # key: (readable name, validation function, name tooltip, value tooltip, default value)
 # The values can be set as strings by the using application.
 PROPERTYLIST = {
-        "filter":(_("Filter"), int, _("Filter index for plate solve capture"), _("-1 for none"), "0"),
+        "filter":(_("Filter"), int, _("Filter index for plate solve capture"), _("-1 for none"), "-1"),
     }
 
 class MaximDLCamera(ICamera):

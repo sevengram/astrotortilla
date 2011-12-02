@@ -24,6 +24,26 @@ OutputBaseFilename=AstroTortilla-0.2.4
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "finnish"; MessagesFile: "compiler:Languages\Finnish.isl"
 
+[CustomMessages]
+Install2=Install %1 and %2
+finnish.Install2=Asenna %1 ja %2
+Installer=%1 setup
+finnish.Installer=%1 asetukset
+FullInstallation=Install AstroTortilla, Cygwin and astrometry.net
+finnish.FullInstallation=Asenna AstroTortilla, Cygwin ja astrometry.net
+NoCygwin=Install AstroTortilla only
+finnish.NoCygwin=Asenna vain AstroTortilla
+And=%1 and %2
+finnish.And=%1 ja %2
+
+[Types]
+Name: "full"; Description: "{cm:FullInstallation}"
+Name: "nocygwin"; Description: "{cm:NoCygwin}"
+
+[Components]
+Name: "AstroTortilla"; Types: full nocygwin; Description: "AstroTortilla"      
+Name: "cygwin"; Types: full; Description: "{cm:And,Cygwin,astrometry.net}"
+
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
@@ -38,6 +58,7 @@ Source: "AstrometryNetPackages.txt"; DestDir: "{app}";
 Source: "README.txt"; DestDir: "{app}"; Flags: isreadme
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "vcredist_x86.exe"; DestDir: {tmp}; Flags: ignoreversion
+Source: "setup.exe"; DestDir: "{app}";
 
 [Icons]
 Name: "{group}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"
@@ -46,10 +67,12 @@ Name: "{group}\User guide (English)"; Filename: "{app}\docs\AstroTortilla_user_g
 Name: "{group}\Pikaopas (Finnish)"; Filename: "{app}\docs\AstroTortilla_pikaopas.pdf"
 Name: "{group}\Käyttöohje (Finnish)"; Filename: "{app}\docs\AstroTortilla_kayttoohje.pdf"
 Name: "{group}\{cm:UninstallProgram,AstroTortilla}"; Filename: "{uninstallexe}"
+Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://downloads.sourceforge.net/astrotortilla/cygwin-custom/tortilla.gpg -s http://downloads.sourceforge.net/astrotortilla/cygwin-custom"
 Name: "{commondesktop}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{tmp}\vcredist_x86.exe"; Parameters: "/q:a /c:""install /l /q"""; WorkingDir: {tmp}; Flags: skipifdoesntexist; StatusMsg: "Checking for and installing ""Microsoft Visual C++ 2005 Redistributable Package"" if needed, This can take several minutes..."
+Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://downloads.sourceforge.net/astrotortilla/cygwin-custom/tortilla.gpg -s http://downloads.sourceforge.net/astrotortilla/cygwin-custom"; Description: "{cm:Install2,Cygwin,astrometry.net}";
 Filename: "{app}\AstroTortilla.exe"; Description: "{cm:LaunchProgram,AstroTortilla}"; Flags: nowait postinstall skipifsilent
 

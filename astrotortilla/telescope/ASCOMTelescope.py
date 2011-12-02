@@ -2,9 +2,12 @@
 Interface for ASCOM telescope
 """
 
+import time
 from ..ITelescope import ITelescope
 from ..units import Coordinate
 from win32com.client import Dispatch
+
+DEBUG = 0 # 1 to enable some debug prints
 
 PROPERTYLIST = {
         "lastselection":("", str, "", "", ""),
@@ -93,12 +96,14 @@ class ASCOMTelescope(ITelescope):
         if not isinstance(coord, Coordinate):
             raise TypeError("Parameter not a Coordinate")
         if not self.connected:
+            if DEBUG: print "Not connected"
             return
         # convert degrees to hours
-        RA = coord.RA*24./360
+        if DEBUG: print "Syncing to ", coord
+        RA = coord.RA*24./360.
         dec = coord.dec
+        separation = self.position - coord
         self.__scope.SyncToCoordinates(RA, dec)
-
 
     @property
     def slewing(self):

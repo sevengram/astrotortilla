@@ -16,6 +16,8 @@ from astrotortilla.units import Coordinate, Separation, deg2dms, deg2hms, deg2st
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
+DEBUG = 0 # 1 to enable some debug prints
+
 def create(parent):
     return mainFrame(parent)
 
@@ -171,7 +173,7 @@ class mainFrame(wx.Frame):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_MAINFRAME, name='mainFrame',
               parent=prnt, pos=wx.Point(481, 126), size=wx.Size(410, 380),
-              style=wx.DEFAULT_FRAME_STYLE, title='AstroTortilla')
+              style=wx.DEFAULT_FRAME_STYLE, title='AstroTortilla %s'%(self.engine.version))
         self._init_utils()
         self.SetClientSize(wx.Size(402, 346))
         self.SetMenuBar(self.menuBar1)
@@ -441,10 +443,10 @@ class mainFrame(wx.Frame):
               id=wxID_MAINFRAMECHKSLEWTARGET)
 
     def __init__(self, parent):
+        self.engine = TortillaEngine()
         self._init_ctrls(parent)
         self.progress.Hide()
         self.configGrid.CreateGrid(1,2)
-        self.engine = TortillaEngine()
         self.engine.subscribeStatus(self.__statusUpdater)
         self.engine.subscribeProgress(self.__progressUpdater)
         self.prev_rowcol = [None, None] # helper for solver config matrix tooltip
@@ -669,6 +671,7 @@ class mainFrame(wx.Frame):
     def __statusUpdater(self, status=None):
         "Update status bar and process UI events safely"
         if status:
+            if DEBUG: print status
             self.SetStatusText(status)
         wx.SafeYield(self)
 

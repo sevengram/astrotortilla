@@ -14,6 +14,9 @@ from time import time, sleep
 from astrotortilla import CameraState
 from astrotortilla.units import Coordinate, Separation, deg2dms, deg2hms
 
+from win32api import LoadResource
+from StringIO import StringIO
+
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
@@ -69,6 +72,17 @@ class TortillaEngine(object):
 
         self.solution = None
         self.lastCorrection = None
+
+    @property
+    def version(self):
+        version = ""
+        try:
+            version = LoadResource(0, u'VERSION', 1)
+        except:
+            pass
+        if not version.strip():
+            version = "unversioned"
+        return version
 
     def loadConfig(self, fileName=None):
         if fileName:
