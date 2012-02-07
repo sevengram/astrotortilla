@@ -350,6 +350,10 @@ class TortillaEngine(object):
             if self.__camera.needsCameraName and not self.__camera.camera:
                 self.__camera.camera = self.__camera.cameraList[0]
             exposure = exposure or self.getExposure()
+            if not self.__camera.connected:
+                self.setStatus(_("ERROR: No camera connected."))
+                self.__status.pop()
+                return None
             self.setStatus(_("Exposing: %.2f seconds")%exposure)
             self.__camera.capture(exposure)
             tEnd = time() + exposure
