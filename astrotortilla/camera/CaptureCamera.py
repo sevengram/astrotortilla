@@ -2,6 +2,10 @@
 - simple camera interface to screen capture based imaging
 """
 
+import logging
+logger = logging.getLogger("astrotortilla.CaptureCamera")
+
+
 from ..ICamera import ICamera
 from .. import CameraState
 import tempfile, shutil

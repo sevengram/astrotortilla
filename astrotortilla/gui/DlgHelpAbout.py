@@ -24,7 +24,7 @@ class DlgHelpAbout(wx.Dialog):
 
         self.close = wx.Button(id=wxID_DLGHELPABOUTCLOSE, label=_('Close'),
               name='close', parent=self, pos=wx.Point(104, 240),
-              size=wx.Size(-1, 23), style=0)
+              size=wx.Size(75, 23), style=0)
         self.close.Center(wx.HORIZONTAL)
         self.close.SetToolTipString('Close')
         self.close.SetHelpText('Close')
@@ -32,8 +32,8 @@ class DlgHelpAbout(wx.Dialog):
               id=wxID_DLGHELPABOUTCLOSE)
 
         self.staticText1 = wx.StaticText(id=wxID_DLGHELPABOUTSTATICTEXT1,
-              label='AstroTortilla %s'%(prnt.engine.version), name='staticText1', parent=self,
-              pos=wx.Point(16, 16), size=wx.Size(-1, 13), style=0)
+              label='AstroTortilla ', name='staticText1', parent=self,
+              pos=wx.Point(16, 16), size=wx.Size(61, 13), style=0)
 
         self.richTextCtrl1 = wx.richtext.RichTextCtrl(id=wxID_DLGHELPABOUTRICHTEXTCTRL1,
               parent=self, pos=wx.Point(16, 32), size=wx.Size(248, 200),
@@ -43,6 +43,8 @@ class DlgHelpAbout(wx.Dialog):
 
     def __init__(self, parent):
         self._init_ctrls(parent)
+        self.staticText1.setLabel("AstroTortilla %s"%(parent.engine.version))
+        self.staticText1.setSize(-1, 13)
 
     def OnCloseButton(self, event):
         self.Close()

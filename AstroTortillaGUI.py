@@ -3,6 +3,7 @@
 
 import wx
 
+import astrotortilla.engine
 import astrotortilla.gui.MainFrame as MainFrame
 import astrotortilla.camera, astrotortilla.solver, astrotortilla.telescope
 from astrotortilla.IPlateSolver import IPlateSolver
@@ -11,9 +12,15 @@ from astrotortilla.ITelescope import ITelescope
 from inspect import isclass, getmembers
 import sys
 
+import logging
+logger = logging.getLogger("astrotortilla.main")
+
 modules ={u'DlgCameraSetup': [0, '', u'astrotortilla/gui/DlgCameraSetup.py'],
  'DlgHelpAbout': [0, '', u'astrotortilla/gui/DlgHelpAbout.py'],
- 'MainFrame': [1, 'Main frame of Application', u'astrotortilla/gui/MainFrame.py'],
+ u'LogFrame': [0, 'Log window', u'astrotortilla/gui/LogFrame.py'],
+ 'MainFrame': [1,
+               'Main frame of Application',
+               u'astrotortilla/gui/MainFrame.py'],
  u'PolarAlignFrame': [0,
                       u'Polar alignment frame',
                       u'astrotortilla/gui/PolarAlignFrame.py']}
@@ -78,3 +85,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    logger.info("Closed")

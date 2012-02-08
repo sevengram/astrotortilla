@@ -2,6 +2,9 @@
 - simple camera interface to read a file from disc
 """
 
+import logging
+logger = logging.getLogger("astrotortilla.FileOpenCamera")
+
 from ..ICamera import ICamera
 from .. import CameraState
 import os.path, os

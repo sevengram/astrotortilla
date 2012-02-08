@@ -1,6 +1,9 @@
 # vim:st=4 sts=4 sw=4 et si
 "Maxim DL Camera interface"
 
+import logging
+logger = logging.getLogger("astrotortilla.MaximDLCamera")
+
 from ..ICamera import ICamera
 from .. import CameraState
 from win32com.client import Dispatch

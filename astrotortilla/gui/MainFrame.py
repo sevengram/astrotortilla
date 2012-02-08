@@ -1,4 +1,6 @@
 #Boa:Frame:mainFrame
+import logging
+logger = logging.getLogger("astrotortilla.Main")
 
 import wx
 import wx.grid
@@ -6,6 +8,7 @@ import wx.lib.masked.numctrl
 import DlgHelpAbout
 import DlgCameraSetup
 import PolarAlignFrame
+import LogFrame
 import gettext
 import ConfigParser
 import os, os.path
@@ -83,8 +86,8 @@ def disable(ctrl):
 ] = [wx.NewId() for _init_coll_menuFile_Items in range(3)]
 
 [wxID_MAINFRAMEMENUTOOLSDRIFTSHOT, wxID_MAINFRAMEMENUTOOLSITEMS2, 
- wxID_MAINFRAMEMENUTOOLSPOLARALIGN, 
-] = [wx.NewId() for _init_coll_menuTools_Items in range(3)]
+ wxID_MAINFRAMEMENUTOOLSLOGWINDOW, wxID_MAINFRAMEMENUTOOLSPOLARALIGN, 
+] = [wx.NewId() for _init_coll_menuTools_Items in range(4)]
 
 [wxID_MAINFRAMEMENUHELPHELPABOUT] = [wx.NewId() for _init_coll_menuHelp_Items in range(1)]
 
@@ -134,12 +137,16 @@ class mainFrame(wx.Frame):
               kind=wx.ITEM_NORMAL, text=_('Polar alignment'))
         parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
               kind=wx.ITEM_NORMAL, text=_(u'Drift shot'))
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW,
+              kind=wx.ITEM_NORMAL, text=_('Log viewer'))
         self.Bind(wx.EVT_MENU, self.OnMenuToolsDriftshotMenu,
               id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT)
         self.Bind(wx.EVT_MENU, self.OnMenuToolsPolaralignMenu,
               id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN)
         self.Bind(wx.EVT_MENU, self.OnMenuToolsGotoImage,
               id=wxID_MAINFRAMEMENUTOOLSITEMS2)
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsLogwindowMenu,
+              id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW)
 
     def _init_coll_statusBar1_Fields(self, parent):
         # generated method, don't edit
@@ -172,8 +179,8 @@ class mainFrame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_MAINFRAME, name='mainFrame',
-              parent=prnt, pos=wx.Point(481, 126), size=wx.Size(410, 380),
-              style=wx.DEFAULT_FRAME_STYLE, title='AstroTortilla %s'%(self.engine.version))
+              parent=prnt, pos=wx.Point(621, 106), size=wx.Size(410, 380),
+              style=wx.DEFAULT_FRAME_STYLE, title='AstroTortilla')
         self._init_utils()
         self.SetClientSize(wx.Size(402, 346))
         self.SetMenuBar(self.menuBar1)
@@ -443,8 +450,10 @@ class mainFrame(wx.Frame):
               id=wxID_MAINFRAMECHKSLEWTARGET)
 
     def __init__(self, parent):
-        self.engine = TortillaEngine()
         self._init_ctrls(parent)
+        self.engine = TortillaEngine()
+        self.SetTitle('AstroTortilla %s'%(self.engine.version))
+
         self.progress.Hide()
         self.configGrid.CreateGrid(1,2)
         self.engine.subscribeStatus(self.__statusUpdater)
@@ -549,6 +558,7 @@ class mainFrame(wx.Frame):
             return
         self.engine.selectCamera(self.choiceCam.GetStringSelection())
         self._updateCamera()
+        logger.debug("Camera set to %s"%self.choiceCam.GetStringSelection())
 
     def _updateCamera(self):
         "Update camera status display"
@@ -673,7 +683,8 @@ class mainFrame(wx.Frame):
         if status:
             if DEBUG: print status
             self.SetStatusText(status)
-        wx.SafeYield(self)
+        wx.SafeYield(self, True)
+        wx.GetApp().Yield(True)
 
     def OnScopePollTimer(self, event):
         if not self.engine.getTelescope():
@@ -814,7 +825,8 @@ class mainFrame(wx.Frame):
             tLeft = tEnd - time()
             if tLeft >= 0:
                 self.SetStatusText(_("Drifting: %.2f seconds")%tLeft)
-            wx.SafeYield()
+            wx.SafeYield(self, True)
+            wx.GetApp().Yield(True)
         self.engine.getTelescope().RightAscensionRate = 0.0
         self.engine.getTelescope().tracking=True
         if self.engine.getCamera().canAutoConnect:
@@ -837,7 +849,8 @@ class mainFrame(wx.Frame):
         else:
             show(self.progress)
             self.progress.SetValue(pct)
-            wx.SafeYield()
+        wx.SafeYield(self, True)
+        wx.GetApp().Yield(True)
 
     def OnMenuToolsGotoImage(self, event):
         if not self.engine.config.has_option("AstroTortilla", "last_gotoimage"):
@@ -860,3 +873,7 @@ class mainFrame(wx.Frame):
                 traceback.print_exc() 
             self.btnGO.SetLabel(_("Capture and Solve"))
             self._updateCamera()
+
+    def OnMenuToolsLogwindowMenu(self, event):
+        logFrame = LogFrame.create(self)
+        logFrame.Show()

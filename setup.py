@@ -6,7 +6,7 @@ import py2exe
 from glob import glob
 import os.path
 
-VERSION = "0.2.4"
+VERSION = "0.2.5"
 
 data_files = [
 	("", [r"c:\Python26\lib\site-packages\wx-2.8-msw-unicode\wx\gdiplus.dll"]),

@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger("astrotortilla.AstrometryNetSolver")
+
 from ..IPlateSolver import IPlateSolver, Solution
 from ..units import Coordinate
 import subprocess, os, os.path, time, tempfile, shutil, threading
@@ -61,7 +64,7 @@ class AstrometryNetSolver(IPlateSolver):
 
     def __execute(self, command):
         "Execute a command in cygwin shell"
-        if DEBUG: print ("Executing: %s"%command)
+        logger.debug("Executing: %s"%command)
         if self.__callback:
             stderrPipe = subprocess.STDOUT
         else:
@@ -162,7 +165,7 @@ class AstrometryNetSolver(IPlateSolver):
 
         r=self.__execute('solve-field %s --no-plot -D \\"`cygpath -a \\"%s\\"`\\" \\"`cygpath -a \\"%s\\"`\\"'%(" ".join(options), workDir, imagePath))
 
-        if r and len(r)>1 and r[1]: print(r[1])
+        if r and len(r)>1 and r[1]: map(logger.info, r[1])
         wcsInfo=[]
 
         # solution resolution exists and a solution was found?
@@ -174,10 +177,10 @@ class AstrometryNetSolver(IPlateSolver):
 
             output, errors = self.__execute('wcsinfo `cygpath %s`/%s.wcs'%(workDir, imageBase))
             if errors:
-                if self.__callback: 
-                    map(self.__callback, errors)
+                if callback:
+                    map(callback, errors)
                 else:
-                    print(errors)
+                    map(logger.error, errors)
 
             # build a WCS info dict, make all numbers to floats
             self.__wcsInfo = dict(

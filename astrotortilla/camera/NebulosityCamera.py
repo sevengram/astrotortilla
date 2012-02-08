@@ -3,6 +3,9 @@
 - simple camera interface to Nebulosity 2
 """
 
+import logging
+logger = logging.getLogger("astrotortilla.NebulosityCamera")
+
 from ..ICamera import ICamera
 from .. import CameraState
 import tempfile, shutil

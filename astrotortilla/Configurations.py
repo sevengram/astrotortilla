@@ -1,4 +1,8 @@
 # vim:st=4 sts=4 sw=4 et si
+import logging
+logger = logging.getLogger("astrotortilla.Configurable")
+
+TRACE = 0 # 1 to enable detailed tracing
 
 class Configurable(object):
     """Configurable - simple configurable properties
@@ -71,4 +75,4 @@ class Configurable(object):
             try:
                 self.setProperty(key,value)
             except Exception, detail:
-                print "Setting property `%s` failed: %s"%(key, detail)
+                logger.error("Setting property `%s` failed: %s"%(key, detail))

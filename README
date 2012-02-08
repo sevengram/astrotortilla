@@ -17,6 +17,8 @@ fit for any purpose.
 
 Version history
 ---------------
+v0.2.5 Added initial support for APT, ASCOM telescope status caching,
+       support for logging into file and a log viewer.
 v0.2.4 Renamed library to astrotortilla, improved Nebulosity integration,
        Support for explicit filter selection added to MaximDL and Nebulosity,
        Added Cygwin setup step as an option to installer.

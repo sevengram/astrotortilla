@@ -1,6 +1,9 @@
 # vim:st=4 sts=4 sw=4 et si
 "ASCOM camera interface"
 
+import logging
+logger = logging.getLogger("astrotortilla.ASCOMCamera")
+
 from ..ICamera import ICamera
 from .. import CameraState
 from win32com.client import Dispatch

@@ -46,7 +46,7 @@ class PolarAlignFrame(wx.Frame):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_POLARALIGNFRAME,
               name=u'PolarAlignFrame', parent=prnt, pos=wx.Point(685, 201),
-              size=wx.Size(310, 384),
+              size=wx.Size(310, 391),
               style=wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX,
               title=_(u'Polar Alignment'))
         self.SetClientSize(wx.Size(302, 357))
@@ -55,7 +55,7 @@ class PolarAlignFrame(wx.Frame):
 
         self.AlignFrame = wx.Panel(id=wxID_POLARALIGNFRAMEALIGNFRAME,
               name=u'AlignFrame', parent=self, pos=wx.Point(0, 0),
-              size=wx.Size(302, 337), style=wx.TAB_TRAVERSAL)
+              size=wx.Size(302, 334), style=wx.TAB_TRAVERSAL)
         self.AlignFrame.SetToolTipString(u'')
 
         self.HemisphereStaticText = wx.StaticText(id=wxID_POLARALIGNFRAMEHEMISPHERESTATICTEXT,

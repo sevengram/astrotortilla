@@ -2,6 +2,12 @@
 # vim: set fileencoding=UTF-8 encoding=UTF-8
 # -*- coding: UTF-8 -*-
 
+import logging
+logger = logging.getLogger("astrotortilla")
+logger.setLevel(logging.DEBUG)
+logFormatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+
 import gettext, sys
 import camera, solver, telescope
 from IPlateSolver import IPlateSolver
@@ -31,10 +37,22 @@ CFGDEFAULTS = {
                 "syncmode":"0",
             },
         "Bookmarks": {"count":"0"},
-        "AstroTortilla": {"settings_path":""}
+        "AstroTortilla": 
+            {
+                "settings_path":"", 
+                "log_file":"",
+                "log_level":"ERROR",
+            }
         }
 
-
+logLevels={
+        "FATAL":logging.FATAL,
+        "CRITICAL":logging.CRITICAL,
+        "ERROR":logging.ERROR,
+        "WARNING":logging.WARNING,
+        "INFO":logging.INFO,
+        "DEBUG":logging.DEBUG,
+        }
 class Status(object):
     Idle = 0
     Slewing = 1
@@ -44,6 +62,11 @@ class Status(object):
 
 class TortillaEngine(object):
     def __init__(self):
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.ERROR)
+        ch.setFormatter(logFormatter)
+        logger.addHandler(ch)
+
         self.__telescopes = self._list_subclasses(ITelescope, telescope)
         self.__telescope = None
         self.__telescopeName = _(u'Not selected')
@@ -70,8 +93,19 @@ class TortillaEngine(object):
         self.__statusCB = []
         self.loadConfig(CFGFILE)
 
+        logFile = self.config.get("AstroTortilla", "log_file").strip()
+        if logFile:
+            logHandler = logging.FileHandler(logFile)
+            logHandler.setLevel(logLevels[self.config.get("AstroTortilla", "log_level")])
+            logHandler.setFormatter(logFormatter)
+            logger.addHandler(logHandler)
+            logger.info("Log started")
         self.solution = None
         self.lastCorrection = None
+
+    @property
+    def logger(self):
+        return logger
 
     @property
     def version(self):
@@ -236,6 +270,8 @@ class TortillaEngine(object):
                 callback(status)
             except:
                 failed.append(callback)
+	if status.strip():
+		logger.info(status)
         [self.__callback.remove(cb) for cb in failed]
 
     def setProgress(self, progress, status=None):
@@ -279,7 +315,7 @@ class TortillaEngine(object):
             self.config.write(file(filename, "w"))
         except:
             import traceback
-            traceback.print_exc() 
+            logger.error(traceback.format_exc())
 
 
     @property
@@ -327,7 +363,7 @@ class TortillaEngine(object):
             self.__status.pop()
         except Exception, detail: # Silent errors
             import traceback
-            print traceback.format_exc()
+            logger.error(traceback.format_exc())
 	if self.solution:
 		self.setStatus(_("Solved in %.1fs")%(time()-startTime))
 	else:
@@ -379,7 +415,7 @@ class TortillaEngine(object):
         except Exception, detail:
             self.setStatus(_("An error occurred."))
             import traceback
-            print traceback.format_exc()
+            logger.error(traceback.format_exc())
         self.setStatus(_(""))
         solution = None
         if img:
