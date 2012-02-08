@@ -64,6 +64,10 @@ class CaptureCamera(ICamera):
 	def __del__(self):
 		super(CaptureCamera, self).__del__()
 	
+	@classmethod
+	def getName(cls):
+		return _("Screen capture")
+
 	@property
 	def imageTypes(self):
 		"List of image types supported by the camera"

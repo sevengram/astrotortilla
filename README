@@ -1,15 +1,11 @@
 AstroTortilla
 =============
-Copyright 2010-2011 Antti Kuntsi <mickut@gmail.com>
+Copyright 2012 AstroTortilla Team <astrotortilla-devel@lists.sourceforge.net>
+Copyright 2010-2011 Antti Kuntsi
 
 The AstroTortilla project aims to automate repetitive tasks during a modern day
 astrophotography session using plate-solving software to speed up the mount
 alignment and GoTo error corrections.
-
-The initial version is targeting to have Python [1] interfaces for ASCOM [2]
-compatible mounts and cameras, astrometry.net [3] plate solving application and
-Nebulosity2 [4] astrophometry application by Stark Labs. Contributions for
-integrating with other applications are welcome.
 
 This project is licensed under GPL, see the file LICENSE for details. This
 software is delivered as-is, with no expressed or implied guarantees of being
@@ -36,7 +32,7 @@ v0.1.0 First test release packaged as an executable
 
 
 Using AstroTortilla
----------------
+-------------------
 
 To be written in more detail later on.
 
@@ -82,9 +78,15 @@ Nebulosity2
 
 If you are using Nebulosity 2.4, you might want to use it with AstroTortilla to
 make sure your imaging camera is pointing to the correct location.
-AstroTortilla depends on the new TCP/IP based scripting feature, win32
-extensions and SendKeys package for automating the interactions.  Note:
+AstroTortilla can use the new TCP/IP based scripting feature, and depends on
+Python win32 extensions and pywinauto package for automating the interactions.
+Note:
 Nebulosity 2.3 is no longer supported.
+
+Astro Photography Tool
+----------------------
+
+Preliminary support for Astro Photography tool.
 
 References
 ----------

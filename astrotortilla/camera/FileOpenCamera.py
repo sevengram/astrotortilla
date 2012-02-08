@@ -53,6 +53,9 @@ class FileOpenCamera(ICamera):
     def __del__(self):
         super(FileOpenCamera, self).__del__()
     
+    @classmethod
+    def getName(cls):
+	    return _("File Open dialog")
     @property
     def imageTypes(self):
         "List of image types supported by the camera"

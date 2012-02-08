@@ -34,6 +34,10 @@ class MaximDLCamera(ICamera):
         del self.__cam
         super(MaximDLCamera, self).__del__()
     
+    @classmethod
+    def getName(cls):
+        return "MaxIm DL"
+
     @property
     def imageTypes(self):
         return ["jpg", "fit"]

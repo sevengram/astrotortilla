@@ -27,6 +27,10 @@ class Solution(object):
 	def __repr__(self):
 		return "Solution(%s, %f, %d, %f, %f)"%(self.__center, self.__rotation, self.__parity, self.__hFOV, self.__vFOV)
 
+	@classmethod
+	def getName(cls):
+		raise NotImplementedError("IPlateSolver.getName not implemented")
+
 	@property
 	def center(self):
 		"Coordinate(RA,dec) -instance at the image center"

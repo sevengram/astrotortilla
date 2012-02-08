@@ -43,6 +43,10 @@ class ASCOMCamera(ICamera):
         del self.__cam
         super(ASCOMCamera, self).__del__()
 
+    @classmethod
+    def getName(cls):
+        return "ASCOM Camera"
+
     @property
     def imageTypes(self):
         "List of image types supported by the camera"

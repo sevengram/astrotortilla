@@ -488,7 +488,7 @@ class mainFrame(wx.Frame):
         event.Skip()
 
     def OnChoiceSolverChoice(self, event):
-        self.engine.selectSolver(self.choiceSolver.GetStringSelection())
+        self.engine.selectSolver(event.GetClientData())
         if self.engine.getSolver():
             self._updateSolverGrid()
 
@@ -543,7 +543,7 @@ class mainFrame(wx.Frame):
         if n == 0:
             self.engine.deselectTelescope()
         else:
-            self.engine.selectTelescope(self.choiceScope.GetStringSelection())
+            self.engine.selectTelescope(event.GetClientData())
             if self.engine.getTelescope():
                 self.scopePollTimer.Start(300)
 
@@ -556,7 +556,7 @@ class mainFrame(wx.Frame):
             self.txtCam.SetLabel(_("No camera"))
             self._updateCamera()
             return
-        self.engine.selectCamera(self.choiceCam.GetStringSelection())
+        self.engine.selectCamera(event.GetClientData())
         self._updateCamera()
         logger.debug("Camera set to %s"%self.choiceCam.GetStringSelection())
 

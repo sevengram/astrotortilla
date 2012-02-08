@@ -12,6 +12,10 @@ class ITelescope(Configurable):
 	def __del__(self):
 		super(ITelescope, self).__del__()
 
+	@classmethod
+	def getName(cls):
+		raise NotImplementedError("ITelescope.getName not implemented")
+
 	@property
 	def connected(self):
 		"Is the telescope connected"

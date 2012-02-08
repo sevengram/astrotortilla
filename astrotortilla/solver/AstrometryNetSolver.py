@@ -62,6 +62,10 @@ class AstrometryNetSolver(IPlateSolver):
         except:
             pass
 
+    @classmethod
+    def getName(cls):
+        return _("Local astrometry.net")
+
     def __execute(self, command):
         "Execute a command in cygwin shell"
         logger.debug("Executing: %s"%command)

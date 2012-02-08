@@ -112,6 +112,10 @@ class NebulosityCamera(ICamera):
             cmd += "\n"
         self.__nebulositySendSript(cmd)
 
+    @classmethod
+    def getName(cls):
+        return "Nebulosity 2"
+
     @property
     def imageTypes(self):
         "List of image types supported by the camera"

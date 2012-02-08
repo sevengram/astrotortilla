@@ -36,6 +36,11 @@ class AstrometryNetWebSolver(baseclass):
         self.__wd = workDirectory
         self.__callback = None
         self.__abort = False
+
+    @classmethod
+    def getName(cls):
+        return _("Web astrometry.net")
+
     @property
     def hasSolution(self):
         return self.__found

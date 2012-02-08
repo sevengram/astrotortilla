@@ -27,6 +27,10 @@ class APTCamera(ICamera):
             self.__socket = None
         super(APTCamera, self).__del__()
 
+    @classmethod
+    def getName(cls):
+        return "Astro Photography Tool"
+
     @property
     def imageTypes(self):
         return ["jpg"]

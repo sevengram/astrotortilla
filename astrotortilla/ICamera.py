@@ -32,6 +32,10 @@ class ICamera(Configurable):
         except:
             logger.error("Failed to remove tempdir '%s'"%(self.__wd))
 
+    @classmethod
+    def getName(cls):
+	raise NotImplementedError("ICamera.getName not implemented")
+
     @property
     def imageTypes(self):
         "List of image types supported by the camera"

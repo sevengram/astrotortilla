@@ -158,7 +158,7 @@ class TortillaEngine(object):
                 self.config.set("Camera-%s"%self.__cameraName, "camera", str(self.__camera.camera))
 
     def listCameras(self):
-        return self.__cameras.keys()
+        return self.__cameras.items()
 
     def selectCamera(self, camName):
         self.deselectCamera()
@@ -183,7 +183,7 @@ class TortillaEngine(object):
         return self.__cameraName
 
     def listSolvers(self):
-        return self.__solvers.keys()
+        return self.__solvers.items()
 
     def selectSolver(self, solverName):
         self.deselectSolver()
@@ -208,7 +208,7 @@ class TortillaEngine(object):
 
 
     def listTelescopes(self):
-        return self.__telescopes.keys()
+        return self.__telescopes.items()
 
     def selectTelescope(self, telescopeName):
         self.deselectTelescope()
@@ -256,8 +256,8 @@ class TortillaEngine(object):
         for module in moduleRef.__all__:
             fqmn = moduleRef.__name__+"."+module
             mod_ = __import__(fqmn, globals(), locals())
-            solvers = getmembers(sys.modules[fqmn], lambda m: isclass(m) and issubclass(m, baseClass) and m is not baseClass)
-            for className, classRef in solvers:
+            subclasses = getmembers(sys.modules[fqmn], lambda m: isclass(m) and issubclass(m, baseClass) and m is not baseClass)
+            for className, classRef in subclasses:
                 rval[className] = classRef
         return rval
         
@@ -493,9 +493,9 @@ def testEngine():
     t = TortillaEngine()
     import sys
     t.subscribeStatus(sys.stderr.write)
-    t.selectSolver(t.listSolvers()[-1])
-    t.selectCamera(t.listCameras()[0])
-    t.selectTelescope(t.listTelescopes()[0])
+    t.selectSolver(t.listSolvers()[-1][0])
+    t.selectCamera(t.listCameras()[0][0])
+    t.selectTelescope(t.listTelescopes()[0][0])
     t.getCamera().connected=True
     t.getSolver().setProperty("scale_low", 90)
     t.getSolver().setProperty("scale_max", 120)

@@ -48,6 +48,10 @@ class ASCOMTelescope(ITelescope):
     def __del__(self):
         super(ASCOMTelescope, self).__del__()
 
+    @classmethod
+    def getName(cls):
+        return "ASCOM Telescope"
+
     @property
     def _maxAge(self):
         return float(self.getProperty("propertyAgeLimit"))
