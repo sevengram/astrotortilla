@@ -60,8 +60,8 @@ yölliseksi välipalaksi tähtitaivaan alla.
 \subsection{Kameran ohjaus}
 
 AstroTortilla voi ohjata mitä tahansa tähtikameraa (CCD, digijärkkäri yms.)
-käyttämällä joko Stark Labsin \textbf{\emph{Nebulosity 2}}:a tai Diffraction
-Limitedin \textbf{\emph{Maxim DL}}:ää. Lisäksi kameraan voi ottaa suoran
+käyttämällä jotakin tuetuista kameraohjelmista, joita ovat Stark Labsin \textbf{\emph{Nebulosity 2}}, Diffraction
+Limitedin \textbf{\emph{Maxim DL}} sekä Incanus Ltd:n \textbf{\emph{Astro Photography Tool}}. Lisäksi kameraan voi ottaa suoran
 yhteyden  \hbox{\textbf{\emph{ASCOM-rajapinnan}}} avulla, vaikkei se kentällä
 olekaan kovin hyödyllistä.
 
@@ -77,7 +77,7 @@ Projektiin osallistuminen esim. rakentamalla tuki uusille kamerasoftille on erit
 AstroTortilla tukee tällä hetkellä kaikkia
 \hbox{\textbf{\emph{ASCOM-rajapinnan}}} kautta yhteensopivia tietokoneohjattuja
 seurantajalustoja. Ohjelman kehittäjät käyttävät EQMOD-ohjelman avulla
-ohjattuja Sky-Watcherin HEQ5 ja EQ6 -jalustoja.  
+ohjattuja Sky-Watcherin HEQ5 ja EQ6 -jalustoja.
 
 ASCOM-rajapinnan käyttö rajoittaa ohjelman toimivuuden tällä hetkellä
 Microsoftin Windows-käyttö\-järjestelmiin. INDI-rajapinnan tukeminen on
@@ -94,7 +94,7 @@ Linuxilla pyörivää Astrometry.net -palvelinta.
 
 Toinen vaihtoehto olisi käyttää DC-3 Dreamsin \emph{PinPoint Astrometric
 Engine}ä, mutta tukea tälle ei ole vielä toteutettu. Valitettavasti
-AstroTortillan ei ole mahdollista hyödyntää Maxim DL:n mukana tulevaa
+AstroTortillan ei ole mahdollista hyödyntää Maxim DL:n mukana tulevaa ilmaista
 \emph{PinPoint LE}:tä, sillä sitä ei voi ohjata etärajapinnan kautta.
 
 \section{Astrometrinen ratkaisu}
@@ -140,12 +140,12 @@ Toisaalta säästät Cygwinin asennuksen vaivan etkä tarvitse muutamaa gigatavua
 tilaa indekseille kiintolevyltäsi. Online-ratkojan käyttö on erityisen näppärää
 voidaksesi kokeilla AstroTortillan käyttöä ilman mittavaa esivalmistelua.
 
-\subsubsection{Installing Cygwin and Astrometry.net}
+\section{AstroTortillan, Cygwinin ja Astrometry.netin asentaminen}
 
 Ajaaksesi Linux-pohjaista Astrometry.netiä paikallisesti Windows-koneella
-joudut asentamaan Cygwin-\-emulaattori\-ympäristön. Asennus on helppoa
-AstroTortilla-tiimin valmistelemalla asennusohjelmalla, joka on etukäteen
-säädetty asentamaan kaiken tarvittavan Internetin kautta.
+joudut asentamaan Cygwin-\-emulaattori\-ympäristön. Asennus on helppoa, koska 
+sekä Cygwinin että Astrometry.netin asennus on niputettu AstroTortillan omaan 
+asennusohjelmaan.
 
 Cygwin-asennus vie noin 350 megatavua tilaa kiintolevyltäsi ja sisältää
 valikoiman linuxtyökaluja joita et todennäköisesti tarvitse.
@@ -159,24 +159,40 @@ vie noin 24 gigatavua levytilaa. Pienin Astrometry.netin ratkaistavissa oleva
 kenttä on noin viiden kaariminuutin levyinen.
 
 
-\textbf{1. Cygwin-asennusohjelman hakeminen}
+\textbf{1. Asennusohjelman hakeminen}
 
 Asennusohjelma löytyy osoitteesta
-\surl{http://astrotortilla.sourceforge.net/cygwin-custom/}. Tallenna ja
-käynnistä \texttt{cygwin-astrometry-setup.exe}. Tämän jälkeen paina toistuvasti
+\surl{http://astrotortilla.sourceforge.net/}. Etusivun vihreä latauskuvake ei
+palveluntarjoajasta johtuvista syistä aina osoita uusimpaan versioon, joten 
+kannattaa tarkistaa uusin versio Downloads-sivulta. 
+Tallenna ja käynnistä \texttt{AstroTortilla-<versio>.exe}. Tämän jälkeen voit
+asentaa ohjelman normaaliin tapaan klikkailemalla Next-nappulaa, kunnes voit 
+valita haluatko asentaa Cygwinin ja Astrometry.netin AstroTortillan mukana.
+
+Ensimmäisellä asennuskerralla valitse myös Cygwinin ja Astrometry.netin asennus.
+Kun seuraavan kerran asennat AstroTortillasta uuden version, voit asentaa pelkän 
+AstroTortillan, Cygwin palikoineen on jo koneellasi.
+
+AstroTortillan asennusohjelma käynnistää nyt Cygwinin asennusohjelman. Tässä voit
+samaten painella toistuvasti
 Next-nappulaa kunnes asennusohjelma pyytää sinua valitsemaan latauspalvelimen
 ("Choose a Download Site").
 
-\textbf{2. Latauspalvelinten valitseminen} Seuraavaksi täytyy valita
-AstroTortilla-tiimin sivusto Astrometry.netin lataamiseksi ja jokin toinen
+\textbf{2. Latauspalvelinten valitseminen} 
+
+Seuraavaksi täytyy valita sourceforge.netin
+sivusto Astrometry.netin lataamiseksi ja jokin toinen
 sivusto varsinaisen Cygwinin lataamiseksi. Palvelinten listassa
-\\\surl{http://astrotortilla.sourceforge.net} on valmiiksi valittuna. Tämän
+\\\surl{http://downloads.sourceforge.net} on valmiiksi valittuna. Tämän
 lisäksi valitse yksi muu palvelin klikkaamalla sitä listassa Ctrl-näppäin
 painettuna. Mikä tahansa käy, mutta jokin lähellä sijaitseva (esim.
 ftp://ftp.sunet.se) saattaa nopeuttaa asennusta.
 
 Ennen jatkamista, \textbf{tarkista että molemmat kaksi palvelinta ovat listassa
-valittuina!} Tämän jälkeen klikkaile Nextiä. Jos näkyviin ilmestyy ylimääräisiä
+valittuina!!!} Väärät klikkailut asennuksen tässä vaiheessa ovat yleisin syy 
+AstroTortillan toimimattomuuteen.
+
+Tämän jälkeen klikkaile Nextiä. Jos näkyviin ilmestyy ylimääräisiä
 ikkunoita, klikkaa OK. Lataamisen ja asennuksen lopuksi klikkaa Finish.
 
 \textbf{3. Indeksien lataaminen}
@@ -184,7 +200,9 @@ ikkunoita, klikkaa OK. Lataamisen ja asennuksen lopuksi klikkaa Finish.
 Toistaiseksi, saadaksesi käyttöön Astrometry.netin tarvitsemat indeksit, sinun
 on hyväksyttävä niiden käyttöehdot ja lähetettävä sähköpostia Astrometry.netin
 kehittäjille täältä löytyvien ohjeiden mukaan:
-\\\surl{http://trac.astrometry.net/ browser/trunk/src/GETTING-INDICES}. Huomaa
+\\\surl{http://trac.astrometry.net/browser/trunk/src/astrometry/GETTING-INDICES}. 
+
+Huomaa
 että tällä hetkellä indeksien jakaminen eteenpäin on kiellettyä ja tämä on
 vielä jonkin aikaa ainoa tapa niiden saamiseksi. Kuten ohjeessa lukee,
 hakemukseen on liitettävä selvä kuvaus siitä mihin indeksejä aikoo käyttää.
@@ -193,14 +211,29 @@ hyödyntävää AstroTortilla-ohjelmaa. Tämän jälkeen kehittäjät ottavat sinuun
 yhteyttä pikimmiten ja antavat linkin, josta valtavan indeksikasan voi ladata
 koneelleen.
 
+Yritämme parhaillaan saada generoiduksi oman indeksikatalogin jota voimme jakaa
+eteenpäin omilla ehdoillamme (täysin vapaasti). Siihen mennessä indeksit on 
+kuitenkin haettava Astrometry.netin kautta heidän asettamien lisenssiehtojen
+mukaisesti.
+
 \textbf{4. Indeksien purkaminen}
 
-Ladattuasi haluamasi indeksit, laita ne hakemistoon \texttt{C:\textbackslash
+Ladattuasi haluamasi indeksit, on niiden pakattujen bz2-tiedostojen sisältö 
+purettava oikeaan hakemistoon. Jos osaat purkaa bz2-tiedostoja windowsissa 
+jollain pakkausohjelmalla (WinRAR, 7-zip jne.) voit halutessasi purkaa pakettien 
+sisällön myös käsin, kunhan varmistut siitä että operaation jälkeen alla näkyvä
+hakemisto sisältää FITS-tiedostoja. 
+
+Mikäli et osaa purkaa paketteja itse, seuraa alla olevaa ohjetta:
+
+Laita lataamasi indeksipaketit hakemistoon \texttt{C:\textbackslash
 cygwin\textbackslash usr\textbackslash share\textbackslash
 astrometry\textbackslash data\textbackslash } tai vastaavaan, jos asensit
-Cygwinin muualle. Tämän jälkeen avaa Cygwin-komentorivi (kuvake työpöydällä),
+Cygwinin muulle asemalle. Tämän jälkeen avaa Cygwin-komentorivi (kuvake työpöydällä),
 komenna \texttt{cd /usr/share/astrometry/data} jonka jälkeen komenna
-\texttt{tar xjf *.bz2}. Nyt bz2-tiedostojen sisällä olevat FITS-tiedostot
+\texttt{tar xjf *.bz2}. 
+
+Nyt bz2-tiedostojen sisällä olevat FITS-tiedostot
 pitäisi olla purettu data-hakemistoon. Voit varmistaa että näin on, jonka
 jälkeen voit poistaa bz2-paketit tilaa viemästä komentamalla \texttt{rm *.bz2}.
 Voit myös poistaa paketit käsin windowsin kautta. Varmista ettet vahingossa
@@ -215,7 +248,8 @@ komennon käytöstä tutustu Astrometry.netin omaan dokumentaatioon.
 Käyttääksesi AstroTortillaa sinun ei tarvitse osata käyttää komentoriviä.
 Seuraavaksi valitse vain AstroTortillan pääikkunasta ratkojaohjelmaksi
 \texttt{AstrometryNetSolver}. Voit myös joutua vaihtamaan Cygwin-polun
-Astrometry.netiin AstroTortillan asetustaulukossa (lisäohjeita alla).
+Astrometry.netiin AstroTortillan asetustaulukossa, mikäli asensit Cygwinin 
+jonnekin muualle kuin \texttt{C:\textbackslash cygwin} -hakemistoon (lisäohjeita alla).
 
 \section{AstroTortillan käyttö}
 
@@ -240,7 +274,7 @@ kotisivuilta löytyvään Plain Old Telescope Handset (POTH) -ohjelmaan, tai
 kokeile jotain muuta ASCOM-hubia.
 
 \textbf{\emph{Camera (Kamera)}} -paneelissa otetaan yhteys käyttämääsi
-kameraan. Riippuen kuvausohjelmastasi, valitse joko \texttt{MaximDLCamera} tai
+kameraan. Riippuen kuvausohjelmastasi, valitse joko \texttt{MaximDLCamera}, \texttt{APTCamera} tai
 \texttt{NebulosityCamera}.  
 
 Kokeillaksesi jotain muuta kameran kuvan ruudulla näyttävää ohjelmaa, valitse
@@ -269,7 +303,7 @@ toistaa (Repeat) korjausliikkeitä automaattisesti niin kauan kunnes olet
 haluamasi raja-arvon sisällä oikeista koordinaateista.
 
 
-\textbf{\emph{Tools (Työkalut)}} -valikossa voit jalustalla levyltä valittavan
+\textbf{\emph{Tools (Työkalut)}} -valikossa voit siirtyä jalustalla levyltä valittavan
 kuvatiedoston koordinaatteihin (Goto image (Avaa kuva ja siirry)) tai käyttää
 AstroTortillaa seurantajalustasi napasuuntaukseen (Polar alignment
 (Napasuuntausavustaja), Drift shot (Ota valuntasuuntauskuva)).
@@ -301,19 +335,19 @@ keskellä ruutua, ruksimalla Repeat (Toista kunnes) -toiminnon AstroTortilla
 toistaa korjausliikkeitä automaattisesti, kunnes on vahvistettu kohteen olevan
 keskellä ruutua halutulla tarkkuudella.
 
-\subsection{Käyttötapa tulevaisuudessa}
-
-Yllä kuvattu käyttötapa yksinkertaistuu huomattavasti tulevissa versioissa,
-joissa AstroTortilla näkyy plane\-taario-ohjelmallesi ASCOM-jalustana. Tällöin
-voit antaa haluamallasi ohjelmalla GoTo-käskyn kohteeseen, ja AstroTortilla
-varmistaa automaattisesti kenttää ratkomalla, että GoTo-ajon valmistuttua kohde
-on päätynyt keskelle kuvakenttääsi yhdellä klikkauksella.
-
-Voit myös määrittää AstroTortillan olemaan puuttumatta GoTo-käskyihin
-siirtymissä, jotka ovat valitsemaasi kulmaetäisyyttä, esim. viittä astetta
-pienempiä. Tällöin AstroTortilla välittää GoTokäskyt suoraan jalustallesi
-varmistaakseen, että pienehköt jalustan siirtelyt esim. kuvakentän rajaamista
-varten sujuvat joutuisasti ja ilman kuvan ratkomiseen kuluvia viiveitä.
+%\subsection{Käyttötapa tulevaisuudessa}
+%
+%Yllä kuvattu käyttötapa yksinkertaistuu huomattavasti tulevissa versioissa,
+%joissa AstroTortilla näkyy plane\-taario-ohjelmallesi ASCOM-jalustana. Tällöin
+%voit antaa haluamallasi ohjelmalla GoTo-käskyn kohteeseen, ja AstroTortilla
+%varmistaa automaattisesti kenttää ratkomalla, että GoTo-ajon valmistuttua kohde
+%on päätynyt keskelle kuvakenttääsi yhdellä klikkauksella.
+%
+%Voit myös määrittää AstroTortillan olemaan puuttumatta GoTo-käskyihin
+%siirtymissä, jotka ovat valitsemaasi kulmaetäisyyttä, esim. viittä astetta
+%pienempiä. Tällöin AstroTortilla välittää GoTokäskyt suoraan jalustallesi
+%varmistaakseen, että pienehköt jalustan siirtelyt esim. kuvakentän rajaamista
+%varten sujuvat joutuisasti ja ilman kuvan ratkomiseen kuluvia viiveitä.
 
 
 \subsection{Goto image -työkalu}
@@ -327,7 +361,7 @@ Käyttääksesi työkalua, valitse \emph{Tools $\rightarrow$ Goto image (Työkalut
 $\rightarrow$ Avaa kuva ja siirry)} ja valitse haluamasi kuva ilmestyvässä
 dialogissa. Tämän jälkeen AstroTortilla ratkoo kuvan ja kääntää jalustasi
 ratkottuihin koordinaatteihin. Valittavan kuvan on oltava FITS-, JPEG-, TIFF-
-tai PNMformaatissa.
+tai PNM-formaatissa.
 
 Käytettäessä kuvaansiirtymistyökalua, AstroTortilla jättää huomiotta
 Actions-paneeliin ruksatut valinnat ja suorittaa aina toistuvan keskityksen
@@ -336,7 +370,7 @@ keskustaa. Samoin ratkaisijan etsintäsädeparametri (search radius) jätetään
 huomiotta - kuvaan siirtyminen on aina täysin sokko ratkaisu.
 
 
-\subsection{Polar aligning your mount with AstroTortilla}
+\subsection{Jalustan napasuuntaus AstroTortillan avulla}
 
 AstroTortilla tarjoaa kaksi työkalua seurantajalustan napasuuntauksen
 helpottamiseen.
@@ -356,7 +390,7 @@ napasuuntaustyökalun joka katselee hetken eri puolille taivasta ja jättää
 käyttäjälle pelkän ruuvien kääntelyn.
 
 
-\subsection{Polar Alignment tool}
+\subsection{Napasuuntausavustaja}
 
 Napasuuntaustyökalu valottaa kaksi paria kuvia ja siirtää parin ruutujen
 välissä jalustaa puolen asteen verran rektaskensioakselin suunnassa. Kuvista
@@ -385,7 +419,7 @@ osoittaa etelämeridiaanin länsipuolelle (oikealle puolelle).
 
 
 
-\subsection{Drift shot tool}
+\subsection{Valuntasuuntaustyökalu}
 
 Valumiseen eli driftaamiseen perustuva napasuuntaus on tarkka mutta työläs tapa
 napasuunnata seurantajalusta, ja se on helpointa tehdä CCD-kameralla verrattuna
@@ -427,10 +461,11 @@ AstroTortillan tekivät
 \begin{tabular}{l l} 
 Antti Kuntsi (Mickut) &Ohjelman varsinainen kehitys \\ 
 Lauri Kangas (Vostok) &Maxim DL -plugin, ohjetekstit \\ 
-Samuli Vuorinen (naavis) &Napasuuntaustyökalu, Astrometry.net online plugin \\
-Jussi Kantola (ketarax) &Astrometry.netin paketointi helposti asennettavaksi \\ 
+Samuli Vuorinen (naavis) &Napasuuntaustyökalu, APT-plugin \\ %Astrometry.net online plugin \\
+Jussi Kantola (ketarax) &Astrometry.netin Cygwin-paketti ja asennusohjelma \\ 
 \end{tabular}
 
 
 
 \end{document}
+
