@@ -13,6 +13,7 @@ fit for any purpose.
 
 Version history
 ---------------
+v0.2.6 Sync failure check added, fixed error in re-slewing to target
 v0.2.5 Added initial support for APT, ASCOM telescope status caching,
        support for logging into file and a log viewer.
 v0.2.4 Renamed library to astrotortilla, improved Nebulosity integration,

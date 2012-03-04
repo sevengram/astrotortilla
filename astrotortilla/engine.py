@@ -468,10 +468,13 @@ class TortillaEngine(object):
         pointError = targetPos - currentSolution.center
         self.lastCorrection = pointError
 
-        retries = limit - 1
-        while (retries > 0) and (pointError.arcminutes > threshold):
+        retries = 0
+        while (retries < limit) and (pointError.arcminutes > threshold):
             self.setStatus(_("Re-centering..."))
             self.__telescope.position = currentSolution.center
+            sync_delta = self.__telescope.position - currentSolution.center
+            if sync_delta.arcminutes > threshold:
+                raise Exception("ASCOM Telescope sync error")
             self.__telescope.slewToAsync(targetPos)
             while self.__telescope.slewing:
                 sleep(0.1)
@@ -485,7 +488,7 @@ class TortillaEngine(object):
 
             pointError = targetPos - currentSolution.center
             self.lastCorrection = pointError
-            retries -= 1
+            retries += 1
         self.__status.pop()
         return pointError
 

@@ -607,6 +607,7 @@ class mainFrame(wx.Frame):
                     self.engine.getCamera().connected = True
                 except Exception, detail:
                     import traceback
+                    logger.error("Camera error: %s"%traceback.format_exc())
                     diag = wx.MessageDialog(parent=self, 
                         message=traceback.format_exc(), 
                         caption=_("Camera error"),
@@ -667,6 +668,21 @@ class mainFrame(wx.Frame):
                 self.engine.solveCamera()
                 if self.chkSync.IsChecked() and self.engine.solution:
                     self.engine.getTelescope().position = self.engine.solution.center
+                    sync_error = self.engine.getTelescope().position - self.engine.solution.center
+                    if sync_error.arcminutes > arcminLimit:
+                        raise Exception("ASCOM Telescope sync error")
+        except Exception as e:
+            import traceback
+            logger.error("Sync failed: %s"%traceback.format_exc())
+            diag = wx.MessageDialog(parent=self, 
+                    message=traceback.format_exc(), 
+                        caption=_("Telescope error"),
+                        style = wx.OK
+                        )
+            try:
+                diag.ShowModal()
+            except:
+                diag.Destroy()
         finally:
             self._updateCamera()
             # update solver configuration grid from solver properties
@@ -791,7 +807,16 @@ class mainFrame(wx.Frame):
             self.engine.saveConfig(fileName)
         except:
             import traceback
-            traceback.print_exc() 
+            logger.error("Saving settings failed: %s"%traceback.format_exc())
+            diag = wx.MessageDialog(parent=self, 
+                    message=traceback.format_exc(), 
+                        caption=_("Error saving settings"),
+                        style = wx.OK
+                        )
+            try:
+                diag.ShowModal()
+            except:
+                diag.Destroy()
 
     def OnMenuToolsDriftshotMenu(self, event):
         if not self.engine.isReady:

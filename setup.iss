@@ -7,8 +7,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{B42B2870-EC8A-4D2D-90E6-9075D4DB5960}
 AppName=AstroTortilla
-AppVersion=0.2.5
-AppVerName=AstroTortilla version 0.2.5
+AppVersion=0.2.6
+AppVerName=AstroTortilla version 0.2.6
 AppPublisherURL=http://astrotortilla.sf.net
 AppSupportURL=http://astrotortilla.sf.net
 AppUpdatesURL=http://astrotortilla.sf.net
@@ -18,7 +18,7 @@ AllowNoIcons=yes
 LicenseFile=LICENSE
 Compression=lzma
 SolidCompression=yes
-OutputBaseFilename=AstroTortilla-0.2.5
+OutputBaseFilename=AstroTortilla-0.2.6
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
