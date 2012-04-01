@@ -15,6 +15,8 @@ logger = logging.getLogger("astrotortilla.ASCOMTelescope")
 PROPERTYLIST = {
         "lastselection":("", str, "", "", ""),
         "propertyAgeLimit":("", float, "", "", "1.0"),
+        "syncMaxWait":("", float, "", "", "2.0"),
+        "syncAccuracy":("", float, "", "", "1.0")
         }
 
 class ASCOMTelescope(ITelescope):
@@ -168,7 +170,13 @@ class ASCOMTelescope(ITelescope):
         separation = self.position - coord
         logger.info("Sync separation is %s"%deg2str(separation.degrees))
         self.__scope.SyncToCoordinates(RA, dec)
-        self.__invalidateCache()
+        sync_time = now = time.time()
+        while (now - sync_time) < float(self.getProperty("syncMaxWait")):
+            self.__invalidateCache()
+            separation = self.position - coord
+            if separation.arcminutes < float(self.getProperty("syncAccuracy")):
+                break
+            time.sleep(float(self.getProperty("syncAccuracy"))/10.0)
         if TRACE: logger.debug("<position set")
 
     @property

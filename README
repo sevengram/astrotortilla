@@ -13,6 +13,8 @@ fit for any purpose.
 
 Version history
 ---------------
+v0.2.7 Sync error checking corrections, WCS parser error handling added,
+       Cygwin installer updates for SourceForge changes
 v0.2.6 Sync failure check added, fixed error in re-slewing to target
 v0.2.5 Added initial support for APT, ASCOM telescope status caching,
        support for logging into file and a log viewer.

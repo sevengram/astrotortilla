@@ -228,7 +228,7 @@ class AstrometryNetSolver(IPlateSolver):
                     self.setProperty("scale_low", hFOV*60/refinement)
                     self.setProperty("scale_max", hFOV*60*refinement)
                 elif scaleUnits == "arcsecperpix":
-                    aspp=float(self.__wcs["pixscale"])
+                    aspp=float(self.__wcsInfo["pixscale"])
                     self.setProperty("scale_low", aspp/refinement)
                     self.setProperty("scale_max", aspp*refinement)
 

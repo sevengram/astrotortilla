@@ -7,8 +7,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{B42B2870-EC8A-4D2D-90E6-9075D4DB5960}
 AppName=AstroTortilla
-AppVersion=0.2.6
-AppVerName=AstroTortilla version 0.2.6
+AppVersion=0.2.7
+AppVerName=AstroTortilla version 0.2.7
 AppPublisherURL=http://astrotortilla.sf.net
 AppSupportURL=http://astrotortilla.sf.net
 AppUpdatesURL=http://astrotortilla.sf.net
@@ -18,7 +18,7 @@ AllowNoIcons=yes
 LicenseFile=LICENSE
 Compression=lzma
 SolidCompression=yes
-OutputBaseFilename=AstroTortilla-0.2.6
+OutputBaseFilename=AstroTortilla-0.2.7
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -67,12 +67,12 @@ Name: "{group}\User guide (English)"; Filename: "{app}\docs\AstroTortilla_user_g
 Name: "{group}\Pikaopas (Finnish)"; Filename: "{app}\docs\AstroTortilla_pikaopas.pdf"
 Name: "{group}\Käyttöohje (Finnish)"; Filename: "{app}\docs\AstroTortilla_kayttoohje.pdf"
 Name: "{group}\{cm:UninstallProgram,AstroTortilla}"; Filename: "{uninstallexe}"
-Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://downloads.sourceforge.net/astrotortilla/cygwin-custom/tortilla.gpg -s http://downloads.sourceforge.net/astrotortilla/cygwin-custom"
+Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://sourceforge.net/projects/astrotortilla/files/cygwin-custom/tortilla.gpg -s http://sourceforge.net/projects/astrotortilla/files/cygwin-custom"
 Name: "{commondesktop}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{tmp}\vcredist_x86.exe"; Parameters: "/q:a /c:""install /l /q"""; WorkingDir: {tmp}; Flags: skipifdoesntexist; StatusMsg: "Checking for and installing ""Microsoft Visual C++ 2005 Redistributable Package"" if needed, This can take several minutes..."
-Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://downloads.sourceforge.net/astrotortilla/cygwin-custom/tortilla.gpg -s http://downloads.sourceforge.net/astrotortilla/cygwin-custom"; Description: "{cm:Install2,Cygwin,astrometry.net}";
+Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://sourceforge.net/projects/astrotortilla/files/cygwin-custom/tortilla.gpg -s http://sourceforge.net/projects/astrotortilla/files/cygwin-custom"; Description: "{cm:Install2,Cygwin,astrometry.net}";
 Filename: "{app}\AstroTortilla.exe"; Description: "{cm:LaunchProgram,AstroTortilla}"; Flags: nowait postinstall skipifsilent
 
