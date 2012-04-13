@@ -802,7 +802,7 @@ class mainFrame(wx.Frame):
         if not fileName:
             return
         try:
-            if lower(fileName[-4:]) != ".cfg":
+            if (fileName[-4:]).lower() != ".cfg":
                 fileName += ".cfg"
             self.engine.saveConfig(fileName)
         except:
