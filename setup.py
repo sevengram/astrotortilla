@@ -5,14 +5,16 @@ from distutils.core import setup
 import py2exe
 from glob import glob
 import os.path
+import platform, sys
 
 VERSION = "0.2.7"
 
-data_files = [
-	("", [r"c:\Python26\lib\site-packages\wx-2.8-msw-unicode\wx\gdiplus.dll"]),
-	(r"locale/fi/LC_MESSAGES", glob(r"locale/fi/LC_MESSAGES/*.mo")),
-	("docs", glob("docs/*.pdf")),
-	]
+data_files = []
+
+if sys.version_info.major == 2 and sys.version_info.minor == 6:
+	data_files.append( ("", [r"c:\Python26\lib\site-packages\wx-2.8-msw-unicode\wx\gdiplus.dll"]) )
+data_files.append( (r"locale/fi/LC_MESSAGES", glob(r"locale/fi/LC_MESSAGES/*.mo")) )
+data_files.append( ("docs", glob("docs/*.pdf")) )
 
 setup(
         name = "AstroTortilla",

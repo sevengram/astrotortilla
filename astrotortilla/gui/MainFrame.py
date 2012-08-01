@@ -470,7 +470,12 @@ class mainFrame(wx.Frame):
     
     def OnClose(self, event):
         "Save settings on exit"
-        self.engine.saveConfig()
+	try:
+	        self.engine.saveConfig()
+	except:
+		pass
+		# saving settings on exit failed, but nowhere to show the error anymore
+
         event.Skip()
 
 

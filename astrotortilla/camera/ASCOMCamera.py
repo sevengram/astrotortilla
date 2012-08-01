@@ -150,20 +150,23 @@ class ASCOMCamera(ICamera):
         if not self.__cam.ImageReady:
             return None
         self.__camState = CameraState.Idle
-        imgName = os.path.join(self.workingDirectory, "ASCOM.jpg")
+        imgName = os.path.join(self.workingDirectory, "ASCOM.png")
         tup = self.__cam.ImageArray
 # HACK the column major data to be correct
-        data = array("B")
-        iwidth = len(tup[0])
-        iheight = len(tup)
-        for x in xrange(iwidth):
-            for y in xrange(iheight):
-                data.append(tup[y][x])
+        iwidth = len(tup)
+        iheight = len(tup[0])
+        if self.__cam.MaxADU < 256:
+            data = array("B")
+        else:
+            data = array("L")
+        for y in xrange(iheight):
+            for x in xrange(iwidth):
+                data.append(tup[x][y])
         if self.__cam.MaxADU < 256:
             mode = "L"
         else:
             mode = "I"
         img = Image.new(mode, (iwidth, iheight), 0)
         img.fromstring(data.tostring())
-        img.save(imgName)
+        img.save(imgName,format="PNG")
         return imgName
