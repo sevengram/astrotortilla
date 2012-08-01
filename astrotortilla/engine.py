@@ -2,6 +2,8 @@
 # vim: set fileencoding=UTF-8 encoding=UTF-8
 # -*- coding: UTF-8 -*-
 
+from libs.appdirs.appdirs import AppDirs
+appdirs = AppDirs("AstroTortilla", "astrotortilla.sf.net")
 import logging
 logger = logging.getLogger("astrotortilla")
 logger.setLevel(logging.DEBUG)
@@ -26,7 +28,7 @@ from StringIO import StringIO
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
-CFGFILE = "astrotortilla.cfg" 
+CFGFILE = os.path.join(appdirs.user_data_dir, "astrotortilla.cfg")
 CFGDEFAULTS = {
         "Session":
             {
@@ -95,6 +97,9 @@ class TortillaEngine(object):
 
         logFile = self.config.get("AstroTortilla", "log_file").strip()
         if logFile:
+            if not os.path.isabs(logFile):
+                logFile = os.path.join(appdirs.user_log_dir, logFile)
+                os.makedirs(os.path.dirname(logFile))
             logHandler = logging.FileHandler(logFile)
             logHandler.setLevel(logLevels[self.config.get("AstroTortilla", "log_level")])
             logHandler.setFormatter(logFormatter)
@@ -131,8 +136,10 @@ class TortillaEngine(object):
         except:
             if not self.config.has_section("AstroTortilla"):
                 self.config.add_section("AstroTortilla")
-        if not default_path:
-            self.config.set("AstroTortilla", "settings_path", os.getcwdu())
+        if not (default_path and os.access(default_path, os.W_OK)):
+            data_dir = appdirs.user_data_dir
+            os.makedirs(data_dir)
+            self.config.set("AstroTortilla", "settings_path", data_dir)
         if self.config.has_option("Session", "solver"):
             self.selectSolver(self.config.get("Session", "solver"))
         if self.config.has_option("Session", "camera"):

@@ -13,6 +13,7 @@ fit for any purpose.
 
 Version history
 ---------------
+v0.2.8 Bugfixes for ASCOM Camera, Help About, config file locations.
 v0.2.7 Sync error checking corrections, WCS parser error handling added,
        Cygwin installer updates for SourceForge changes
 v0.2.6 Sync failure check added, fixed error in re-slewing to target
@@ -57,6 +58,7 @@ Python
 The application AstroTortilla and the associated library are written in Python
 2.6, using WxPython [5] , Python win32all extension [6] and Python Imaging
 Library 1.1.7 [7], pywinauto 0.4.0 [9]. Python 2.7 is also supported.
+Source includes Appdirs 1.2.0 [10] (c) 2010 ActiveState Software Inc.
 
 Running astrometry.net
 ----------------------
@@ -79,12 +81,13 @@ the release date. ASCOM support requires the Python win32all extensions [5].
 Nebulosity2
 -----------
 
-If you are using Nebulosity 2.4, you might want to use it with AstroTortilla to
+If you are using Nebulosity 2.4+, you might want to use it with AstroTortilla to
 make sure your imaging camera is pointing to the correct location.
 AstroTortilla can use the new TCP/IP based scripting feature, and depends on
 Python win32 extensions and pywinauto package for automating the interactions.
 Note:
 Nebulosity 2.3 is no longer supported.
+Nebulosity 3 is not yet supported.
 
 Astro Photography Tool
 ----------------------
@@ -102,3 +105,4 @@ References
 [7] http://www.pythonware.com/products/pil/
 [8] http://www.cygwin.com/
 [9] https://sourceforge.net/projects/pywinauto/
+[10] http://pypi.python.org/pypi/appdirs/

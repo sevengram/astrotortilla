@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #Boa:App:BoaApp
 
+import sys
+
 import wx
 
 import astrotortilla.engine
@@ -10,7 +12,6 @@ from astrotortilla.IPlateSolver import IPlateSolver
 from astrotortilla.ICamera import ICamera
 from astrotortilla.ITelescope import ITelescope
 from inspect import isclass, getmembers
-import sys
 
 import logging
 logger = logging.getLogger("astrotortilla.main")
@@ -80,9 +81,10 @@ class BoaApp(wx.App):
     #            choiceList.Append(className, classRef)
 
 def main():
-    application = BoaApp(0)
+    application = BoaApp(redirect=0)
     application.MainLoop()
+    wx.Exit()
 
 if __name__ == '__main__':
     main()
-    logger.info("Closed")
+    sys.exit(0)

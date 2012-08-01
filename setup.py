@@ -7,12 +7,13 @@ from glob import glob
 import os.path
 import platform, sys
 
-VERSION = "0.2.7"
+VERSION = "0.2.8"
 
 data_files = []
 
-if sys.version_info.major == 2 and sys.version_info.minor == 6:
-	data_files.append( ("", [r"c:\Python26\lib\site-packages\wx-2.8-msw-unicode\wx\gdiplus.dll"]) )
+gdidll = os.path.join(sys.prefix, r"lib\site-packages\wx-2.8-msw-unicode\wx\gdiplus.dll")
+if os.path.exists(gdidll):
+	data_files.append( ("", [gdidll]) )
 data_files.append( (r"locale/fi/LC_MESSAGES", glob(r"locale/fi/LC_MESSAGES/*.mo")) )
 data_files.append( ("docs", glob("docs/*.pdf")) )
 
@@ -32,7 +33,9 @@ setup(
                     "astrotortilla.gui", 
                     "astrotortilla.camera",
                     "astrotortilla.solver", 
-                    "astrotortilla.telescope"
+                    "astrotortilla.telescope",
+		    "libs",
+		    "libs.appdirs"
                     ],
         options = { 
                 "py2exe":
@@ -41,7 +44,8 @@ setup(
                     "includes" : [
                         "astrotortilla.camera.*",
                         "astrotortilla.solver.*",
-                        "astrotortilla.telescope.*"
+                        "astrotortilla.telescope.*",
+			"libs.appdirs.*"
                         ],
                     "packages":[
                         "encodings", "pywinauto",

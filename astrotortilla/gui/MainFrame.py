@@ -470,12 +470,11 @@ class mainFrame(wx.Frame):
     
     def OnClose(self, event):
         "Save settings on exit"
-	try:
-	        self.engine.saveConfig()
-	except:
-		pass
-		# saving settings on exit failed, but nowhere to show the error anymore
-
+        try:
+            self.engine.saveConfig()
+        except:
+            pass
+        # saving settings on exit failed, but nowhere to show the error anymore
         event.Skip()
 
 
@@ -499,8 +498,8 @@ class mainFrame(wx.Frame):
 
     def _updateSolverGrid(self):
         "Update solver configuration grid"
-	if not self.engine.getSolver():
-		return
+        if not self.engine.getSolver():
+            return
         solverProps = self.engine.getSolver().propertyList
         self.configGrid.ClearGrid()
         solverConfig = self.engine.getSolver().configuration
