@@ -1,4 +1,4 @@
-"AstroMate main engine classes"
+"AstroTortilla main engine classes"
 # vim: set fileencoding=UTF-8 encoding=UTF-8
 # -*- coding: UTF-8 -*-
 
@@ -20,6 +20,7 @@ import ConfigParser
 import os, os.path
 from time import time, sleep
 from astrotortilla import CameraState
+from astrotortilla.bookmark import Bookmark
 from astrotortilla.units import Coordinate, Separation, deg2dms, deg2hms
 
 from win32api import LoadResource
@@ -80,6 +81,8 @@ class TortillaEngine(object):
         self.__cameras = self._list_subclasses(ICamera, camera)
         self.__camera = None
         self.__cameraName = _(u'Not selected')
+
+	self.__bookmarks = []
         
         self.__status = [Status.Idle]
         self.__abortAction = False   # did user want to abort current action?
@@ -144,7 +147,16 @@ class TortillaEngine(object):
             self.selectSolver(self.config.get("Session", "solver"))
         if self.config.has_option("Session", "camera"):
             self.selectCamera(self.config.get("Session", "camera"))
-    
+        if self.config.has_section("Bookmarks"):
+            bmlist = []
+            bm_count = self.config.getint("Bookmarks", "count")
+            for i in xrange(bm_count):
+                try:
+                    bm = Bookmark.from_string(self.config.get("Bookmarks", "bm-%d"%i))
+                    bmlist.append(bm)
+                except:
+                    pass
+            self.__bookmarks = bmlist
 
     def __loadCameraConfig(self):
         "Assign camera specific configuration to current camera"
@@ -319,6 +331,14 @@ class TortillaEngine(object):
                 self.__saveCameraConfig()
             if self.__solver and self.__solverName:
                 self.__saveObjConfig(self.__solver, "Solver-%s"%self.__solverName)
+            if self.__bookmarks:
+                self.config.remove_section("Bookmarks") ## clear old bookmarks from settings
+                self.config.add_section("Bookmarks")
+                bmi = 0
+                for bookmark in bookmarks:
+                    self.config.set("Bookmarks", "bm-%d"%(bmi), bookmark.to_string().replace("%", "%%"))
+                    bmi += 1
+                self.config.set("Bookmarks", "count", bmi)
             self.config.write(file(filename, "w"))
         except:
             import traceback

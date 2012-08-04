@@ -5,8 +5,10 @@
 #define TortillaVersion GetFileVersion(AddBackslash(SourcePath) + "Dist\\AstroTortilla.exe")
 #ifexist "vcredist_x64.exe"
 #define VCRedist "vcredist_x64.exe"
+#define Platform "64bit"
 #else
 #define VCRedist "vcredist_x86.exe"
+#define Platform "32bit"
 #endif
 
 [Setup]
@@ -26,7 +28,7 @@ AllowNoIcons=yes
 LicenseFile=LICENSE
 Compression=lzma
 SolidCompression=yes
-OutputBaseFilename={#AstroTortilla}-{#TortillaVersion}
+OutputBaseFilename={#AstroTortilla}-{#TortillaVersion}-{#Platform}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

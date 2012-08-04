@@ -23,7 +23,18 @@ class ASCOMTelescope(ITelescope):
     def __init__(self):
         super(ASCOMTelescope, self).__init__()
         if TRACE: logger.debug(">init")
-        self.__chooser = Dispatch("DriverHelper.Chooser")
+        self.__chooser = None
+        try:
+            self.__chooser = Dispatch("DriverHelper.Chooser")
+        except: pass
+        try:
+            self.__chooser = Dispatch("Utilities.Chooser")
+        except: pass
+        try:
+            self.__chooser = Dispatch("ASCOM.Utilities.Chooser")
+        except: pass
+        if not self.__chooser:
+            raise Exception("Failed to initialize ASCOM device chooser")
         self.__chooser.DeviceType = "Telescope"
         self.propertyList = PROPERTYLIST
         self.__scopeName = None
@@ -41,11 +52,11 @@ class ASCOMTelescope(ITelescope):
         if TRACE: logger.debug("<init")
 
     def __invalidateCache(self):
-	    self.__positionTime = 0
-	    self.__targetTime = 0
-	    self.__parkedTime = 0
-	    self.__slewingTime = 0
-	    self.__trackingTime = 0
+        self.__positionTime = 0
+        self.__targetTime = 0
+        self.__parkedTime = 0
+        self.__slewingTime = 0
+        self.__trackingTime = 0
     
     def __del__(self):
         super(ASCOMTelescope, self).__del__()

@@ -35,8 +35,19 @@ class ASCOMCamera(ICamera):
         self.propertyList = PROPERTYLIST
 
     def __initChooser(self):
-        self.__chooser = Dispatch("DriverHelper.Chooser")
-        self.__chooser.DeviceType = "Camera"
+        self.__chooser = None
+        try:
+            self.__chooser = Dispatch("DriverHelper.Chooser")
+        except: pass
+        try:
+            self.__chooser = Dispatch("Utilities.Chooser")
+        except: pass
+        try:
+            self.__chooser = Dispatch("ASCOM.Utilities.Chooser")
+        except: pass
+
+        if self.__chooser:
+            self.__chooser.DeviceType = "Camera"
 
     def __del__(self):
         del self.__chooser
@@ -69,6 +80,8 @@ class ASCOMCamera(ICamera):
                 return
         if not self.__camname:
             self.__initChooser()
+            if not self.__chooser:
+                raise Exception("Failed to initialize ASCOM device chooser")
             self.__camname = self.__chooser.Choose(self.getProperty("lastCamera"))
             if not self.__camname: # End-user cancel
                 self.__camname = None
