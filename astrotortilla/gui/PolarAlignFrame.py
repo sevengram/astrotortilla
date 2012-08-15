@@ -10,6 +10,10 @@ from astrotortilla.units import deg2str
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
+import logging
+logger = logging.getLogger("astrotortilla.PolarAlign")
+
+
 def create(parent):
     return PolarAlignFrame(parent)
 
@@ -46,7 +50,7 @@ class PolarAlignFrame(wx.Frame):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_POLARALIGNFRAME,
               name=u'PolarAlignFrame', parent=prnt, pos=wx.Point(685, 201),
-              size=wx.Size(310, 391),
+              size=wx.Size(318, 395),
               style=wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX,
               title=_(u'Polar Alignment'))
         self.SetClientSize(wx.Size(302, 357))
@@ -137,7 +141,7 @@ class PolarAlignFrame(wx.Frame):
 
         self.AltitudeErrorResult = wx.StaticText(id=wxID_POLARALIGNFRAMEALTITUDEERRORRESULT,
               label=_(u'N/A'), name=u'AltitudeErrorResult',
-              parent=self.AlignFrame, pos=wx.Point(184, 136), size=wx.Size(21,
+              parent=self.AlignFrame, pos=wx.Point(184, 136), size=wx.Size(22,
               13), style=0)
         self.AltitudeErrorResult.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL,
               wx.BOLD, False, u'Tahoma'))
@@ -151,7 +155,7 @@ class PolarAlignFrame(wx.Frame):
 
         self.AzimuthErrorResult = wx.StaticText(id=wxID_POLARALIGNFRAMEAZIMUTHERRORRESULT,
               label=_(u'N/A'), name=u'AzimuthErrorResult',
-              parent=self.AlignFrame, pos=wx.Point(184, 264), size=wx.Size(21,
+              parent=self.AlignFrame, pos=wx.Point(184, 264), size=wx.Size(22,
               13), style=0)
         self.AzimuthErrorResult.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD,
               False, u'Tahoma'))

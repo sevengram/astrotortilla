@@ -1,4 +1,6 @@
 #Boa:Frame:mainFrame
+# vim: set fileencoding=UTF-8 encoding=UTF-8
+# -*- coding: UTF-8 -*-
 import logging
 logger = logging.getLogger("astrotortilla.Main")
 
@@ -14,6 +16,7 @@ import ConfigParser
 import os, os.path
 from time import time, sleep
 from astrotortilla import CameraState
+from astrotortilla.bookmark import Bookmark
 from astrotortilla.engine import TortillaEngine, Status
 from astrotortilla.units import Coordinate, Separation, deg2dms, deg2hms, deg2str
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
@@ -89,6 +92,10 @@ def disable(ctrl):
  wxID_MAINFRAMEMENUTOOLSLOGWINDOW, wxID_MAINFRAMEMENUTOOLSPOLARALIGN, 
 ] = [wx.NewId() for _init_coll_menuTools_Items in range(4)]
 
+[wxID_MAINFRAMEMENUBOOKMARKSADDIMAGEBM, 
+ wxID_MAINFRAMEMENUBOOKMARKSADDSOLUTIONBM, 
+] = [wx.NewId() for _init_coll_menuBookmarks_Items in range(2)]
+
 [wxID_MAINFRAMEMENUHELPHELPABOUT] = [wx.NewId() for _init_coll_menuHelp_Items in range(1)]
 
 [wxID_MAINFRAMESCOPEPOLLTIMER] = [wx.NewId() for _init_utils in range(1)]
@@ -98,8 +105,42 @@ class mainFrame(wx.Frame):
         # generated method, don't edit
 
         parent.Append(menu=self.menuFile, title=_('File'))
+        parent.Append(menu=self.menuBookmarks, title=_('Bookmarks'))
         parent.Append(menu=self.menuTools, title=_('Tools'))
         parent.Append(menu=self.menuHelp, title=_('Help'))
+
+    def _init_coll_menuTools_Items(self, parent):
+        # generated method, don't edit
+
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSITEMS2,
+              kind=wx.ITEM_NORMAL, text=_('Goto Image'))
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN,
+              kind=wx.ITEM_NORMAL, text=_('Polar alignment'))
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
+              kind=wx.ITEM_NORMAL, text=_(u'Drift shot'))
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW,
+              kind=wx.ITEM_NORMAL, text=_('Log viewer'))
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsDriftshotMenu,
+              id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT)
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsPolaralignMenu,
+              id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN)
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsGotoImage,
+              id=wxID_MAINFRAMEMENUTOOLSITEMS2)
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsLogwindowMenu,
+              id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW)
+
+    def _init_coll_menuBookmarks_Items(self, parent):
+        # generated method, don't edit
+
+        parent.Append(help='', id=wxID_MAINFRAMEMENUBOOKMARKSADDSOLUTIONBM,
+              kind=wx.ITEM_NORMAL, text=_(u'Add current solution'))
+        parent.Append(help='', id=wxID_MAINFRAMEMENUBOOKMARKSADDIMAGEBM,
+              kind=wx.ITEM_NORMAL, text=_(u'Add from solved image'))
+        parent.AppendSeparator()
+        self.Bind(wx.EVT_MENU, self.OnMenuBookmarksAddsolutionbmMenu,
+              id=wxID_MAINFRAMEMENUBOOKMARKSADDSOLUTIONBM)
+        self.Bind(wx.EVT_MENU, self.OnMenuBookmarksAddimagebmMenu,
+              id=wxID_MAINFRAMEMENUBOOKMARKSADDIMAGEBM)
 
     def _init_coll_menuHelp_Items(self, parent):
         # generated method, don't edit
@@ -128,26 +169,6 @@ class mainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnMenuFileSaveSettingsMenu,
               id=wxID_MAINFRAMEMENUFILEITEMS2)
 
-    def _init_coll_menuTools_Items(self, parent):
-        # generated method, don't edit
-
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSITEMS2,
-              kind=wx.ITEM_NORMAL, text=_('Goto Image'))
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN,
-              kind=wx.ITEM_NORMAL, text=_('Polar alignment'))
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
-              kind=wx.ITEM_NORMAL, text=_(u'Drift shot'))
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW,
-              kind=wx.ITEM_NORMAL, text=_('Log viewer'))
-        self.Bind(wx.EVT_MENU, self.OnMenuToolsDriftshotMenu,
-              id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT)
-        self.Bind(wx.EVT_MENU, self.OnMenuToolsPolaralignMenu,
-              id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN)
-        self.Bind(wx.EVT_MENU, self.OnMenuToolsGotoImage,
-              id=wxID_MAINFRAMEMENUTOOLSITEMS2)
-        self.Bind(wx.EVT_MENU, self.OnMenuToolsLogwindowMenu,
-              id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW)
-
     def _init_coll_statusBar1_Fields(self, parent):
         # generated method, don't edit
         parent.SetFieldsCount(1)
@@ -171,18 +192,21 @@ class mainFrame(wx.Frame):
 
         self.menuTools = wx.Menu(title='')
 
+        self.menuBookmarks = wx.Menu(title='')
+
         self._init_coll_menuFile_Items(self.menuFile)
         self._init_coll_menuHelp_Items(self.menuHelp)
         self._init_coll_menuBar1_Menus(self.menuBar1)
         self._init_coll_menuTools_Items(self.menuTools)
+        self._init_coll_menuBookmarks_Items(self.menuBookmarks)
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_MAINFRAME, name='mainFrame',
-              parent=prnt, pos=wx.Point(621, 106), size=wx.Size(410, 380),
+              parent=prnt, pos=wx.Point(948, 105), size=wx.Size(410, 380),
               style=wx.DEFAULT_FRAME_STYLE, title='AstroTortilla')
         self._init_utils()
-        self.SetClientSize(wx.Size(402, 346))
+        self.SetClientSize(wx.Size(394, 342))
         self.SetMenuBar(self.menuBar1)
         self.SetThemeEnabled(True)
         self.SetToolTipString('')
@@ -466,6 +490,11 @@ class mainFrame(wx.Frame):
 
         # Bind self.OnClose to window closing event
         self.Bind(wx.EVT_CLOSE, self.OnClose)
+
+        self.bookmarkMenuStart = self.menuBookmarks.GetMenuItemCount()
+        self.bookmarkMenuItems = []
+        self.bookmarkMap = {}
+        self.updateBookmarkMenu()
 
     
     def OnClose(self, event):
@@ -906,3 +935,71 @@ class mainFrame(wx.Frame):
     def OnMenuToolsLogwindowMenu(self, event):
         logFrame = LogFrame.create(self)
         logFrame.Show()
+
+    def OnMenuBookmarksAddsolutionbmMenu(self, event):
+        if not self.solution:
+            return
+        self.CreateBookmark(self.solution)
+
+    def CreateBookmark(self, solution):
+        dlg = wx.TextEntryDialog(self, message=_("Enter a name for the bookmark"),  caption=_("Bookmark name"))
+        dlg.ShowModal()
+        bmName = dlg.GetValue()
+        bm = Bookmark(bmName, solution.center, solution.rotation)
+        self.engine.addBookmark(bm)
+        self.updateBookmarkMenu()
+
+
+    def OnMenuBookmarksAddimagebmMenu(self, event):
+        if not self.engine.config.has_option("AstroTortilla", "last_gotoimage"):
+            self.engine.config.set("AstroTortilla", "last_gotoimage", "")
+        fileName = wx.FileSelector(
+                message=_("Goto Image"),
+                default_path = self.engine.config.get("AstroTortilla", "last_gotoimage"),
+                flags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST,
+                wildcard=_("Image files")+" (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm",
+                )
+
+        if fileName:
+            self.btnGO.SetLabel(_("Abort solver"))
+            target = None
+            try:
+                target = self.engine.solveImage(fileName)
+            except:
+                import traceback
+                traceback.print_exc() 
+            self.btnGO.SetLabel(_("Capture and Solve"))
+            if target:
+                self.CreateBookmark(target)
+
+    def OnMenuBookmarksBookmarklistMenu(self, event):
+        event.skip()
+
+    def updateBookmarkMenu(self):
+        # Clear old bookmarks from menu
+        while self.menuBookmarks.GetMenuItemCount() > self.bookmarkMenuStart:
+            bm = self.bookmarkMenuItems.pop()
+            self.Unbind(wx.EVT_MENU, id=bm, handler=self.OnMenuBookmarksBookmarklistEntry)
+            self.menuBookmarks.DeleteItem(self.menuBookmarks.FindItemByPosition(self.bookmarkMenuStart))
+        self.bookmarkMap = {}
+        # add bookmarks from engine to menu
+        for bookmark in self.engine.bookmarks:
+            i = wx.NewId()
+            self.menuBookmarks.Append(help='', id=i,
+                    kind=wx.ITEM_NORMAL, text=bookmark.name)
+            self.Bind(wx.EVT_MENU, self.OnMenuBookmarksBookmarklistEntry,
+                    id=i)
+            self.bookmarkMenuItems.append(i)
+            self.bookmarkMap[i]=bookmark
+
+    def OnMenuBookmarksBookmarklistEntry(self, event):
+        bm = self.bookmarkMap[event.GetId()]
+        self.engine.gotoPosition(bm.position)
+    
+
+if __name__ == '__main__':
+    app = wx.PySimpleApp()
+    frame = create(None)
+    frame.Show()
+
+    app.MainLoop()

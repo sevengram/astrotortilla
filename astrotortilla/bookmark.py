@@ -17,8 +17,8 @@ _ = t.gettext
 
 class Bookmark(object):
     "Named bookmark holder"
-    def __init__(self, name, position, angle):
-        if not (type(name) == str and issubclass(type(position), Coordinate) and type(angle) in (float, int)):
+    def __init__(self, name, position, angle):	    
+        if not (type(name) in (str, unicode) and issubclass(type(position), Coordinate) and type(angle) in (float, int)):
             raise TypeError("Invalid parameter types")
         self.__name = name
         self.__position = position
@@ -38,12 +38,12 @@ class Bookmark(object):
 
     def to_string(self):
         "Short string representation"
-        return u"%s:%s:%.1f:%s"%(deg2hms(self.__position.RA), deg2dms(self.__position.dec), self.__angle, self.__name)
+        return u"%s,%s,%.1f,%s"%(deg2hms(self.__position.RA), deg2dms(self.__position.dec,":"), self.__angle, self.__name)
 
     @classmethod
     def from_string(cls, bookmark):
         "construct bookmark from serialized string representation"
-        ra, dec, angle, name = bookmark.split(":",4)
+        ra, dec, angle, name = bookmark.split(",",4)
         position = Coordinate(ra.strip(), dec.strip())
         angle = float(angle.strip())
         return Bookmark(name.strip(), position, angle)

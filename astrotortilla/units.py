@@ -1,5 +1,5 @@
 "AstroMate units"
-# vim: set fileencoding=UTF-8 :
+# vim: set fileencoding=UTF-8 encoding=UTF-8:
 # -*- coding: UTF-8 -*-
 
 import gettext
@@ -9,7 +9,7 @@ from math import pi, sin, cos, asin, sqrt, radians, degrees, atan2
 class Coordinate(object):
     "Equatorial coordinate-pair RA and dec"
     def __init__(self, RA, Dec):
-        if type(RA) == str or type(RA) == tuple:
+        if type(RA) in (str,unicode) or type(RA) == tuple:
             if isFloat(RA):
                 self.__ra = float(RA) # float degrees in string format?
             else:
@@ -19,7 +19,7 @@ class Coordinate(object):
         else:
             raise TypeError("Invalid type for RA")
         
-        if type(Dec) == str or type(Dec) == tuple:
+        if type(Dec) in (str,unicode) or type(Dec) == tuple:
             if isFloat(Dec):
                 self.__dec = float(Dec) # float degrees in string format?
             else:

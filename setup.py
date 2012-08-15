@@ -7,7 +7,7 @@ from glob import glob
 import os.path
 import platform, sys
 
-VERSION = "0.2.8.1"
+VERSION = "0.2.9.0"
 
 data_files = []
 
@@ -40,18 +40,22 @@ setup(
         options = { 
                 "py2exe":
                 {
-                    "dll_excludes":["MSVCP90.dll"],
+                    "dll_excludes":["MSVCP90.dll", "MFC90.dll"],
                     "includes" : [
                         "astrotortilla.camera.*",
                         "astrotortilla.solver.*",
                         "astrotortilla.telescope.*",
 			"libs.appdirs.*"
                         ],
+		    "excludes":[
+			    '_ssl', 'doctest', 'unittest', 'calendar', 'email'
+			    ],
                     "packages":[
                         "encodings", "pywinauto",
                         "pywinauto.controls", "pywinauto.tests"
                         ],
                     "bundle_files": 3,
+		    "optimize":2,
                 }
 		},
         data_files = data_files,

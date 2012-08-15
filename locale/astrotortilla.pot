@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-11-19 13:34+Normaaliaika\n"
+"POT-Creation-Date: 2012-08-05 14:47+FLE Daylight Time\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,196 +39,204 @@ msgstr ""
 msgid "Waiting"
 msgstr ""
 
-#: astrotortilla\camera\ASCOMCamera.py:19
+#: astrotortilla\camera\ASCOMCamera.py:22
 msgid "Default camera"
 msgstr ""
 
-#: astrotortilla\camera\ASCOMCamera.py:122 astrotortilla\gui\MainFrame.py:312
-#: astrotortilla\gui\MainFrame.py:554
+#: astrotortilla\camera\ASCOMCamera.py:142 astrotortilla\gui\MainFrame.py:321
+#: astrotortilla\gui\MainFrame.py:570
 msgid "Not connected"
 msgstr ""
 
-#: astrotortilla\camera\CaptureCamera.py:33
+#: astrotortilla\camera\CaptureCamera.py:37
 msgid "Left margin"
 msgstr ""
 
-#: astrotortilla\camera\CaptureCamera.py:34
+#: astrotortilla\camera\CaptureCamera.py:38
 msgid "Right margin"
 msgstr ""
 
-#: astrotortilla\camera\CaptureCamera.py:35
+#: astrotortilla\camera\CaptureCamera.py:39
 msgid "Top margin"
 msgstr ""
 
-#: astrotortilla\camera\CaptureCamera.py:36
+#: astrotortilla\camera\CaptureCamera.py:40
 msgid "Bottom margin"
 msgstr ""
 
-#: astrotortilla\camera\CaptureCamera.py:37
+#: astrotortilla\camera\CaptureCamera.py:41
 msgid "Window class"
 msgstr ""
 
-#: astrotortilla\camera\CaptureCamera.py:37
-#: astrotortilla\camera\CaptureCamera.py:38
+#: astrotortilla\camera\CaptureCamera.py:41
+#: astrotortilla\camera\CaptureCamera.py:42
 msgid "Regex match filter"
 msgstr ""
 
-#: astrotortilla\camera\CaptureCamera.py:38
+#: astrotortilla\camera\CaptureCamera.py:42
 msgid "Window title"
 msgstr ""
 
-#: astrotortilla\camera\CaptureCamera.py:101
+#: astrotortilla\camera\CaptureCamera.py:69
+msgid "Screen capture"
+msgstr ""
+
+#: astrotortilla\camera\CaptureCamera.py:109
 msgid "'%s' is not a known window"
 msgstr ""
 
-#: astrotortilla\camera\FileOpenCamera.py:35
+#: astrotortilla\camera\FileOpenCamera.py:38
 msgid "Directory"
 msgstr ""
 
-#: astrotortilla\camera\FileOpenCamera.py:139
+#: astrotortilla\camera\FileOpenCamera.py:58
+msgid "File Open dialog"
+msgstr ""
+
+#: astrotortilla\camera\FileOpenCamera.py:145
 msgid "Choose file to solve"
 msgstr ""
 
-#: astrotortilla\camera\FileOpenCamera.py:142
-#: astrotortilla\gui\MainFrame.py:847
+#: astrotortilla\camera\FileOpenCamera.py:148
+#: astrotortilla\gui\MainFrame.py:892
 msgid "Image files"
 msgstr ""
 
-#: astrotortilla\camera\MaximDLCamera.py:18
+#: astrotortilla\camera\MaximDLCamera.py:21
 msgid "-1 for none"
 msgstr ""
 
-#: astrotortilla\camera\MaximDLCamera.py:18
+#: astrotortilla\camera\MaximDLCamera.py:21
 msgid "Filter"
 msgstr ""
 
-#: astrotortilla\camera\MaximDLCamera.py:18
+#: astrotortilla\camera\MaximDLCamera.py:21
 msgid "Filter index for plate solve capture"
 msgstr ""
 
-#: astrotortilla\camera\MaximDLCamera.py:51
+#: astrotortilla\camera\MaximDLCamera.py:58
 msgid "Dispatching Maxim.CCDCamera failed"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:74
+#: astrotortilla\camera\NebulosityCamera.py:77
 msgid "Nebulosity Path"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:75
+#: astrotortilla\camera\NebulosityCamera.py:78
 msgid "Set camera"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:75
+#: astrotortilla\camera\NebulosityCamera.py:78
 msgid "Set camera model on capture"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:75
+#: astrotortilla\camera\NebulosityCamera.py:78
 msgid "True or False"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:76
+#: astrotortilla\camera\NebulosityCamera.py:79
 msgid "Set ext filter"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:76
+#: astrotortilla\camera\NebulosityCamera.py:79
 msgid "Set ext filter before solving"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:76
-#: astrotortilla\camera\NebulosityCamera.py:77
+#: astrotortilla\camera\NebulosityCamera.py:79
+#: astrotortilla\camera\NebulosityCamera.py:80
 msgid "Filter index or -1"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:77
+#: astrotortilla\camera\NebulosityCamera.py:80
 msgid "Set filter"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:77
+#: astrotortilla\camera\NebulosityCamera.py:80
 msgid "Set filter before solving"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:78
+#: astrotortilla\camera\NebulosityCamera.py:81
 msgid "%(date)s = current date, %(night)s = current date at dusk"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:78
+#: astrotortilla\camera\NebulosityCamera.py:81
 msgid "After capture directory"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:78
+#: astrotortilla\camera\NebulosityCamera.py:81
 msgid "Reset directory to"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:286
+#: astrotortilla\camera\NebulosityCamera.py:293
 msgid "Nebulosity not responding to script loading"
 msgstr ""
 
-#: astrotortilla\engine.py:46 astrotortilla\engine.py:50
-#: astrotortilla\engine.py:54
+#: astrotortilla\engine.py:75 astrotortilla\engine.py:79
+#: astrotortilla\engine.py:83
 msgid "Not selected"
 msgstr ""
 
-#: astrotortilla\engine.py:301
+#: astrotortilla\engine.py:378
 msgid "ERROR: No solver selected."
 msgstr ""
 
-#: astrotortilla\engine.py:305
+#: astrotortilla\engine.py:382
 msgid "Solving..."
 msgstr ""
 
-#: astrotortilla\engine.py:318
+#: astrotortilla\engine.py:395
 msgid "Solved in %.1fs"
 msgstr ""
 
-#: astrotortilla\engine.py:320
+#: astrotortilla\engine.py:397
 msgid "No solution in %.1fs"
 msgstr ""
 
-#: astrotortilla\engine.py:327
+#: astrotortilla\engine.py:404 astrotortilla\engine.py:417
 msgid "ERROR: No camera connected."
 msgstr ""
 
-#: astrotortilla\engine.py:333 astrotortilla\gui\MainFrame.py:787
+#: astrotortilla\engine.py:410 astrotortilla\gui\MainFrame.py:830
 msgid "Connecting to camera..."
 msgstr ""
 
-#: astrotortilla\engine.py:339 astrotortilla\engine.py:346
+#: astrotortilla\engine.py:420 astrotortilla\engine.py:427
 msgid "Exposing: %.2f seconds"
 msgstr ""
 
-#: astrotortilla\engine.py:349 astrotortilla\gui\MainFrame.py:819
+#: astrotortilla\engine.py:430 astrotortilla\gui\MainFrame.py:863
 msgid "Waiting for camera"
 msgstr ""
 
-#: astrotortilla\engine.py:355
+#: astrotortilla\engine.py:436
 msgid "Reading image from camera"
 msgstr ""
 
-#: astrotortilla\engine.py:358
+#: astrotortilla\engine.py:439
 msgid "Aborted."
 msgstr ""
 
-#: astrotortilla\engine.py:360
+#: astrotortilla\engine.py:441
 msgid "Camera did not produce an image to solve"
 msgstr ""
 
-#: astrotortilla\engine.py:362
+#: astrotortilla\engine.py:443
 msgid "An error occurred."
 msgstr ""
 
-#: astrotortilla\engine.py:365 astrotortilla\gui\MainFrame.py:193
+#: astrotortilla\engine.py:446 astrotortilla\gui\MainFrame.py:202
 msgid ""
 msgstr ""
 
-#: astrotortilla\engine.py:377 astrotortilla\engine.py:389
+#: astrotortilla\engine.py:458 astrotortilla\engine.py:470
 msgid "ERROR: No telescope connected."
 msgstr ""
 
-#: astrotortilla\engine.py:392
+#: astrotortilla\engine.py:473
 msgid "Waiting for scope to stop"
 msgstr ""
 
-#: astrotortilla\engine.py:419
+#: astrotortilla\engine.py:500
 msgid "Re-centering..."
 msgstr ""
 
@@ -237,7 +245,8 @@ msgstr ""
 msgid "Camera Setup"
 msgstr ""
 
-#: astrotortilla\gui\DlgCameraSetup.py:40
+#: astrotortilla\gui\DlgCameraSetup.py:40 astrotortilla\gui\DlgHelpAbout.py:25
+#: astrotortilla\gui\LogFrame.py:57
 msgid "Close"
 msgstr ""
 
@@ -265,6 +274,10 @@ msgstr ""
 msgid "Camera binning"
 msgstr ""
 
+#: astrotortilla\gui\DlgHelpAbout.py:22
+msgid "About AstroTortilla"
+msgstr ""
+
 #: astrotortilla\gui\DlgHelpAbout.py:41
 msgid ""
 "AstroTortilla is aimed for automating telescope GoTo corrections using plate-solving. It uses a simple wrapper library for telescope control, image capture and plate-solving. See the files README and LICENSE for details.\n"
@@ -274,220 +287,240 @@ msgid ""
 "AstroTortilla and the library use:\n"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:95
+#: astrotortilla\gui\LogFrame.py:64
+msgid "Log level"
+msgstr ""
+
+#: astrotortilla\gui\LogFrame.py:71
+msgid "Active log level"
+msgstr ""
+
+#: astrotortilla\gui\MainFrame.py:100
 msgid "File"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:96
+#: astrotortilla\gui\MainFrame.py:101
 msgid "Tools"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:97
+#: astrotortilla\gui\MainFrame.py:102
 msgid "Help"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:102
+#: astrotortilla\gui\MainFrame.py:107
 msgid "Information about the application."
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:104
+#: astrotortilla\gui\MainFrame.py:109
 msgid "About"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:112
+#: astrotortilla\gui\MainFrame.py:117
 msgid "Load settings..."
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:114
+#: astrotortilla\gui\MainFrame.py:119
 msgid "Save settings..."
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:116
+#: astrotortilla\gui\MainFrame.py:121
 msgid "Exit the application"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:118
+#: astrotortilla\gui\MainFrame.py:123
 msgid "Exit"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:130 astrotortilla\gui\MainFrame.py:844
+#: astrotortilla\gui\MainFrame.py:135 astrotortilla\gui\MainFrame.py:889
 msgid "Goto Image"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:132
+#: astrotortilla\gui\MainFrame.py:137
 msgid "Polar alignment"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:134
+#: astrotortilla\gui\MainFrame.py:139
 msgid "Drift shot"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:191
+#: astrotortilla\gui\MainFrame.py:141
+msgid "Log viewer"
+msgstr ""
+
+#: astrotortilla\gui\MainFrame.py:200
 msgid "Telescope"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:199
+#: astrotortilla\gui\MainFrame.py:208
 msgid "Camera"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:204
+#: astrotortilla\gui\MainFrame.py:213
 msgid "Actions"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:208
+#: astrotortilla\gui\MainFrame.py:217
 msgid "Setup"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:211
+#: astrotortilla\gui\MainFrame.py:220
 msgid "Setup camera"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:215 astrotortilla\gui\MainFrame.py:291
+#: astrotortilla\gui\MainFrame.py:224 astrotortilla\gui\MainFrame.py:300
 msgid "RA:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:220 astrotortilla\gui\MainFrame.py:300
+#: astrotortilla\gui\MainFrame.py:229 astrotortilla\gui\MainFrame.py:309
 msgid "Dec:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:228
+#: astrotortilla\gui\MainFrame.py:237
 msgid "Right ascension"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:233
+#: astrotortilla\gui\MainFrame.py:242
 msgid "Declination"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:236 astrotortilla\gui\MainFrame.py:545
+#: astrotortilla\gui\MainFrame.py:245 astrotortilla\gui\MainFrame.py:560
 msgid "No camera"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:241
+#: astrotortilla\gui\MainFrame.py:250
 msgid "Unpark"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:243
+#: astrotortilla\gui\MainFrame.py:252
 msgid "Unpark telescope"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:248
+#: astrotortilla\gui\MainFrame.py:257
 msgid "Field size:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:257
+#: astrotortilla\gui\MainFrame.py:266
 msgid "Rotation:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:266 astrotortilla\gui\MainFrame.py:577
+#: astrotortilla\gui\MainFrame.py:275 astrotortilla\gui\MainFrame.py:593
 msgid "Normal"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:271
+#: astrotortilla\gui\MainFrame.py:280
 msgid "After solve:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:288
+#: astrotortilla\gui\MainFrame.py:297
 msgid "arcmin"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:308
+#: astrotortilla\gui\MainFrame.py:317
 msgid "Status:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:316
+#: astrotortilla\gui\MainFrame.py:325
 msgid "Slewing"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:324
+#: astrotortilla\gui\MainFrame.py:333
 msgid "Tracking"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:329
+#: astrotortilla\gui\MainFrame.py:338
 msgid "Exposure:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:344
+#: astrotortilla\gui\MainFrame.py:353
 msgid "Exposure time in seconds"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:353
+#: astrotortilla\gui\MainFrame.py:362
 msgid "Current:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:360
+#: astrotortilla\gui\MainFrame.py:369
 msgid "Target:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:376
+#: astrotortilla\gui\MainFrame.py:385
 msgid "Sync scope"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:383
+#: astrotortilla\gui\MainFrame.py:392
 msgid "Repeat until within"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:390 astrotortilla\gui\MainFrame.py:666
-#: astrotortilla\gui\MainFrame.py:858
+#: astrotortilla\gui\MainFrame.py:399 astrotortilla\gui\MainFrame.py:698
+#: astrotortilla\gui\MainFrame.py:903
 msgid "Capture and Solve"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:397
+#: astrotortilla\gui\MainFrame.py:406
 msgid "Solver"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:411
+#: astrotortilla\gui\MainFrame.py:420
 msgid "Solver configuration"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:437
+#: astrotortilla\gui\MainFrame.py:446
 msgid "Re-slew to target"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:563
+#: astrotortilla\gui\MainFrame.py:579
 msgid "Previous solution"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:575
+#: astrotortilla\gui\MainFrame.py:591
 msgid "Flipped"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:582 astrotortilla\gui\MainFrame.py:731
+#: astrotortilla\gui\MainFrame.py:598 astrotortilla\gui\MainFrame.py:765
 msgid "Last error: %s"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:600
+#: astrotortilla\gui\MainFrame.py:617
 msgid "Camera error"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:641
+#: astrotortilla\gui\MainFrame.py:658
 msgid "Aborting..."
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:643 astrotortilla\gui\MainFrame.py:852
+#: astrotortilla\gui\MainFrame.py:660 astrotortilla\gui\MainFrame.py:897
 msgid "Abort solver"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:749
+#: astrotortilla\gui\MainFrame.py:683
+msgid "Telescope error"
+msgstr ""
+
+#: astrotortilla\gui\MainFrame.py:783
 msgid "Invalid data"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:754
+#: astrotortilla\gui\MainFrame.py:788
 msgid "Load settings"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:757 astrotortilla\gui\MainFrame.py:770
+#: astrotortilla\gui\MainFrame.py:791 astrotortilla\gui\MainFrame.py:804
 msgid "Config files"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:767
+#: astrotortilla\gui\MainFrame.py:801
 msgid "Save settings"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:796 astrotortilla\gui\MainFrame.py:813
+#: astrotortilla\gui\MainFrame.py:817
+msgid "Error saving settings"
+msgstr ""
+
+#: astrotortilla\gui\MainFrame.py:839 astrotortilla\gui\MainFrame.py:856
 msgid "Drifting: %.2f seconds"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:825
+#: astrotortilla\gui\MainFrame.py:869
 msgid "Drifting done."
 msgstr ""
 
@@ -605,91 +638,95 @@ msgstr ""
 msgid "too west"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:16
+#: astrotortilla\solver\AstrometryNetSolver.py:19
 msgid "Downscaling"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:16
+#: astrotortilla\solver\AstrometryNetSolver.py:19
 msgid "Image downscaling factor"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:17
+#: astrotortilla\solver\AstrometryNetSolver.py:20
 msgid "Backend config"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:17
+#: astrotortilla\solver\AstrometryNetSolver.py:20
 msgid "Cygwin path to backend config file"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:18
+#: astrotortilla\solver\AstrometryNetSolver.py:21
 msgid "Radius of search area in degrees"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:18
+#: astrotortilla\solver\AstrometryNetSolver.py:21
 msgid "Search radius"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:19
+#: astrotortilla\solver\AstrometryNetSolver.py:22
 #: astrotortilla\solver\AstrometryNetWebSolver.py:18
 msgid "Image scale lower bound"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:19
+#: astrotortilla\solver\AstrometryNetSolver.py:22
 #: astrotortilla\solver\AstrometryNetWebSolver.py:18
 msgid "Scale minimum"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:20
+#: astrotortilla\solver\AstrometryNetSolver.py:23
 #: astrotortilla\solver\AstrometryNetWebSolver.py:19
 msgid "Image scale upper bound"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:20
+#: astrotortilla\solver\AstrometryNetSolver.py:23
 #: astrotortilla\solver\AstrometryNetWebSolver.py:19
 msgid "Scale maximum"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:21
+#: astrotortilla\solver\AstrometryNetSolver.py:24
 msgid "Scale units"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:21
+#: astrotortilla\solver\AstrometryNetSolver.py:24
 msgid "View scale size units"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:21
+#: astrotortilla\solver\AstrometryNetSolver.py:24
 msgid "arcminwidth, degwidth, arcsecperpix"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:22
+#: astrotortilla\solver\AstrometryNetSolver.py:25
 msgid "0 to turn off"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:22
+#: astrotortilla\solver\AstrometryNetSolver.py:25
 msgid "Image scale refinement factor"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:22
+#: astrotortilla\solver\AstrometryNetSolver.py:25
 msgid "Scale refinement"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:23
+#: astrotortilla\solver\AstrometryNetSolver.py:26
 msgid "Additional custom options"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:23
+#: astrotortilla\solver\AstrometryNetSolver.py:26
 msgid "Custom options"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:24
+#: astrotortilla\solver\AstrometryNetSolver.py:27
 msgid "Cygwin shell"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:24
+#: astrotortilla\solver\AstrometryNetSolver.py:27
 msgid "Shell command for Cygwin execution"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:172
+#: astrotortilla\solver\AstrometryNetSolver.py:67
+msgid "Local astrometry.net"
+msgstr ""
+
+#: astrotortilla\solver\AstrometryNetSolver.py:179
 msgid "Parsing results..."
 msgstr ""
 
@@ -707,5 +744,9 @@ msgstr ""
 
 #: astrotortilla\solver\AstrometryNetWebSolver.py:17
 msgid "E-mail address"
+msgstr ""
+
+#: astrotortilla\solver\AstrometryNetWebSolver.py:42
+msgid "Web astrometry.net"
 msgstr ""
 

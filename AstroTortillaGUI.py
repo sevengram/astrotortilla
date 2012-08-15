@@ -87,4 +87,9 @@ def main():
 
 if __name__ == '__main__':
     main()
-    sys.exit(0)
+    # wx+win32ui causes the python interpreter not to exit on win7, so kill
+    # the current process.
+    import platform
+    if '7' in platform.win32_ver()[:1]:
+	    import os, signal
+	    os.kill(os.getpid(), signal.SIGTERM)

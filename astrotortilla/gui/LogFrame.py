@@ -45,7 +45,7 @@ class LogWindow(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_LOGWINDOW, name='', parent=prnt,
-              pos=wx.Point(490, 117), size=wx.Size(408, 387),
+              pos=wx.Point(490, 117), size=wx.Size(416, 391),
               style=wx.DEFAULT_FRAME_STYLE, title='LogWindow')
         self.SetClientSize(wx.Size(400, 353))
         self.SetMinSize(wx.Size(300, 120))
@@ -82,7 +82,6 @@ class LogWindow(wx.Frame):
         self.logGrid.SetColLabelSize(0)
         self.logGrid.SetDefaultColSize(-1)
         self.logGrid.SetAutoLayout(True)
-        
 
     def __init__(self, parent):
         self._init_ctrls(parent)

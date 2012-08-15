@@ -16,14 +16,14 @@ _ = t.gettext
 DEBUG = 0 # 1 to enable some debug prints
 
 PROPERTYLIST = {
-        "downscale":(_("Downscaling"), int, _("Image downscaling factor") ,"", 2),
+        "downscale":(_("Downscaling"), int, _("Image downscaling factor") ,"", 0),
         "configfile":(_("Backend config"), str, _("Cygwin path to backend config file"), "", "/etc/astrometry/backend.cfg"),
         "searchradius":(_("Search radius"), float, _("Radius of search area in degrees"), "0..180", 180),
         "scale_low":(_("Scale minimum"), float, _("Image scale lower bound"), "", 0),
         "scale_max":(_("Scale maximum"), float, _("Image scale upper bound"), "", 179),
         "scale_units":(_("Scale units"), str, _("View scale size units"), _("arcminwidth, degwidth, arcsecperpix"), "degwidth"),
-        "scale_xrefine":(_("Scale refinement"), float, _("Image scale refinement factor"), _("0 to turn off"), 0.1),
-        "xtra":(_("Custom options"), str, _("Additional custom options"), "", ""),
+        "scale_xrefine":(_("Scale refinement"), float, _("Image scale refinement factor"), _("0 to turn off"), 0),
+        "xtra":(_("Custom options"), str, _("Additional custom options"), "", "--sigma 1"),
         "shell":(_("Cygwin shell"), str, _("Shell command for Cygwin execution"), "", 'C:\\cygwin\\bin\\bash --login -c "%s"'),
         }
 
@@ -218,7 +218,7 @@ class AstrometryNetSolver(IPlateSolver):
             self.__found = True
 
             # see if the property for image width should be refined based on solution
-            if self.getProperty("scale_xrefine") > 0:
+            if float(self.getProperty("scale_xrefine")) > 0:
                 refinement = float(self.getProperty("scale_xrefine")) + 1
                 scaleUnits = self.getProperty("scale_units")
                 if scaleUnits == "degwidth":

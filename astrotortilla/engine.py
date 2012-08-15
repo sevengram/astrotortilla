@@ -10,7 +10,7 @@ logger.setLevel(logging.DEBUG)
 logFormatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
-import gettext, sys
+import gettext, sys, codecs
 import camera, solver, telescope
 from IPlateSolver import IPlateSolver
 from ICamera import ICamera
@@ -19,6 +19,7 @@ from inspect import isclass, getmembers
 import ConfigParser
 import os, os.path
 from time import time, sleep
+
 from astrotortilla import CameraState
 from astrotortilla.bookmark import Bookmark
 from astrotortilla.units import Coordinate, Separation, deg2dms, deg2hms
@@ -82,7 +83,7 @@ class TortillaEngine(object):
         self.__camera = None
         self.__cameraName = _(u'Not selected')
 
-	self.__bookmarks = []
+        self.__bookmarks = []
         
         self.__status = [Status.Idle]
         self.__abortAction = False   # did user want to abort current action?
@@ -128,7 +129,8 @@ class TortillaEngine(object):
 
     def loadConfig(self, fileName=None):
         if fileName:
-            self.config.read(fileName)
+            with codecs.open(fileName, mode="rb", encoding="UTF-8") as conffile:
+                self.config.readfp(conffile)
             self.config.set("AstroTortilla", "settings_path", os.path.abspath(os.path.dirname(fileName)))
             self.__configure(self.__telescope, "Telescope-%s"%self.__telescopeName)
             self.__loadCameraConfig()
@@ -335,15 +337,24 @@ class TortillaEngine(object):
                 self.config.remove_section("Bookmarks") ## clear old bookmarks from settings
                 self.config.add_section("Bookmarks")
                 bmi = 0
-                for bookmark in bookmarks:
+                for bookmark in self.__bookmarks:
                     self.config.set("Bookmarks", "bm-%d"%(bmi), bookmark.to_string().replace("%", "%%"))
                     bmi += 1
-                self.config.set("Bookmarks", "count", bmi)
-            self.config.write(file(filename, "w"))
+                self.config.set("Bookmarks", "count", "%d"%bmi)
+            with codecs.open(filename, mode="wb", encoding="UTF-8") as conffile:
+                self.config.write(conffile)
         except:
             import traceback
             logger.error(traceback.format_exc())
 
+    def addBookmark(self, bookmark):
+        if type(bookmark) != Bookmark:
+            return
+        self.__bookmarks.append(bookmark)
+
+    @property
+    def bookmarks(self):
+        return self.__bookmarks
 
     @property
     def isReady(self):
@@ -463,6 +474,13 @@ class TortillaEngine(object):
             return self.gotoCurrentTarget(limit, threshold)
         return None
 
+    def gotoPosition(self, coords, limit=0, threshold=0.0):
+        "Goto a defined coordinate position"
+        if not self.__telescope:
+            self.setStatus(_("ERROR: No telescope connected."))
+            return None
+        self.__telescope.slewToAsync(coords)
+        return self.gotoCurrentTarget(limit, threshold)
 
     def gotoCurrentTarget(self, limit=0, threshold=0.0):
         "Correct slew to telescope target, retry until within 'threshold' arc minutes, no more than 'limit' times"
