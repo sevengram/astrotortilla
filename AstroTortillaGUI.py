@@ -83,13 +83,16 @@ class BoaApp(wx.App):
 def main():
     application = BoaApp(redirect=0)
     application.MainLoop()
+    del application
     wx.Exit()
 
 if __name__ == '__main__':
+    import threading
     main()
-    # wx+win32ui causes the python interpreter not to exit on win7, so kill
-    # the current process.
-    import platform
-    if '7' in platform.win32_ver()[:1]:
-	    import os, signal
-	    os.kill(os.getpid(), signal.SIGTERM)
+    ## wx+win32ui causes the python interpreter not to exit on win7, so kill
+    ## the current process.
+##Maybe cured with forcibly GC'ing the wx.App and exiting wx
+    #import platform
+    #if '7' in platform.win32_ver()[:1]:
+	#    import os, signal
+	#    os.kill(os.getpid(), signal.SIGTERM)

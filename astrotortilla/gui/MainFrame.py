@@ -101,34 +101,6 @@ def disable(ctrl):
 [wxID_MAINFRAMESCOPEPOLLTIMER] = [wx.NewId() for _init_utils in range(1)]
 
 class mainFrame(wx.Frame):
-    def _init_coll_menuBar1_Menus(self, parent):
-        # generated method, don't edit
-
-        parent.Append(menu=self.menuFile, title=_('File'))
-        parent.Append(menu=self.menuBookmarks, title=_('Bookmarks'))
-        parent.Append(menu=self.menuTools, title=_('Tools'))
-        parent.Append(menu=self.menuHelp, title=_('Help'))
-
-    def _init_coll_menuTools_Items(self, parent):
-        # generated method, don't edit
-
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSITEMS2,
-              kind=wx.ITEM_NORMAL, text=_('Goto Image'))
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN,
-              kind=wx.ITEM_NORMAL, text=_('Polar alignment'))
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
-              kind=wx.ITEM_NORMAL, text=_(u'Drift shot'))
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW,
-              kind=wx.ITEM_NORMAL, text=_('Log viewer'))
-        self.Bind(wx.EVT_MENU, self.OnMenuToolsDriftshotMenu,
-              id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT)
-        self.Bind(wx.EVT_MENU, self.OnMenuToolsPolaralignMenu,
-              id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN)
-        self.Bind(wx.EVT_MENU, self.OnMenuToolsGotoImage,
-              id=wxID_MAINFRAMEMENUTOOLSITEMS2)
-        self.Bind(wx.EVT_MENU, self.OnMenuToolsLogwindowMenu,
-              id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW)
-
     def _init_coll_menuBookmarks_Items(self, parent):
         # generated method, don't edit
 
@@ -141,6 +113,14 @@ class mainFrame(wx.Frame):
               id=wxID_MAINFRAMEMENUBOOKMARKSADDSOLUTIONBM)
         self.Bind(wx.EVT_MENU, self.OnMenuBookmarksAddimagebmMenu,
               id=wxID_MAINFRAMEMENUBOOKMARKSADDIMAGEBM)
+
+    def _init_coll_menuBar1_Menus(self, parent):
+        # generated method, don't edit
+
+        parent.Append(menu=self.menuFile, title=_('File'))
+        parent.Append(menu=self.menuBookmarks, title=_('Bookmarks'))
+        parent.Append(menu=self.menuTools, title=_('Tools'))
+        parent.Append(menu=self.menuHelp, title=_('Help'))
 
     def _init_coll_menuHelp_Items(self, parent):
         # generated method, don't edit
@@ -168,6 +148,26 @@ class mainFrame(wx.Frame):
               id=wxID_MAINFRAMEMENUFILEITEMS1)
         self.Bind(wx.EVT_MENU, self.OnMenuFileSaveSettingsMenu,
               id=wxID_MAINFRAMEMENUFILEITEMS2)
+
+    def _init_coll_menuTools_Items(self, parent):
+        # generated method, don't edit
+
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSITEMS2,
+              kind=wx.ITEM_NORMAL, text=_('Goto Image'))
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN,
+              kind=wx.ITEM_NORMAL, text=_('Polar alignment'))
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
+              kind=wx.ITEM_NORMAL, text=_(u'Drift shot'))
+        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW,
+              kind=wx.ITEM_NORMAL, text=_('Log viewer'))
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsDriftshotMenu,
+              id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT)
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsPolaralignMenu,
+              id=wxID_MAINFRAMEMENUTOOLSPOLARALIGN)
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsGotoImage,
+              id=wxID_MAINFRAMEMENUTOOLSITEMS2)
+        self.Bind(wx.EVT_MENU, self.OnMenuToolsLogwindowMenu,
+              id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW)
 
     def _init_coll_statusBar1_Fields(self, parent):
         # generated method, don't edit
@@ -206,12 +206,13 @@ class mainFrame(wx.Frame):
               parent=prnt, pos=wx.Point(948, 105), size=wx.Size(410, 380),
               style=wx.DEFAULT_FRAME_STYLE, title='AstroTortilla')
         self._init_utils()
-        self.SetClientSize(wx.Size(394, 342))
         self.SetMenuBar(self.menuBar1)
         self.SetThemeEnabled(True)
         self.SetToolTipString('')
         self.SetMaxSize(wx.Size(410, 380))
         self.SetMinSize(wx.Size(410, 380))
+        self.SetAutoLayout(True)
+        self.SetClientSize(wx.Size(394, 342))
 
         self.statusBar1 = wx.StatusBar(id=wxID_MAINFRAMESTATUSBAR1,
               name='statusBar1', parent=self, style=0)
@@ -430,6 +431,7 @@ class mainFrame(wx.Frame):
               label=_('Solver'), name='staticBox2', parent=self, pos=wx.Point(8,
               168), size=wx.Size(240, 134), style=0)
         self.staticBox2.SetToolTipString('')
+        self.staticBox2.SetAutoLayout(True)
 
         self.choiceSolver = wx.Choice(choices=[], id=wxID_MAINFRAMECHOICESOLVER,
               name='choiceSolver', parent=self, pos=wx.Point(16, 184),
@@ -937,9 +939,11 @@ class mainFrame(wx.Frame):
         logFrame.Show()
 
     def OnMenuBookmarksAddsolutionbmMenu(self, event):
-        if not self.solution:
+        if not self.engine.solution:
+            self.SetStatusText(_("No current solution"))
             return
-        self.CreateBookmark(self.solution)
+        self.SetStatusText(_("Creating bookmark from current solution"))
+        self.CreateBookmark(self.engine.solution)
 
     def CreateBookmark(self, solution):
         dlg = wx.TextEntryDialog(self, message=_("Enter a name for the bookmark"),  caption=_("Bookmark name"))
@@ -948,9 +952,10 @@ class mainFrame(wx.Frame):
         bm = Bookmark(bmName, solution.center, solution.rotation)
         self.engine.addBookmark(bm)
         self.updateBookmarkMenu()
-
+        self.SetStatusText(_("Done"))
 
     def OnMenuBookmarksAddimagebmMenu(self, event):
+        self.SetStatusText(_("Creating bookmark from image"))
         if not self.engine.config.has_option("AstroTortilla", "last_gotoimage"):
             self.engine.config.set("AstroTortilla", "last_gotoimage", "")
         fileName = wx.FileSelector(

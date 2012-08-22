@@ -21,7 +21,7 @@ class DlgCameraSetup(wx.Dialog):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Dialog.__init__(self, id=wxID_DLGCAMERASETUP, name='', parent=prnt,
-              pos=wx.Point(316, 126), size=wx.Size(304, 342),
+              pos=wx.Point(510, 122), size=wx.Size(312, 346),
               style=wx.DEFAULT_DIALOG_STYLE, title=_('Camera Setup'))
         self.SetClientSize(wx.Size(296, 308))
 
@@ -44,7 +44,7 @@ class DlgCameraSetup(wx.Dialog):
 
         self.lblCameraName = wx.StaticText(id=wxID_DLGCAMERASETUPLBLCAMERANAME,
               label=_('Camera Setup'), name='lblCameraName', parent=self,
-              pos=wx.Point(16, 8), size=wx.Size(68, 13), style=0)
+              pos=wx.Point(16, 8), size=wx.Size(224, 13), style=0)
 
         self.chCamName = wx.Choice(choices=[], id=wxID_DLGCAMERASETUPCHCAMNAME,
               name='chCamName', parent=self, pos=wx.Point(64, 200),
@@ -113,9 +113,18 @@ class DlgCameraSetup(wx.Dialog):
         if curCam in camlist:
             self.chCamName.SetStringSelection(curCam)
         if not camlist:
+            self.lblCamList.Hide()
             self.chCamName.Disable()
+            self.btnRefresh.Disable()
+            self.chCamName.Hide()
+            self.btnRefresh.Hide()
         else:
+            self.lblCamList.Show()
             self.chCamName.Enable()
+            self.chCamName.Show()
+            self.btnRefresh.Enable()
+            self.btnRefresh.Show()
+
 
     def OnGridCameraConfMotion(self, evt):
         # evt.GetRow() and evt.GetCol() would be nice to have here,

@@ -179,7 +179,7 @@ class AstrometryNetSolver(IPlateSolver):
             if self.__callback: self.__callback(_("Parsing results..."))
             self.__callback = None # clear callback, we want to capture output from the next
 
-            output, errors = self.__execute('wcsinfo `cygpath %s`/%s.wcs'%(workDir, imageBase))
+            output, errors = self.__execute('wcsinfo \\"`cygpath -a \\"%s\\"`/%s.wcs\\"'%(workDir, imageBase))
             if errors:
                 if callback:
                     map(callback, errors)

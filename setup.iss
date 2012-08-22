@@ -5,10 +5,10 @@
 #define TortillaVersion GetFileVersion(AddBackslash(SourcePath) + "Dist\\AstroTortilla.exe")
 #ifexist "vcredist_x64.exe"
 #define VCRedist "vcredist_x64.exe"
-#define Platform "64bit"
+#define Platform "amd64"
 #else
 #define VCRedist "vcredist_x86.exe"
-#define Platform "32bit"
+#define Platform "x86"
 #endif
 
 [Setup]
