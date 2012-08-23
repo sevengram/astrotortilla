@@ -23,7 +23,7 @@ PROPERTYLIST = {
         "scale_max":(_("Scale maximum"), float, _("Image scale upper bound"), "", 179),
         "scale_units":(_("Scale units"), str, _("View scale size units"), _("arcminwidth, degwidth, arcsecperpix"), "degwidth"),
         "scale_xrefine":(_("Scale refinement"), float, _("Image scale refinement factor"), _("0 to turn off"), 0),
-        "xtra":(_("Custom options"), str, _("Additional custom options"), "", "--sigma 1"),
+        "xtra":(_("Custom options"), str, _("Additional custom options"), "", "--sigma 1 --no-plot -N none"),
         "shell":(_("Cygwin shell"), str, _("Shell command for Cygwin execution"), "", 'C:\\cygwin\\bin\\bash --login -c "%s"'),
         }
 
@@ -167,7 +167,7 @@ class AstrometryNetSolver(IPlateSolver):
             pass
 
 
-        r=self.__execute('solve-field %s --no-plot -D \\"`cygpath -a \\"%s\\"`\\" \\"`cygpath -a \\"%s\\"`\\"'%(" ".join(options), workDir, imagePath))
+        r=self.__execute('solve-field %s -D \\"`cygpath -a \\"%s\\"`\\" \\"`cygpath -a \\"%s\\"`\\"'%(" ".join(options), workDir, imagePath))
 
         if r and len(r)>1 and r[1]: map(logger.info, r[1])
         wcsInfo=[]

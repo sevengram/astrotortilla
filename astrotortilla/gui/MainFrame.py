@@ -497,6 +497,7 @@ class mainFrame(wx.Frame):
         self.bookmarkMenuItems = []
         self.bookmarkMap = {}
         self.updateBookmarkMenu()
+        self._updateCamera()
 
     
     def OnClose(self, event):
@@ -516,7 +517,8 @@ class mainFrame(wx.Frame):
         dlg = DlgHelpAbout.DlgHelpAbout(self)
         try:
             dlg.ShowModal()
-        except:
+        except: pass
+        finally:
             dlg.Destroy()
 
     def OnConfigGridGridEditorCreated(self, event):
@@ -604,6 +606,9 @@ class mainFrame(wx.Frame):
             self.camSetup.Enable()
             self.btnGO.Enable()
             self.txtCamStatus.SetLabel(CameraState.State[self.engine.getCamera().cameraState])
+            n = self.choiceCam.GetSelection()
+            if n<0 or self.choiceCam.GetClientData(n) != self.engine.getCamera():
+                self.choiceCam.SetSelection(self.choiceCam.FindString(self.engine.getCamera().getName()))
 
         if not self.engine.solution:
             if self.engine.getCamera():
@@ -643,22 +648,15 @@ class mainFrame(wx.Frame):
                 except Exception, detail:
                     import traceback
                     logger.error("Camera error: %s"%traceback.format_exc())
-                    diag = wx.MessageDialog(parent=self, 
-                        message=traceback.format_exc(), 
-                        caption=_("Camera error"),
-                        style = wx.OK
-                        )
-                    try:
-                        diag.ShowModal()
-                    except:
-                        diag.Destroy()
+                    self.showTracebackDialog(traceback.format_exc(), "Camera error")
                     return
             self.engine.getCamera().setup()
             return
         dlg = DlgCameraSetup.DlgCameraSetup(self)
         try:
             dlg.ShowModal()
-        except:
+        except: pass
+        finally:
             dlg.Destroy()
         
 
@@ -679,6 +677,18 @@ class mainFrame(wx.Frame):
         if state:
             self.chkSlewTarget.SetValue(True)
             self.chkSync.SetValue(True)
+
+    def showTraceabackDialog(traceback, header):
+        diag = wx.MessageDialog(parent=self, 
+                message=traceback.format_exc(), 
+                   caption=_(header),
+                    style = wx.OK
+                    )
+        try:
+            diag.ShowModal()
+        except: pass
+        finally:
+            diag.Destroy()
 
     def OnBtnGOButton(self, event):
         if not self.engine.getCamera() or not self.engine.getSolver():
@@ -709,15 +719,8 @@ class mainFrame(wx.Frame):
         except Exception as e:
             import traceback
             logger.error("Sync failed: %s"%traceback.format_exc())
-            diag = wx.MessageDialog(parent=self, 
-                    message=traceback.format_exc(), 
-                        caption=_("Telescope error"),
-                        style = wx.OK
-                        )
-            try:
-                diag.ShowModal()
-            except:
-                diag.Destroy()
+            self.showTracebackDialog(traceback.format_exc(), "Telescope communication error")
+
         finally:
             self._updateCamera()
             # update solver configuration grid from solver properties
@@ -843,15 +846,7 @@ class mainFrame(wx.Frame):
         except:
             import traceback
             logger.error("Saving settings failed: %s"%traceback.format_exc())
-            diag = wx.MessageDialog(parent=self, 
-                    message=traceback.format_exc(), 
-                        caption=_("Error saving settings"),
-                        style = wx.OK
-                        )
-            try:
-                diag.ShowModal()
-            except:
-                diag.Destroy()
+            self.showTracebackDialog(traceback.format_exc(), "Error saving settings");
 
     def OnMenuToolsDriftshotMenu(self, event):
         if not self.engine.isReady:
@@ -930,7 +925,8 @@ class mainFrame(wx.Frame):
                 self.engine.gotoImage(fileName)
             except:
                 import traceback
-                traceback.print_exc() 
+                logger.error("Solver error occurred: %"%traceback.format_exc())
+                self.showTracebackDialog(traceback.format_exc(), "Solver error")
             self.btnGO.SetLabel(_("Capture and Solve"))
             self._updateCamera()
 
@@ -947,12 +943,16 @@ class mainFrame(wx.Frame):
 
     def CreateBookmark(self, solution):
         dlg = wx.TextEntryDialog(self, message=_("Enter a name for the bookmark"),  caption=_("Bookmark name"))
-        dlg.ShowModal()
-        bmName = dlg.GetValue()
-        bm = Bookmark(bmName, solution.center, solution.rotation)
-        self.engine.addBookmark(bm)
-        self.updateBookmarkMenu()
-        self.SetStatusText(_("Done"))
+        try:
+            dlg.ShowModal()
+            bmName = dlg.GetValue()
+            bm = Bookmark(bmName, solution.center, solution.rotation)
+            self.engine.addBookmark(bm)
+            self.updateBookmarkMenu()
+            self.SetStatusText(_("Done"))
+        except:pass
+        finally:
+            dlg.Destroy()
 
     def OnMenuBookmarksAddimagebmMenu(self, event):
         self.SetStatusText(_("Creating bookmark from image"))
@@ -972,7 +972,8 @@ class mainFrame(wx.Frame):
                 target = self.engine.solveImage(fileName)
             except:
                 import traceback
-                traceback.print_exc() 
+                logger.error("Solver error occurred: %"%traceback.format_exc())
+                self.showTracebackDialog(traceback.format_exc(), "Solver error");
             self.btnGO.SetLabel(_("Capture and Solve"))
             if target:
                 self.CreateBookmark(target)

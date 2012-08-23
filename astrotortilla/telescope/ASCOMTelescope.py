@@ -59,6 +59,8 @@ class ASCOMTelescope(ITelescope):
         self.__trackingTime = 0
     
     def __del__(self):
+        del self.__chooser
+        del self.__scope
         super(ASCOMTelescope, self).__del__()
 
     @classmethod

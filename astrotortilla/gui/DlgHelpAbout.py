@@ -44,7 +44,7 @@ class DlgHelpAbout(wx.Dialog):
     def __init__(self, parent):
         self._init_ctrls(parent)
         self.staticText1.SetLabel("AstroTortilla %s"%(parent.engine.version))
-        self.staticText1.SetSize(-1, 13)
+        self.staticText1.SetSize(wx.Size(-1, 13))
 
     def OnCloseButton(self, event):
         self.Close()

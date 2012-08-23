@@ -50,13 +50,13 @@ class MaximDLCamera(ICamera):
         if self.__cam:
             if self.__cam.LinkEnabled:
                 return
-            else:
-                self.__cam.LinkEnabled = True
-                return
-        self.__cam = Dispatch("Maxim.CCDCamera")
-        if not self.__cam:
-            raise Exception(_("Dispatching Maxim.CCDCamera failed"))
+        else:
+            self.__cam = Dispatch("Maxim.CCDCamera")
+            if not self.__cam:
+                raise Exception(_("Dispatching Maxim.CCDCamera failed"))
         self.__cam.LinkEnabled = True
+        while not self.__cam.LinkEnabled:
+            time.sleep(0.05)
         self.__cam.DisableAutoShutdown = True
         
 
@@ -89,10 +89,11 @@ class MaximDLCamera(ICamera):
     def connected(self, value):
         if value == self.connected:
             return
-        self.connect()
-        if not self.__cam:
-            return
-        self.__cam.LinkEnabled = value
+        if value:
+            self.connect()
+        else:
+            del self.__cam
+            self.__cam = None
 
     @property
     def cameraState(self):
@@ -100,11 +101,11 @@ class MaximDLCamera(ICamera):
         if self.__cam:
             state = self.__cam.CameraStatus
             if state == 2: return CameraState.Idle
-            if state == 7 or state == 8 or state == 15 or state ==20: return CameraState.Waiting
-            if state == 3: return CameraState.Exposing
-            if state == 4: return CameraState.Reading
-            if state == 5: return CameraState.Downloading
-            if state == 1: return CameraState.Error
+            elif state in (7, 8, 15, 20): return CameraState.Waiting
+            elif state == 3: return CameraState.Exposing
+            elif state == 4: return CameraState.Reading
+            elif state == 5: return CameraState.Downloading
+            elif state == 1: return CameraState.Error
         return self.__camState # Idle?
 
     @property 
@@ -126,7 +127,7 @@ class MaximDLCamera(ICamera):
                 self.__cam.Expose(duration, 1) # 1 for lightframe
         except:
             self.__camState = CameraState.Error
-    
+
     @property
     def imageReady(self):
         if not self.__cam:
@@ -134,14 +135,16 @@ class MaximDLCamera(ICamera):
         return self.__cam.ImageReady
 
     def getImage(self):
-        self.connect()
-        if not self.__cam.ImageReady:
-            return None
-        self.__camState = CameraState.Idle
-        #imgName = os.path.join(self.workingDirectory, "Maxim.jpg")
-        imgName = os.path.join(self.workingDirectory, "Maxim.fit")
-        doc = self.__cam.Document
-        #doc.SaveFile(imgName, 6, True) # jpg, auto stretch
-        doc.SaveFile(imgName, 3, True, 1) # fits, auto stretch
+        imgName = None
+        try:
+            self.connect()
+            if self.__cam.ImageReady:
+                self.__camState = CameraState.Idle
+                imgName = os.path.join(self.workingDirectory, "Maxim.fit")
+                doc = self.__cam.Document
+                #doc.SaveFile(imgName, 6, True) # jpg, auto stretch
+                doc.SaveFile(imgName, 3, True, 1) # fits, auto stretch
+        finally:
+            self.connected = False
         return imgName
 

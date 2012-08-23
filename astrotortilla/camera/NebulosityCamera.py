@@ -273,7 +273,7 @@ class NebulosityCamera(ICamera):
         """
         app = Application()
         nebu_path = os.path.join(self.getProperty("path"), "nebulosity.exe")
-        print nebu_path
+        logger.debug("Trying with %s"%nebu_path)
         try:
             app.connect_(path=nebu_path)
         except:

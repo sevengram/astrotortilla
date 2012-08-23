@@ -129,12 +129,15 @@ class TortillaEngine(object):
 
     def loadConfig(self, fileName=None):
         if fileName:
-            with codecs.open(fileName, mode="rb", encoding="UTF-8") as conffile:
-                self.config.readfp(conffile)
-            self.config.set("AstroTortilla", "settings_path", os.path.abspath(os.path.dirname(fileName)))
-            self.__configure(self.__telescope, "Telescope-%s"%self.__telescopeName)
-            self.__loadCameraConfig()
-            self.__configure(self.__solver, "Solver-%s"%self.__solverName)
+            try:
+                with codecs.open(fileName, mode="rb", encoding="UTF-8") as conffile:
+                    self.config.readfp(conffile)
+                self.config.set("AstroTortilla", "settings_path", os.path.abspath(os.path.dirname(fileName)))
+                self.__configure(self.__telescope, "Telescope-%s"%self.__telescopeName)
+                self.__loadCameraConfig()
+                self.__configure(self.__solver, "Solver-%s"%self.__solverName)
+            except:
+                pass # No config file necessarily exists on first start
         default_path=None
         try:
             default_path = self.config.get("AstroTortilla", "settings_path")
@@ -291,8 +294,8 @@ class TortillaEngine(object):
                 callback(status)
             except:
                 failed.append(callback)
-	if status.strip():
-		logger.info(status)
+        if status.strip():
+            logger.info(status)
         [self.__callback.remove(cb) for cb in failed]
 
     def setProgress(self, progress, status=None):
@@ -341,6 +344,8 @@ class TortillaEngine(object):
                     self.config.set("Bookmarks", "bm-%d"%(bmi), bookmark.to_string().replace("%", "%%"))
                     bmi += 1
                 self.config.set("Bookmarks", "count", "%d"%bmi)
+            if not os.path.exists(os.path.dirname(filename)):
+                os.makedirs(os.path.dirname(filename))
             with codecs.open(filename, mode="wb", encoding="UTF-8") as conffile:
                 self.config.write(conffile)
         except:
@@ -402,10 +407,10 @@ class TortillaEngine(object):
         except Exception, detail: # Silent errors
             import traceback
             logger.error(traceback.format_exc())
-	if self.solution:
-		self.setStatus(_("Solved in %.1fs")%(time()-startTime))
-	else:
-		self.setStatus(_("No solution in %.1fs")%(time()-startTime))
+        if self.solution:
+            self.setStatus(_("Solved in %.1fs")%(time()-startTime))
+        else:
+            self.setStatus(_("No solution in %.1fs")%(time()-startTime))
         return self.solution
 
 
