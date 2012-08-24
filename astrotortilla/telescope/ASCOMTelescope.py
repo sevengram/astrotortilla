@@ -49,6 +49,7 @@ class ASCOMTelescope(ITelescope):
         self.__slewingTime = 0
         self.__tracking = None
         self.__trackingTime = 0
+        self.__scopeIFVersion = 0
         if TRACE: logger.debug("<init")
 
     def __invalidateCache(self):
@@ -96,6 +97,11 @@ class ASCOMTelescope(ITelescope):
         self.__scope = Dispatch(self.__scopeName)
         self.setProperty("lastselection", self.__scopeName)
         self.__scope.Connected = True
+        self.__scopeIFVersion = 1
+        try:
+            self.__scopeIFVersion = self.__scope.InterfaceVersion
+        except:
+            pass
         if TRACE: logger.debug("<connect")
         self.__invalidateCache()
 
@@ -264,6 +270,8 @@ class ASCOMTelescope(ITelescope):
         "Which side of pier is the scope, 0=looking west, 1=looking east"
         if not self.connected:
             return 0
+        if self.__scopeIFVersion < 2:
+            return 0
         return self.__scope.SideOfPier
 
     @property
@@ -273,12 +281,16 @@ class ASCOMTelescope(ITelescope):
         if not self.connected:
             if TRACE: logger.debug("<parked")
             return True
-
+        if self.__scopeIFVersion < 2:
+            return False # v1 ASCOM cannot park/unpark
         now = time.time()
-        if now - self.__parkedTime > self._maxAge:
-            logger.debug("request parked status")
-            self.__parked = self.__scope.AtPark
-            self.__parkedTime = now
+        try:
+            if now - self.__parkedTime > self._maxAge:
+                logger.debug("request parked status")
+                self.__parked = self.__scope.AtPark
+                self.__parkedTime = now
+        except: # Getting parked status fails, assume V1 driver
+            self.__scopeIFVersion = 1
         if TRACE: logger.debug("<parked")
         return self.__parked
 
@@ -287,6 +299,7 @@ class ASCOMTelescope(ITelescope):
         "Park and Unpark scope"
         if not self.connected:
             return
+        return # v1 ASCOM cannot park/unpark
         if TRACE: logger.debug(">park")
         if state:
             self.__scope.Park()

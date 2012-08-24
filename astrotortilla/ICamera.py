@@ -24,17 +24,18 @@ class ICamera(Configurable):
     def __init__(self):
         super(ICamera, self).__init__()
         self.__wd = tempfile.mkdtemp(prefix="cam")
+        self.__createdWd = self.__wd
         logger.debug("Tempdir set to '%s'"%(self.__wd))
     
     def __del__(self):
         try:
-            shutil.rmtree(self.__wd)
+            shutil.rmtree(self.__createdWd)
         except:
             logger.error("Failed to remove tempdir '%s'"%(self.__wd))
 
     @classmethod
     def getName(cls):
-	raise NotImplementedError("ICamera.getName not implemented")
+        raise NotImplementedError("ICamera.getName not implemented")
 
     @property
     def imageTypes(self):

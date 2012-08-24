@@ -648,7 +648,7 @@ class mainFrame(wx.Frame):
                 except Exception, detail:
                     import traceback
                     logger.error("Camera error: %s"%traceback.format_exc())
-                    self.showTracebackDialog(traceback.format_exc(), "Camera error")
+                    self.showTracebackDialog(traceback.format_exc(), _("Camera error"))
                     return
             self.engine.getCamera().setup()
             return
@@ -678,10 +678,10 @@ class mainFrame(wx.Frame):
             self.chkSlewTarget.SetValue(True)
             self.chkSync.SetValue(True)
 
-    def showTraceabackDialog(traceback, header):
+    def showTracebackDialog(traceback, header):
         diag = wx.MessageDialog(parent=self, 
                 message=traceback.format_exc(), 
-                   caption=_(header),
+                   caption=header,
                     style = wx.OK
                     )
         try:
@@ -715,11 +715,11 @@ class mainFrame(wx.Frame):
                     self.engine.getTelescope().position = self.engine.solution.center
                     sync_error = self.engine.getTelescope().position - self.engine.solution.center
                     if sync_error.arcminutes > arcminLimit:
-                        raise Exception("ASCOM Telescope sync error")
+                        raise Exception(_("ASCOM Telescope sync error"))
         except Exception as e:
             import traceback
             logger.error("Sync failed: %s"%traceback.format_exc())
-            self.showTracebackDialog(traceback.format_exc(), "Telescope communication error")
+            self.showTracebackDialog(traceback.format_exc(), _("Telescope communication error"))
 
         finally:
             self._updateCamera()
@@ -846,7 +846,7 @@ class mainFrame(wx.Frame):
         except:
             import traceback
             logger.error("Saving settings failed: %s"%traceback.format_exc())
-            self.showTracebackDialog(traceback.format_exc(), "Error saving settings");
+            self.showTracebackDialog(traceback.format_exc(), _("Error saving settings"))
 
     def OnMenuToolsDriftshotMenu(self, event):
         if not self.engine.isReady:
@@ -926,7 +926,7 @@ class mainFrame(wx.Frame):
             except:
                 import traceback
                 logger.error("Solver error occurred: %"%traceback.format_exc())
-                self.showTracebackDialog(traceback.format_exc(), "Solver error")
+                self.showTracebackDialog(traceback.format_exc(), _("Solver error"))
             self.btnGO.SetLabel(_("Capture and Solve"))
             self._updateCamera()
 
@@ -973,7 +973,7 @@ class mainFrame(wx.Frame):
             except:
                 import traceback
                 logger.error("Solver error occurred: %"%traceback.format_exc())
-                self.showTracebackDialog(traceback.format_exc(), "Solver error");
+                self.showTracebackDialog(traceback.format_exc(), _("Solver error"))
             self.btnGO.SetLabel(_("Capture and Solve"))
             if target:
                 self.CreateBookmark(target)

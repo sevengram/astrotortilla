@@ -71,6 +71,8 @@ class TortillaEngine(object):
         ch.setFormatter(logFormatter)
         logger.addHandler(ch)
 
+        self.__workDirectory = None
+
         self.__telescopes = self._list_subclasses(ITelescope, telescope)
         self.__telescope = None
         self.__telescopeName = _(u'Not selected')
@@ -103,7 +105,9 @@ class TortillaEngine(object):
         if logFile:
             if not os.path.isabs(logFile):
                 logFile = os.path.join(appdirs.user_log_dir, logFile)
-                os.makedirs(os.path.dirname(logFile))
+                try:
+                    os.makedirs(os.path.dirname(logFile))
+                except: pass
             logHandler = logging.FileHandler(logFile)
             logHandler.setLevel(logLevels[self.config.get("AstroTortilla", "log_level")])
             logHandler.setFormatter(logFormatter)
@@ -162,6 +166,7 @@ class TortillaEngine(object):
                 except:
                     pass
             self.__bookmarks = bmlist
+        self.__workDirectory = self.config.get("AstroTortilla", "work_directory") if self.config.has_option("AstroTortilla", "work_directory") else None
 
     def __loadCameraConfig(self):
         "Assign camera specific configuration to current camera"
@@ -188,6 +193,7 @@ class TortillaEngine(object):
         self.deselectCamera()
         if camName in self.__cameras:
             self.__camera = self.__cameras[camName]()
+            self.__camera.workingDirectory = self.__workDirectory
             self.__cameraName = camName
             self.__loadCameraConfig()
         self.config.set("Session", "camera", camName)
@@ -212,7 +218,7 @@ class TortillaEngine(object):
     def selectSolver(self, solverName):
         self.deselectSolver()
         if solverName in self.__solvers:
-            self.__solver = self.__solvers[solverName]()
+            self.__solver = self.__solvers[solverName](self.__workDirectory)
             self.__solverName = solverName
             self.__configure(self.__solver, "Solver-%s"%self.__solverName)
         self.config.set("Session", "solver", solverName)
