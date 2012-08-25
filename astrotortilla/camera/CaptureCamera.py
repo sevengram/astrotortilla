@@ -193,7 +193,7 @@ class CaptureCamera(ICamera):
 		jpgname = os.path.join(self.workingDirectory, self.__basename+".jpg")
 		bmpstr = saveBitMap.GetBitmapBits(True)
 		bmpinfo = saveBitMap.GetInfo()
- 
+
 		im = Image.frombuffer('RGB', (bmpinfo['bmWidth'], bmpinfo['bmHeight']), bmpstr, 'raw', 'BGRX', 0, 1)
 		im.save(jpgname, format = 'jpeg', quality = 85)
 		saveDC.DeleteDC()

@@ -36,7 +36,7 @@ handle: (name, validation-func, help, value help, default)
 # The values can be set as strings by the using application.
 PROPERTYLIST = {
 		"directory":(_("Directory"), str, "", "", "")
-        }
+}
 
 class FileOpenCamera(ICamera):
     """FileOpenCamera()
@@ -55,7 +55,8 @@ class FileOpenCamera(ICamera):
     
     @classmethod
     def getName(cls):
-	    return _("File Open dialog")
+        return _("File Open dialog")
+    
     @property
     def imageTypes(self):
         "List of image types supported by the camera"
@@ -145,14 +146,14 @@ class FileOpenCamera(ICamera):
                 message=_("Choose file to solve"),
                 default_path = os.path.dirname(self.__openedFile or self.getProperty("directory")),
                 flags = wx.FD_OPEN|wx.FD_FILE_MUST_EXIST,
-		wildcard=_("Image files") + " (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm"
+                wildcard=_("Image files") + " (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm"
                 )
         self.__selected = True
         if not fileName:
             self.__openedFile = None
         else:
             self.__openedFile = fileName
-	    self.setProperty("directory", os.path.dirname(fileName))
+        self.setProperty("directory", os.path.dirname(fileName))
         return
 
     def getImage(self):

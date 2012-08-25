@@ -43,22 +43,21 @@ class AstrometryNetSolver(IPlateSolver):
         self.__timeout = 300        # timeout for finding a solution
         self.__wd = workDirectory   # temporary working directory
         self.__counter = 0      # internal solution counter
-        self.__wdCreated = False    # book-keeping on temp-dir clean-up responsibility
+        self.__wdCreated = None    # book-keeping on temp-dir clean-up responsibility
         self.__callback = None      # status update callback reference
         self.__abort = False        # has abort been requested?
         if not workDirectory:
             self.__wd = tempfile.mkdtemp(prefix="solver")
-            self.__wdCreated = True
+            self.__wdCreated = self.__wd
         if not os.path.exists(self.__wd):
-            os.mkdir(self.__wd)
-            self.__wdCreated = True
+            os.makedirs(self.__wd)
         if not os.path.isdir(self.__wd):
             raise "Work directory exists and is not a directory"
     
     def __del__(self):
         try:
             if self.__wdCreated:
-                shutil.rmtree(self.__wd)
+                shutil.rmtree(self.__wdCreated)
         except:
             pass
 
@@ -240,7 +239,8 @@ class AstrometryNetSolver(IPlateSolver):
 
         # Clean up and return
         try:
-            shutil.rmtree(workDir)
+            if self.__wdCreated:
+                shutil.rmtree(workDir)
         except:
             pass
         self.__counter += 1

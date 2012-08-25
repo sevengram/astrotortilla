@@ -97,10 +97,6 @@ class NebulosityCamera(ICamera):
             self.__sock.recv(1)
             self.__sock.close()
             del self.__sock
-        try:
-            map(os.remove, glob.glob(os.path.join(self.workingDirectory, self.__basename+"*.fit")))
-        except:
-            pass
         super(NebulosityCamera, self).__del__()
     
     def __cmd(self, cmd):
