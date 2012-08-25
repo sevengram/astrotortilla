@@ -193,7 +193,12 @@ class TortillaEngine(object):
         self.deselectCamera()
         if camName in self.__cameras:
             self.__camera = self.__cameras[camName]()
-            self.__camera.workingDirectory = self.__workDirectory
+            try:
+                if self.__workDirectory is not None:
+                    self.__camera.workingDirectory = self.__workDirectory
+            except Exception(e):
+                import traceback
+                logger.error("Setting working to '%s' directory failed: %s"%(self.__workDirectory, traceback.format_exc()))
             self.__cameraName = camName
             self.__loadCameraConfig()
         self.config.set("Session", "camera", camName)

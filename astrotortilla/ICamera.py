@@ -139,7 +139,7 @@ class ICamera(Configurable):
     @workingDirectory.setter
     def workingDirectory(self, value):
         "Changes current WD, old WD is not deleted."
-        if os.path.isdir(value):
+        if type(value) in (str, unicode) and os.path.isdir(value):
             self.__wd = value
         else:
             raise ValueError("value is not a path to a directory")

@@ -55,6 +55,8 @@ class MaximDLCamera(ICamera):
             if not self.__cam:
                 raise Exception(_("Dispatching Maxim.CCDCamera failed"))
         self.__cam.LinkEnabled = True
+        maxim = Dispatch("Maxim.Application")
+        maxim.LockApp = True
         while not self.__cam.LinkEnabled:
             time.sleep(0.05)
         self.__cam.DisableAutoShutdown = True
