@@ -150,7 +150,8 @@ class TortillaEngine(object):
                 self.config.add_section("AstroTortilla")
         if not (default_path and os.access(default_path, os.W_OK)):
             data_dir = appdirs.user_data_dir
-            os.makedirs(data_dir)
+            try:os.makedirs(data_dir) # fails if exists
+            except:pass
             self.config.set("AstroTortilla", "settings_path", data_dir)
         if self.config.has_option("Session", "solver"):
             self.selectSolver(self.config.get("Session", "solver"))
