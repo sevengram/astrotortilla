@@ -10,5 +10,6 @@ Exposing = 2
 Reading = 3
 Downloading = 4
 Error = 5
+Busy = 5
 
-State = (_("Idle"), _("Waiting"), _("Exposing"), _("Reading"), _("Downloading"), _("Error"))
+State = (_("Idle"), _("Waiting"), _("Exposing"), _("Reading"), _("Downloading"), _("Error"), _("Busy"))

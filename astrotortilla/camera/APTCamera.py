@@ -11,23 +11,75 @@ import os, os.path
 import shutil
 import socket
 import time
+from select import select
 
 import gettext
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
+#
+"""APT commands Nov2011
+Command "S" (status) returns:
+        NCC - no camera connection
+        IDL - APT can accept commands
+        BUS - APT is busy
+        CAP - APT is capturing image in result of "C" command
+        E01 - unknown status
+        E02 - the camera has to be set in B/M dial mode. The status will be
+              set to IDL after the E02 is read with "S" command from AT. This case happens
+              when "C" command is sent, but exposure can't start
 
+Command "C" (capture) - format C1XXX. Returns:
+        E01 - Bad exposure duration parameter
+        E02 - Bad state - APT can't start the exposure because is busy or
+              there is no connection to camera
+        E03 - Can't start exposure
+        ROK - the command is accepted. Wait a second or two and check the
+              status to see if you will get E02, if the status is CAP or IDL everything is
+              fine
+
+Command "G" (get) returns
+        A string with the filename. The socket will provide the length of
+        the string
+
+Command "R" (remove). This deletes the last captured for AT image. Returns:
+        E01 - the file can't be deleted - most likely doesn't exist
+        ROK - the file is deleted
+
+If a command gets a result "USC" this means "Unsupported command".
+"""
+#
+#
+#
 PROPERTYLIST = {
         "port":(_("Port"), int, _("Astro Photography Tool TCP port"), _("default 21701"), "21701"),
         "hostname":(_("Hostname"), str, _("Hostname or IP address"), "", "localhost"),
         }
 
 class APTCamera(ICamera):
+    """
+    State transitions:
+    __exposing == exposure issued, not completed yet
+    __waitingDON == exposure issued, current socket connection has not yet acknowledged completion
+    __latestImage== name of the image file after latest successfull exposure or None
+    """
+    status = {
+        "":CameraState.Idle,
+        "IDL": CameraState.Idle,
+        "CAP": CameraState.Exposing,
+        "BUS": CameraState.Busy,
+        "E01": CameraState.Error,
+        "E02": CameraState.Error,
+        "NCC": CameraState.Error,
+        }
     def __init__(self):
         super(APTCamera, self).__init__()
         self.__socket = None
+        self.__connected = False
         self.__buffersize = 512
-        self.__camState = CameraState.Idle
         self.__latestImage = None
+        self.__exposing = True # internal state keeping flag
+        self.__waitingDON = False # out-of-state transition flag
+        self.propertyList = PROPERTYLIST
 
     def __del__(self):
         if self.__socket:
@@ -43,15 +95,26 @@ class APTCamera(ICamera):
     def imageTypes(self):
         return ["jpg"]
 
-    def aptCmd(self, command):
-        self.connected = true
+    def aptCmd(self, command, timeout=0):
+        self.connected = True
+        if timeout > 0:
+            n=self.__socket.gettimeout()
+            self.__socket.settimeout(timeout)
+            timeout=n
         response = ""
         try:
             self.__socket.send(command)
+            time.sleep(0.1) # A small pause for scheduling and APT processing
             response = self.__socket.recv(self.__buffersize)
-        except:
+        except timeout:
+            pass # TODO: deal with timeouts properly
+        except Exception:
+            import traceback
+            logger.error(traceback.format_exc())
             logger.error("APT connection lost during command")
-        self.connected = false
+        finally:
+            if timeout > 0:
+                self.__socket.settimeout(timeout)
         return response
 
     def connect(self):
@@ -59,6 +122,8 @@ class APTCamera(ICamera):
             try:
                 self.__socket = socket.create_connection((self.getProperty("hostname"), int(self.getProperty("port"))), timeout=10)
             except:
+                import traceback
+                logger.error(traceback.format_exc())
                 self.__socket = None
 
     @property
@@ -67,30 +132,61 @@ class APTCamera(ICamera):
 
     @connected.setter
     def connected(self, value):
-        if value == self.connected:
-            return
-        if value:
+        if value and not self.__socket:
             self.connect()
-        else:
-            self.__socket.close()
+
+        if not value and self.connected:
+            try:
+                self.__socket.close()
+            except: pass
             self.__socket = None
 
     @property
     def cameraState(self):
         "Current camera state, see ASCOM cameraState parameter"
-        return self.__camState
+        if self.__waitingDON: # Capturing started, not done yet
+            return CameraState.Exposing
+        return APTCamera.status[self.aptCmd("S")]
 
     @property
     def imageReady(self):
-        reply = self.aptCmd("S")
-        if "IDL" in reply or "DON" in reply and self.__latestImage:
-            self.__camState = CameraState.Idle
+        if self.__latestImage != None:
+            return True
+        if self.__waitingDON:
+            r,s,x = select([self.__socket], [],[],.02)
+            if not r:
+                return False
+            try:
+                don=self.__socket.recv(3)
+                if don == "DON":
+                    self.__waitingDON = False
+                    self.__exposing = CameraState.Idle
+                    self.__getImage()
+                    logger.debug("Image ready")
+                    return True
+            except timeout:
+                logger.debug("Communication timeout")
+                return False
+            except:
+                import traceback
+                logger.error(traceback.format_exc())
+                self.connected = False
+                self.__waitingDON = False
+                self.__connected= True
+        # Fall thru on connection failure, reconnect and wait for idle status
+        if self.cameraState == CameraState.Idle and self.__exposing == CameraState.Exposing:
+            self.__exposing = False
+            self.__waitingDON = False
+            logger.debug("Recovering connection, APT is idle")
+            self.__getImage()
             return True
         else:
+            logger.debug("Recovering connection, APT is busy")
             return False
 
     def capture(self, duration):
-        self.__camState = CameraState.Exposing
+        if not self.cameraState == CameraState.Idle:
+            raise Exception("APT: Camera not idle")
         if duration < 1:
             exposureTime = 1
         elif duration > 999:
@@ -98,29 +194,24 @@ class APTCamera(ICamera):
         else:
             exposureTime = duration
 
+        self.__latestImage = None
         try:
-            reply = self.aptCmd("S")
-            if "IDL" not in reply:
-                raise Exception("APT: Not idle!")
             reply = self.aptCmd("C1%03i" % exposureTime)
             if "ROK" not in reply:
-                raise Exception("APT: No ROK in reply!")
+                raise Exception("APT: Unexpected response: %s"%reply)
+            self.__waitingDON = True
+            self.__exposing = True
         except Exception:
-            self.__camState = CameraState.Error
-            raise
+            raise 
 
     def getImage(self):
-        if self.__camState == CameraState.Error:
-            return None
-        self.connect()
-        if not self.connected or not self.imageReady:
-            return None
-        self.__camState = CameraState.Idle
+        return self.__latestImage
+
+    def __getImage(self):
+        self.__exposing = False
         reply = self.aptCmd("G")
-        if reply == "ROK":
-            return None
-        newPath = os.path.join(self.workingDirectory, "APT.jpg")
+        newPath = os.path.join(self.workingDirectory, os.path.basename(reply))
         shutil.copyfile(reply, newPath)
         self.aptCmd("R")
         self.__latestImage = newPath
-        return newPath
+        logger.debug(newPath)
