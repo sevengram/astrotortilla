@@ -5,10 +5,12 @@ setlocal
 
 if exist "\python26\python.exe" (
 	set PYTHON="\python26\python.exe"
+	set PYTHONPATH="\python26"
 )
 
 if exist "\python27\python.exe" (
 	set PYTHON="\python27\python.exe"
+	set PYTHONPATH="\python27"
 )
 
 if exist "\program files\Inno Setup 5\iscc.exe" (
@@ -27,6 +29,10 @@ echo InnoSetup compiler not found.
 GOTO END
 )
 
+echo *** rebuilding localization files ***
+pushd locale\fi\LC_MESSAGES
+%PYTHON% %PYTHONPATH%\Tools\i18n\msgfmt.py AstroTortilla.po
+popd
 
 rmdir /q /s build dist
 %PYTHON% setup.py -q py2exe

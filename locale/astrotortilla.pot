@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-08-24 22:13+FLE Daylight Time\n"
+"POT-Creation-Date: 2012-08-27 23:34+FLE Daylight Time\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,28 +15,52 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: astrotortilla\CameraState.py:14
+#: astrotortilla\CameraState.py:15
+msgid "Busy"
+msgstr ""
+
+#: astrotortilla\CameraState.py:15
 msgid "Downloading"
 msgstr ""
 
-#: astrotortilla\CameraState.py:14
+#: astrotortilla\CameraState.py:15
 msgid "Error"
 msgstr ""
 
-#: astrotortilla\CameraState.py:14
+#: astrotortilla\CameraState.py:15
 msgid "Exposing"
 msgstr ""
 
-#: astrotortilla\CameraState.py:14
+#: astrotortilla\CameraState.py:15
 msgid "Idle"
 msgstr ""
 
-#: astrotortilla\CameraState.py:14
+#: astrotortilla\CameraState.py:15
 msgid "Reading"
 msgstr ""
 
-#: astrotortilla\CameraState.py:14
+#: astrotortilla\CameraState.py:15
 msgid "Waiting"
+msgstr ""
+
+#: astrotortilla\camera\APTCamera.py:54
+msgid "Astro Photography Tool TCP port"
+msgstr ""
+
+#: astrotortilla\camera\APTCamera.py:54
+msgid "Port"
+msgstr ""
+
+#: astrotortilla\camera\APTCamera.py:54
+msgid "default 21701"
+msgstr ""
+
+#: astrotortilla\camera\APTCamera.py:55
+msgid "Hostname"
+msgstr ""
+
+#: astrotortilla\camera\APTCamera.py:55
+msgid "Hostname or IP address"
 msgstr ""
 
 #: astrotortilla\camera\ASCOMCamera.py:22
@@ -93,11 +117,11 @@ msgstr ""
 msgid "File Open dialog"
 msgstr ""
 
-#: astrotortilla\camera\FileOpenCamera.py:145
+#: astrotortilla\camera\FileOpenCamera.py:146
 msgid "Choose file to solve"
 msgstr ""
 
-#: astrotortilla\camera\FileOpenCamera.py:148
+#: astrotortilla\camera\FileOpenCamera.py:149
 #: astrotortilla\gui\MainFrame.py:918 astrotortilla\gui\MainFrame.py:965
 msgid "Image files"
 msgstr ""
@@ -167,7 +191,7 @@ msgstr ""
 msgid "Reset directory to"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:293
+#: astrotortilla\camera\NebulosityCamera.py:289
 msgid "Nebulosity not responding to script loading"
 msgstr ""
 
@@ -176,68 +200,68 @@ msgstr ""
 msgid "Not selected"
 msgstr ""
 
-#: astrotortilla\engine.py:400
+#: astrotortilla\engine.py:405
 msgid "ERROR: No solver selected."
 msgstr ""
 
-#: astrotortilla\engine.py:404
+#: astrotortilla\engine.py:409
 msgid "Solving..."
 msgstr ""
 
-#: astrotortilla\engine.py:417
+#: astrotortilla\engine.py:422
 msgid "Solved in %.1fs"
 msgstr ""
 
-#: astrotortilla\engine.py:419
+#: astrotortilla\engine.py:424
 msgid "No solution in %.1fs"
 msgstr ""
 
-#: astrotortilla\engine.py:426 astrotortilla\engine.py:439
+#: astrotortilla\engine.py:431 astrotortilla\engine.py:444
 msgid "ERROR: No camera connected."
 msgstr ""
 
-#: astrotortilla\engine.py:432 astrotortilla\gui\MainFrame.py:856
+#: astrotortilla\engine.py:437 astrotortilla\gui\MainFrame.py:856
 msgid "Connecting to camera..."
 msgstr ""
 
-#: astrotortilla\engine.py:442 astrotortilla\engine.py:449
+#: astrotortilla\engine.py:447 astrotortilla\engine.py:454
 msgid "Exposing: %.2f seconds"
 msgstr ""
 
-#: astrotortilla\engine.py:452 astrotortilla\gui\MainFrame.py:889
+#: astrotortilla\engine.py:457 astrotortilla\gui\MainFrame.py:889
 msgid "Waiting for camera"
 msgstr ""
 
-#: astrotortilla\engine.py:458
+#: astrotortilla\engine.py:463
 msgid "Reading image from camera"
 msgstr ""
 
-#: astrotortilla\engine.py:461
+#: astrotortilla\engine.py:466
 msgid "Aborted."
 msgstr ""
 
-#: astrotortilla\engine.py:463
+#: astrotortilla\engine.py:468
 msgid "Camera did not produce an image to solve"
 msgstr ""
 
-#: astrotortilla\engine.py:465
+#: astrotortilla\engine.py:470
 msgid "An error occurred."
 msgstr ""
 
-#: astrotortilla\engine.py:468 astrotortilla\gui\MainFrame.py:227
+#: astrotortilla\engine.py:473 astrotortilla\gui\MainFrame.py:227
 msgid ""
 msgstr ""
 
-#: astrotortilla\engine.py:480 astrotortilla\engine.py:491
-#: astrotortilla\engine.py:499
+#: astrotortilla\engine.py:485 astrotortilla\engine.py:496
+#: astrotortilla\engine.py:504
 msgid "ERROR: No telescope connected."
 msgstr ""
 
-#: astrotortilla\engine.py:502
+#: astrotortilla\engine.py:507
 msgid "Waiting for scope to stop"
 msgstr ""
 
-#: astrotortilla\engine.py:529
+#: astrotortilla\engine.py:534
 msgid "Re-centering..."
 msgstr ""
 
@@ -685,95 +709,103 @@ msgstr ""
 msgid "too west"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:19
+#: astrotortilla\solver\AstrometryNetSolver.py:20
 msgid "Downscaling"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:19
+#: astrotortilla\solver\AstrometryNetSolver.py:20
 msgid "Image downscaling factor"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:20
+#: astrotortilla\solver\AstrometryNetSolver.py:21
 msgid "Backend config"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:20
+#: astrotortilla\solver\AstrometryNetSolver.py:21
 msgid "Cygwin path to backend config file"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:21
+#: astrotortilla\solver\AstrometryNetSolver.py:22
 msgid "Radius of search area in degrees"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:21
+#: astrotortilla\solver\AstrometryNetSolver.py:22
 msgid "Search radius"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:22
+#: astrotortilla\solver\AstrometryNetSolver.py:23
 #: astrotortilla\solver\AstrometryNetWebSolver.py:18
 msgid "Image scale lower bound"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:22
+#: astrotortilla\solver\AstrometryNetSolver.py:23
 #: astrotortilla\solver\AstrometryNetWebSolver.py:18
 msgid "Scale minimum"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:23
+#: astrotortilla\solver\AstrometryNetSolver.py:24
 #: astrotortilla\solver\AstrometryNetWebSolver.py:19
 msgid "Image scale upper bound"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:23
+#: astrotortilla\solver\AstrometryNetSolver.py:24
 #: astrotortilla\solver\AstrometryNetWebSolver.py:19
 msgid "Scale maximum"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:24
+#: astrotortilla\solver\AstrometryNetSolver.py:25
 msgid "Scale units"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:24
+#: astrotortilla\solver\AstrometryNetSolver.py:25
 msgid "View scale size units"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:24
+#: astrotortilla\solver\AstrometryNetSolver.py:25
 msgid "arcminwidth, degwidth, arcsecperpix"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:25
+#: astrotortilla\solver\AstrometryNetSolver.py:26
 msgid "0 to turn off"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:25
+#: astrotortilla\solver\AstrometryNetSolver.py:26
 msgid "Image scale refinement factor"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:25
+#: astrotortilla\solver\AstrometryNetSolver.py:26
 msgid "Scale refinement"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:26
+#: astrotortilla\solver\AstrometryNetSolver.py:27
 msgid "Additional custom options"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:26
+#: astrotortilla\solver\AstrometryNetSolver.py:27
 msgid "Custom options"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:27
+#: astrotortilla\solver\AstrometryNetSolver.py:28
 msgid "Cygwin shell"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:27
+#: astrotortilla\solver\AstrometryNetSolver.py:28
 msgid "Shell command for Cygwin execution"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:67
+#: astrotortilla\solver\AstrometryNetSolver.py:29
+msgid "JNOW or J2000"
+msgstr ""
+
+#: astrotortilla\solver\AstrometryNetSolver.py:29
+msgid "JNow or J2000"
+msgstr ""
+
+#: astrotortilla\solver\AstrometryNetSolver.py:74
 msgid "Local astrometry.net"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:179
+#: astrotortilla\solver\AstrometryNetSolver.py:186
 msgid "Parsing results..."
 msgstr ""
 

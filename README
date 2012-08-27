@@ -13,6 +13,7 @@ fit for any purpose.
 
 Version history
 ---------------
+v0.2.10 Astro Photography Tool support, JNow epoch support
 v0.2.9 Initial bookmark support, 64 bit build support, WCS info bugfixes
        LX200 non-conformance fixes, new config settings enabled
 v0.2.8 Bugfixes for ASCOM Camera, Help About, config file locations.

@@ -6,6 +6,7 @@ from ..units import Coordinate
 import subprocess, os, os.path, time, tempfile, shutil, threading
 import win32process
 import win32con
+from win32com.client import Dispatch
 import gettext
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
@@ -25,6 +26,7 @@ PROPERTYLIST = {
         "scale_xrefine":(_("Scale refinement"), float, _("Image scale refinement factor"), _("0 to turn off"), 0),
         "xtra":(_("Custom options"), str, _("Additional custom options"), "", "--sigma 1 --no-plot -N none"),
         "shell":(_("Cygwin shell"), str, _("Shell command for Cygwin execution"), "", 'C:\\cygwin\\bin\\bash --login -c "%s"'),
+        "year_epoch":(_("JNow or J2000"), str, _("JNOW or J2000"), "", "JNOW"),
         }
 
 def ThreadedReader(pipe, outputList, terminator):
@@ -53,8 +55,14 @@ class AstrometryNetSolver(IPlateSolver):
             os.makedirs(self.__wd)
         if not os.path.isdir(self.__wd):
             raise "Work directory exists and is not a directory"
+        try:
+            self.__transform = Dispatch("ASCOM.Astrometry.Transform.Transform")
+        except:
+            logger.error("Failed to initialize ASCOM astrometric transformer, no epoch conversion available")
+            self.__transform = None
     
     def __del__(self):
+        del self.__transform
         try:
             if self.__wdCreated:
                 shutil.rmtree(self.__wdCreated)
@@ -192,7 +200,12 @@ class AstrometryNetSolver(IPlateSolver):
                     ]
                     )
             # construct solution center Coordinate
-            center = Coordinate(self.__wcsInfo["ra_center"], self.__wcsInfo["dec_center"])
+            ra, dec = self.__wcsInfo["ra_center"], self.__wcsInfo["dec_center"]
+            center = Coordinate(ra, dec)
+            if self.__transform and self.getProperty("year_epoch").lower() == "jnow":
+                self.__transform.SetJ2000(center.RAhour, center.dec)
+                center  = Coordinate(self.__transform.RAApparent/24.*360, self.__transform.DECApparent)
+                
 
             # field of view in degrees
             hFOV = float(self.__wcsInfo["fieldw"])

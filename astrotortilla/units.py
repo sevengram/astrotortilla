@@ -7,8 +7,10 @@ import gettext
 from math import pi, sin, cos, asin, sqrt, radians, degrees, atan2
 
 class Coordinate(object):
+    RAdegrees = 1
+    RAhours = 2
     "Equatorial coordinate-pair RA and dec"
-    def __init__(self, RA, Dec):
+    def __init__(self, RA, Dec, RAType = RAdegrees):
         if type(RA) in (str,unicode) or type(RA) == tuple:
             if isFloat(RA):
                 self.__ra = float(RA) # float degrees in string format?
@@ -18,6 +20,8 @@ class Coordinate(object):
             self.__ra = float(RA)
         else:
             raise TypeError("Invalid type for RA")
+        if RAType == Coordinate.RAhours:
+            self.__ra = self.__ra / 24. * 360
         
         if type(Dec) in (str,unicode) or type(Dec) == tuple:
             if isFloat(Dec):
@@ -38,6 +42,11 @@ class Coordinate(object):
     def RA(self):
         "Right ascension in degrees"
         return self.__ra
+
+    @property
+    def RAhour(self):
+        "Right ascension in hours"
+        return self.__ra*24./360
 
     @property
     def dec(self):
