@@ -63,7 +63,7 @@ class APTCamera(ICamera):
     __latestImage== name of the image file after latest successfull exposure or None
     """
     status = {
-        "":CameraState.Idle,
+        "":CameraState.Error,
         "IDL": CameraState.Idle,
         "CAP": CameraState.Exposing,
         "BUS": CameraState.Busy,
@@ -97,6 +97,8 @@ class APTCamera(ICamera):
 
     def aptCmd(self, command, timeout=0):
         self.connected = True
+        if not self.connected:
+            return ""
         if timeout > 0:
             n=self.__socket.gettimeout()
             self.__socket.settimeout(timeout)
@@ -121,9 +123,9 @@ class APTCamera(ICamera):
         if not self.__socket:
             try:
                 self.__socket = socket.create_connection((self.getProperty("hostname"), int(self.getProperty("port"))), timeout=10)
-            except:
-                import traceback
-                logger.error(traceback.format_exc())
+            except: # incorrect socket or APT not running
+                #import traceback
+                #logger.error(traceback.format_exc())
                 self.__socket = None
 
     @property

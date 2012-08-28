@@ -69,7 +69,11 @@ class ASCOMCamera(ICamera):
 
     def setup(self):
         if self.__cam:
-            self.__cam.SetupDialog()
+            try:
+                self.__cam.SetupDialog()
+            except:
+                logger.info("Could not show Setup Dialog")
+                pass
     
     def connect(self):
         if self.__cam:
