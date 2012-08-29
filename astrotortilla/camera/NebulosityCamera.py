@@ -1,6 +1,6 @@
 # vim:st=4 sts=4 sw=4 et si
 """NebulosityCamera
-- simple camera interface to Nebulosity 2
+- simple camera interface to Nebulosity 2/3
 """
 
 import logging
@@ -75,6 +75,7 @@ def str2bool(string):
 # The values can be set as strings by the using application.
 PROPERTYLIST = {
         "path":(_("Nebulosity Path"), os.path.isdir, "", "", "C:\\Program Files\\Nebulosity2\\"),
+        "nebulosity":(_("Nebulosity 2 or 3"), int, "", _("2 or 3"), "2"),
         "setCamera":(_("Set camera"), str2bool, _("Set camera model on capture"), _("True or False"), "False"),
         "setExtFilterWheel":(_("Set ext filter"), int, _("Set ext filter before solving"), _("Filter index or -1"), "-1"),
         "setFilterWheel":(_("Set filter"), int, _("Set filter before solving"), _("Filter index or -1"), "-1"),
@@ -110,7 +111,7 @@ class NebulosityCamera(ICamera):
 
     @classmethod
     def getName(cls):
-        return "Nebulosity 2"
+        return "Nebulosity 2/3"
 
     @property
     def imageTypes(self):
@@ -217,7 +218,7 @@ class NebulosityCamera(ICamera):
 
 
         cmd = [
-            "SetDuration %d"%(int(duration*1000)),
+            "SetDuration %d"%(int(duration*1000)) if self.getProperty("nebulosity")=="2" else "SetDuration %.2f"%float(duration),
             "SetDirectory %s"%self.workingDirectory,
             "SetBinning %d"%(self.__bin-1)]
 
@@ -245,8 +246,12 @@ class NebulosityCamera(ICamera):
             except:
                 pass
             cmd.append("SetDirectory %s"%resetPath)
-
-        self.__cmd(cmd)
+        try:
+            self.__cmd(cmd)
+        except:
+            import traceback
+            logger.error(traceback.format_exc())
+            self.__state = CameraState.Error
         self.__state = CameraState.Idle
 
 
@@ -275,14 +280,21 @@ class NebulosityCamera(ICamera):
         except:
             app.start_(nebu_path)
         # Create script file
-        fname = os.path.join(self.getProperty("path"), "capture.neb")
+        fname = os.path.join(self.workingDirectory, "AstroTortilla.neb")
         f = file(fname, "w")
         f.write(script)
         f.close()
         fname = fname.replace("~", "{~}")
-        app.Nebulosity.Wait("visible")
-        app.Nebulosity.SetFocus()
-        app.Nebulosity.TypeKeys("^r")
+        if self.getProperty("nebulosity") == "2":
+            app.Nebulosityv2.SetFocus()
+            app.Nebulosityv2.Wait("visible")
+            app.Nebulosityv2.SetFocus()
+            app.Nebulosityv2.TypeKeys("^r")
+        else:
+            app.Nebulosityv3.SetFocus()
+            app.Nebulosityv3.Wait("visible")
+            app.Nebulosityv3.SetFocus()
+            app.Nebulosityv3.TypeKeys("^r")
         try:
             WaitUntil(10.5, 0.5, app.LoadScript.Exists, True)
         except:

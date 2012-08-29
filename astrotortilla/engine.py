@@ -153,10 +153,6 @@ class TortillaEngine(object):
             try:os.makedirs(data_dir) # fails if exists
             except:pass
             self.config.set("AstroTortilla", "settings_path", data_dir)
-        if self.config.has_option("Session", "solver"):
-            self.selectSolver(self.config.get("Session", "solver"))
-        if self.config.has_option("Session", "camera"):
-            self.selectCamera(self.config.get("Session", "camera"))
         if self.config.has_section("Bookmarks"):
             bmlist = []
             bm_count = self.config.getint("Bookmarks", "count")
@@ -168,6 +164,10 @@ class TortillaEngine(object):
                     pass
             self.__bookmarks = bmlist
         self.__workDirectory = self.config.get("AstroTortilla", "work_directory") if self.config.has_option("AstroTortilla", "work_directory") else None
+        if self.config.has_option("Session", "solver"):
+            self.selectSolver(self.config.get("Session", "solver"))
+        if self.config.has_option("Session", "camera"):
+            self.selectCamera(self.config.get("Session", "camera"))
 
     def __loadCameraConfig(self):
         "Assign camera specific configuration to current camera"

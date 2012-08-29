@@ -63,7 +63,7 @@ msgstr "Nimi tai IP-osoite"
 msgid "Default camera"
 msgstr "Oletuskamera"
 
-#: astrotortilla\camera\ASCOMCamera.py:142 astrotortilla\gui\MainFrame.py:346
+#: astrotortilla\camera\ASCOMCamera.py:146 astrotortilla\gui\MainFrame.py:346
 #: astrotortilla\gui\MainFrame.py:603
 msgid "Not connected"
 msgstr "Ei yhdistetty"
@@ -143,51 +143,59 @@ msgid "Nebulosity Path"
 msgstr "Nebulosityn polku"
 
 #: astrotortilla\camera\NebulosityCamera.py:78
+msgid "2 or 3"
+msgstr "2 tai 3"
+
+#: astrotortilla\camera\NebulosityCamera.py:78
+msgid "Nebulosity 2 or 3"
+msgstr "Nebulosityn 2 vai 3"
+
+#: astrotortilla\camera\NebulosityCamera.py:79
 msgid "Set camera"
 msgstr "Aseta kamera"
 
-#: astrotortilla\camera\NebulosityCamera.py:78
+#: astrotortilla\camera\NebulosityCamera.py:79
 msgid "Set camera model on capture"
 msgstr "Aseta kameramalli kuvatessa"
 
-#: astrotortilla\camera\NebulosityCamera.py:78
+#: astrotortilla\camera\NebulosityCamera.py:79
 msgid "True or False"
 msgstr "'True' tai 'False'"
 
-#: astrotortilla\camera\NebulosityCamera.py:79
+#: astrotortilla\camera\NebulosityCamera.py:80
 msgid "Set ext filter"
 msgstr "Aseta ExtFilter -suodin"
 
-#: astrotortilla\camera\NebulosityCamera.py:79
+#: astrotortilla\camera\NebulosityCamera.py:80
 msgid "Set ext filter before solving"
 msgstr "Aseta ExtFilter -suodin ennen ratkontaa"
 
-#: astrotortilla\camera\NebulosityCamera.py:79
 #: astrotortilla\camera\NebulosityCamera.py:80
+#: astrotortilla\camera\NebulosityCamera.py:81
 msgid "Filter index or -1"
 msgstr "Suotimen numero tai -1"
 
-#: astrotortilla\camera\NebulosityCamera.py:80
+#: astrotortilla\camera\NebulosityCamera.py:81
 msgid "Set filter"
 msgstr "Aseta Filter -suodin"
 
-#: astrotortilla\camera\NebulosityCamera.py:80
+#: astrotortilla\camera\NebulosityCamera.py:81
 msgid "Set filter before solving"
 msgstr "Aseta Filter -suodin ennen ratkontaa"
 
-#: astrotortilla\camera\NebulosityCamera.py:81
+#: astrotortilla\camera\NebulosityCamera.py:82
 msgid "%(date)s = current date, %(night)s = current date at dusk"
 msgstr "%(date)s = tarkka p‰iv‰, %(night)s = p‰iv‰m‰‰r‰ illalla"
 
-#: astrotortilla\camera\NebulosityCamera.py:81
+#: astrotortilla\camera\NebulosityCamera.py:82
 msgid "After capture directory"
 msgstr "Normaali kuvaushakemisto"
 
-#: astrotortilla\camera\NebulosityCamera.py:81
+#: astrotortilla\camera\NebulosityCamera.py:82
 msgid "Reset directory to"
 msgstr "Palauta kuvaushakemistoksi"
 
-#: astrotortilla\camera\NebulosityCamera.py:289
+#: astrotortilla\camera\NebulosityCamera.py:295
 msgid "Nebulosity not responding to script loading"
 msgstr "Nebulosity ei vastaa"
 
@@ -196,64 +204,64 @@ msgstr "Nebulosity ei vastaa"
 msgid "Not selected"
 msgstr "Ei valittu"
 
-#: astrotortilla\engine.py:405
+#: astrotortilla\engine.py:406
 msgid "ERROR: No solver selected."
 msgstr "VIRHE: Ratkojaa ei ole valittu."
 
-#: astrotortilla\engine.py:409
+#: astrotortilla\engine.py:410
 msgid "Solving..."
 msgstr "Ratkotaan..."
 
-#: astrotortilla\engine.py:422
+#: astrotortilla\engine.py:423
 msgid "Solved in %.1fs"
 msgstr "Ratkaistu %.1f sekunnissa"
 
-#: astrotortilla\engine.py:424
+#: astrotortilla\engine.py:425
 msgid "No solution in %.1fs"
 msgstr "Ei ratkennut, %.1fs"
 
-#: astrotortilla\engine.py:431 astrotortilla\engine.py:444
+#: astrotortilla\engine.py:432 astrotortilla\engine.py:445
 msgid "ERROR: No camera connected."
 msgstr "VIRHE: Kameraa ei ole yhdistetty."
 
-#: astrotortilla\engine.py:437 astrotortilla\gui\MainFrame.py:856
+#: astrotortilla\engine.py:438 astrotortilla\gui\MainFrame.py:856
 msgid "Connecting to camera..."
 msgstr "Yhdistet‰‰n kameraan..."
 
-#: astrotortilla\engine.py:447 astrotortilla\engine.py:454
+#: astrotortilla\engine.py:448 astrotortilla\engine.py:455
 msgid "Exposing: %.2f seconds"
 msgstr "Valotetaan: %.2f sekuntia"
 
-#: astrotortilla\engine.py:457 astrotortilla\gui\MainFrame.py:889
+#: astrotortilla\engine.py:458 astrotortilla\gui\MainFrame.py:889
 msgid "Waiting for camera"
 msgstr "Odotetaan kameraa"
 
-#: astrotortilla\engine.py:463
+#: astrotortilla\engine.py:464
 msgid "Reading image from camera"
 msgstr "Luetaan kuvaa kameralta"
 
-#: astrotortilla\engine.py:466
+#: astrotortilla\engine.py:467
 msgid "Aborted."
 msgstr "Keskeytetty"
 
-#: astrotortilla\engine.py:468
+#: astrotortilla\engine.py:469
 msgid "Camera did not produce an image to solve"
 msgstr "Kamera ei tuottanut kuvaa ratkottavaksi"
 
-#: astrotortilla\engine.py:470
+#: astrotortilla\engine.py:471
 msgid "An error occurred."
 msgstr "Tapahtui virhe"
 
-#: astrotortilla\engine.py:485 astrotortilla\engine.py:496
-#: astrotortilla\engine.py:504
+#: astrotortilla\engine.py:486 astrotortilla\engine.py:497
+#: astrotortilla\engine.py:505
 msgid "ERROR: No telescope connected."
 msgstr "VIRHE: Jalustaa ei ole yhdistetty"
 
-#: astrotortilla\engine.py:507
+#: astrotortilla\engine.py:508
 msgid "Waiting for scope to stop"
 msgstr "Odotetaan jalustan pys‰htymist‰"
 
-#: astrotortilla\engine.py:534
+#: astrotortilla\engine.py:535
 msgid "Re-centering..."
 msgstr "Keskitet‰‰n..."
 
