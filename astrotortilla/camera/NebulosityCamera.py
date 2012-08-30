@@ -273,7 +273,7 @@ class NebulosityCamera(ICamera):
         Throws an exception if anything fails.
         """
         app = Application()
-        nebu_path = os.path.join(self.getProperty("path"), "nebulosity.exe")
+        nebu_path = os.path.join(self.getProperty("path"), "nebulosity.exe" if self.getProperty("nebulosity")=="2" else "nebulosity3.exe")
         logger.debug("Trying with %s"%nebu_path)
         try:
             app.connect_(path=nebu_path)
@@ -286,13 +286,17 @@ class NebulosityCamera(ICamera):
         f.close()
         fname = fname.replace("~", "{~}")
         if self.getProperty("nebulosity") == "2":
+            if app.Nebulosityv2.GetShowState() not in (win32con.SW_MAXIMIZE, win32con.SW_NORMAL, win32con.SW_RESTORE, win32con.SW_SHOW):
+                app.Nebulosityv2.Restore()
             app.Nebulosityv2.SetFocus()
-            app.Nebulosityv2.Wait("visible")
+            app.Nebulosityv2.Wait("exists enabled visible ready")
             app.Nebulosityv2.SetFocus()
             app.Nebulosityv2.TypeKeys("^r")
         else:
+            if app.Nebulosityv3.GetShowState() not in (win32con.SW_MAXIMIZE, win32con.SW_NORMAL, win32con.SW_RESTORE, win32con.SW_SHOW):
+                app.Nebulosityv3.Restore()
             app.Nebulosityv3.SetFocus()
-            app.Nebulosityv3.Wait("visible")
+            app.Nebulosityv3.Wait("exists enabled visible ready")
             app.Nebulosityv3.SetFocus()
             app.Nebulosityv3.TypeKeys("^r")
         try:
@@ -302,4 +306,5 @@ class NebulosityCamera(ICamera):
         dlg = app.LoadScript.Wait("visible")
         dlg.SetFocus()
         dlg.TypeKeys(fname+"{ENTER}", pause=0.001, with_spaces=True)
+
 
