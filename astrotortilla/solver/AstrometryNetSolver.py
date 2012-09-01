@@ -48,6 +48,7 @@ class AstrometryNetSolver(IPlateSolver):
         self.__wdCreated = None    # book-keeping on temp-dir clean-up responsibility
         self.__callback = None      # status update callback reference
         self.__abort = False        # has abort been requested?
+        self.__shell = None
         if not workDirectory:
             self.__wd = tempfile.mkdtemp(prefix="solver")
             self.__wdCreated = self.__wd
@@ -83,9 +84,9 @@ class AstrometryNetSolver(IPlateSolver):
         cygShell = self.getProperty("shell")
 
         si = subprocess.STARTUPINFO()
-        si.dwFlags |= win32process.STARTF_USESHOWWINDOW
-        si.wShowWindow = win32con.SW_HIDE
-        shell = subprocess.Popen(cygShell%command, shell=False, bufsize=1,
+        #si.dwFlags |= win32process.STARTF_USESHOWWINDOW
+        #si.wShowWindow = win32con.SW_HIDE
+        self.__shell = subprocess.Popen(cygShell%command, shell=False, bufsize=1,
                 stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                 stderr=stderrPipe, startupinfo=si)
 
@@ -93,25 +94,28 @@ class AstrometryNetSolver(IPlateSolver):
             # Loop until child exits
             stdoutList = []
             terminator = threading.Event()
-            reader = threading.Thread(target=ThreadedReader, args=(shell.stdout, stdoutList, terminator))
+            terminator.clear()
+            reader = threading.Thread(target=ThreadedReader, args=(self.__shell.stdout, stdoutList, terminator))
             reader.start()
-            while shell.poll() == None:
-                if stdoutList:
-                    self.__callback(stdoutList.pop())
-                else:
-                    self.__callback(None)
-                if self.__abort:
-                    terminator.set()
-                    shell.kill()
-                    reader.join()
-                    return [None, None]
-                time.sleep(0.1)
+            try:
+                while self.__shell.poll() == None:
+                    if stdoutList:
+                        self.__callback(stdoutList.pop())
+                    else:
+                        self.__callback(None)
+                    if self.__abort:
+                        terminator.set()
+                        self.__shell.kill()
+                        reader.join()
+                        return [None, None]
+                    time.sleep(0.1)
+            finally:
             # Pipe whatever is left after child exit
-            terminator.set()
-            reader.join()
-            map(self.__callback, stdoutList)
+                terminator.set()
+                reader.join()
+                map(self.__callback, stdoutList)
         else: # return (stdout, stderr) if no callback is defined.
-            return shell.communicate()
+            return self.__shell.communicate()
 
 
     @property
@@ -148,6 +152,7 @@ class AstrometryNetSolver(IPlateSolver):
         """
         self.__callback = callback
         self.__found = False
+        self.__abort = False
         # construct command line
         workDir = os.path.join(self.__wd, str(self.__counter)).replace("\\", "/")
         imageBase = os.path.splitext(os.path.basename(imagePath))[0].replace("\\", "/")
@@ -173,8 +178,14 @@ class AstrometryNetSolver(IPlateSolver):
         except:
             pass
 
-
         r=self.__execute('solve-field %s -D \\"`cygpath -a \\"%s\\"`\\" \\"`cygpath -a \\"%s\\"`\\"'%(" ".join(options), workDir, imagePath))
+
+        if self.__shell != None:
+            pid = self.__shell.pid
+            self.__shell.wait()
+            rc = self.__shell.returncode
+            logger.debug("Pid %d exit code %d"%(pid, rc))
+            self.__shell = None
 
         if r and len(r)>1 and r[1]: map(logger.info, r[1])
         wcsInfo=[]

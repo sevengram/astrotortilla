@@ -94,5 +94,5 @@ if __name__ == '__main__':
 ##Maybe cured with forcibly GC'ing the wx.App and exiting wx
     #import platform
     #if '7' in platform.win32_ver()[:1]:
-	#    import os, signal
-	#    os.kill(os.getpid(), signal.SIGTERM)
+    #    import os, signal
+    #    os.kill(os.getpid(), signal.SIGTERM)

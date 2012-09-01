@@ -9,7 +9,7 @@ logger = logging.getLogger("astrotortilla.NebulosityCamera")
 from ..ICamera import ICamera
 from .. import CameraState
 import tempfile, shutil
-import os.path, os
+import os.path, os, string
 import win32ui, win32api, win32con
 try:
     import winxpgui as win32gui
@@ -24,7 +24,7 @@ t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 
-CAMERAS = (
+CAMERAS_N2 = (
         "No Camera",
         "Simulator",
         "Apogee",
@@ -66,16 +66,78 @@ CAMERAS = (
         "ASCOMLate Camera",
         )
 
+CAMERAS_N3 = (
+        "No Camera",
+        "Simulator",
+        "Apogee",
+        "Artemis 285 / Atik 16HR",
+        "Artemis 285C / Atik 16HRC",
+        "Artemis 429 / Atik 16",
+        "Artemis 429C / Atik 16C",
+        "ASCOM Camera",
+        "Atik 16C",
+        "Atik 16IC Color",
+        "Atik Universal",
+        "Canon DIGICII/III/4 DSLR",
+        "CCD Labs Q285M/QHY2Pro",
+        "FLI",
+        "Fishcamp Starfish",
+        "Meade DSI",
+        "Moravian G2/G3",
+        "Opticstar DS-335C",
+        "Opticstar DS-335C ICE",
+        "Opticstar DS-336C XL",
+        "Opticstar DS-615C XL",
+        "Opticstar DS-616C XL",
+        "Opticstar PL-130M",
+        "Opticstar PL-130C",
+        "Opticstar DS-142M ICE",
+        "Opticstar DS-142C ICE",
+        "Opticstar DS-145M ICE",
+        "Opticstar DS-145C ICE",
+        "Orion StarShoot (original)",
+        "QHY2 TVDE",
+        "QHY8 Pro",
+        "QHY8",
+        "QHY8L",
+        "QHY9",
+        "QHY10",
+        "QHY12",
+        "QSI 500/600",
+        "SAC-10",
+        "SAC7/SC webcam LXUSB",
+        "SAC7/SC webcam Parallel",
+        "SBIG",
+        "Starlight Xpress USB",
+    )
+
 def str2bool(string):
     s = str(string).lower()+" "
     return s[0] in ("y", "t", "1")
 
+
+NEBULOSITY_PATH="C:\\Program Files\\Nebulosity2\\" # Fallback for Nebulosity2 on x86
+NEBULOSITY_VERSION = "2"
+# Auto-probe typical Nebulosity locations
+candidates = []
+drivemask = win32api.GetLogicalDrives()
+for drive in string.uppercase:
+    if drivemask&1 and os.path.isdir(drive+":\\"):
+        candidates.extend(glob.glob(drive+":\\Program*\Nebulosity*"))
+    drivemask >>= 1
+
+if candidates:
+    candidates.sort(lambda a,b:-cmp(a[::-1], b[::-1]))
+    NEBULOSITY_PATH = candidates[0]
+    NEBULOSITY_VERSION = NEBULOSITY_PATH[-1]
+
 # Property dict structure:
 # key: (readable name, validation function, name tooltip, value tooltip, default value)
 # The values can be set as strings by the using application.
+
 PROPERTYLIST = {
-        "path":(_("Nebulosity Path"), os.path.isdir, "", "", "C:\\Program Files\\Nebulosity2\\"),
-        "nebulosity":(_("Nebulosity 2 or 3"), int, "", _("2 or 3"), "2"),
+        "path":(_("Nebulosity Path"), os.path.isdir, "", "", NEBULOSITY_PATH),
+        "nebulosity":(_("Nebulosity 2 or 3"), int, "", _("2 or 3"), NEBULOSITY_VERSION),
         "setCamera":(_("Set camera"), str2bool, _("Set camera model on capture"), _("True or False"), "False"),
         "setExtFilterWheel":(_("Set ext filter"), int, _("Set ext filter before solving"), _("Filter index or -1"), "-1"),
         "setFilterWheel":(_("Set filter"), int, _("Set filter before solving"), _("Filter index or -1"), "-1"),
@@ -121,7 +183,7 @@ class NebulosityCamera(ICamera):
     @property
     def cameraList(self):
         "List of cameras supported if one must be pre-selected"
-        return CAMERAS
+        return CAMERAS_N2 if self.getProperty("nebulosity") == 2 else CAMERAS_N3
 
     @property
     def camera(self):
