@@ -3,7 +3,7 @@
 # -*- coding: UTF-8 -*-
 
 from libs.appdirs.appdirs import AppDirs
-import logging
+import logging, base64
 logger = logging.getLogger("astrotortilla.Bookmark")
 logger.setLevel(logging.DEBUG)
 logFormatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -17,10 +17,16 @@ _ = t.gettext
 
 class Bookmark(object):
     "Named bookmark holder"
-    def __init__(self, name, position, angle):	    
+    def __init__(self, name, position, angle):
         if not (type(name) in (str, unicode) and issubclass(type(position), Coordinate) and type(angle) in (float, int)):
             raise TypeError("Invalid parameter types")
-        self.__name = name
+        if type(name) == str:
+            trying=["utf8", "latin1"]
+            while trying:
+                try:
+                    name = name.decode(trying.pop())
+                except:pass
+        self.__name = unicode(name)
         self.__position = position
         self.__angle = angle
 
@@ -38,7 +44,8 @@ class Bookmark(object):
 
     def to_string(self):
         "Short string representation"
-        return u"%s,%s,%.1f,%s"%(deg2hms(self.__position.RA), deg2dms(self.__position.dec,":"), self.__angle, self.__name)
+        name = "(b64|utf8)" + base64.b64encode(self.__name.encode("utf8"))
+        return u"%s,%s,%.1f,%s"%(deg2hms(self.__position.RA), deg2dms(self.__position.dec,":"), self.__angle, name)
 
     @classmethod
     def from_string(cls, bookmark):
@@ -46,4 +53,11 @@ class Bookmark(object):
         ra, dec, angle, name = bookmark.split(",",4)
         position = Coordinate(ra.strip(), dec.strip())
         angle = float(angle.strip())
-        return Bookmark(name.strip(), position, angle)
+        name = name.strip()
+        #try:
+        if 1:
+            if name[:4] == "(b64":
+                enc,name = name[5:].split(")", 1)
+                name = base64.b64decode(name).decode(enc or "utf8")
+        #except: pass
+        return Bookmark(name, position, angle)
