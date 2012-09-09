@@ -216,4 +216,5 @@ class APTCamera(ICamera):
         shutil.copyfile(reply, newPath)
         self.aptCmd("R")
         self.__latestImage = newPath
+        self.connected = False # close connection to avoid APT issued disconnect problems.
         logger.debug(newPath)
