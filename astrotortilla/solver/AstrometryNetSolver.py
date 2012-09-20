@@ -24,7 +24,7 @@ PROPERTYLIST = {
         "scale_max":(_("Scale maximum"), float, _("Image scale upper bound"), "", 179),
         "scale_units":(_("Scale units"), str, _("View scale size units"), _("arcminwidth, degwidth, arcsecperpix"), "degwidth"),
         "scale_xrefine":(_("Scale refinement"), float, _("Image scale refinement factor"), _("0 to turn off"), 0),
-        "xtra":(_("Custom options"), str, _("Additional custom options"), "", "--sigma 1 --no-plot -N none"),
+        "xtra":(_("Custom options"), str, _("Additional custom options"), "", "--sigma 1 --no-plots -N none"),
         "shell":(_("Cygwin shell"), str, _("Shell command for Cygwin execution"), "", 'C:\\cygwin\\bin\\bash --login -c "%s"'),
         "year_epoch":(_("JNow or J2000"), str, _("JNOW or J2000"), "", "JNOW"),
         }
