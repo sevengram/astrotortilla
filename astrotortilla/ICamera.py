@@ -151,3 +151,7 @@ class ICamera(Configurable):
     def getImage(self):
         "@return None or path to image"
         return None
+
+    def reset(self):
+        "Reset camera state, abort exposure if possible"
+        return

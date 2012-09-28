@@ -393,6 +393,8 @@ class TortillaEngine(object):
         "Try to abort current action"
         if self.__solver:
             self.__solver.abort()
+        if self.__camera:
+            self.__camera.reset()
         self.__abortAction=True
 
     def clearStatus(self):
@@ -468,7 +470,7 @@ class TortillaEngine(object):
             else:
                 self.setStatus(_("Camera did not produce an image to solve"))
         except Exception, detail:
-            self.setStatus(_("An error occurred."))
+            self.setStatus(_("Camera error: ")+str(detail))
             import traceback
             logger.error(traceback.format_exc())
         self.setStatus(_(""))

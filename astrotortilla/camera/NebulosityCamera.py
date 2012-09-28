@@ -193,7 +193,7 @@ class NebulosityCamera(ICamera):
     @camera.setter
     def camera(self, value):
         "Set current camera value or None for no change"
-        if value in CAMERAS or value is None:
+        if value in self.cameraList or value is None:
             self.__camera = value
         else:
             raise NameError("'%s' is not a known camera"%str(value))

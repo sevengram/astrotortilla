@@ -108,7 +108,7 @@ class APTCamera(ICamera):
             self.__socket.send(command)
             time.sleep(0.1) # A small pause for scheduling and APT processing
             response = self.__socket.recv(self.__buffersize)
-        except timeout:
+        except socket.timeout:
             pass # TODO: deal with timeouts properly
         except Exception:
             import traceback
@@ -166,7 +166,7 @@ class APTCamera(ICamera):
                     self.__getImage()
                     logger.debug("Image ready")
                     return True
-            except timeout:
+            except socket.timeout:
                 logger.debug("Communication timeout")
                 return False
             except:
@@ -188,7 +188,7 @@ class APTCamera(ICamera):
 
     def capture(self, duration):
         if not self.cameraState == CameraState.Idle:
-            raise Exception("APT: Camera not idle")
+            raise Exception("APT: Camera not idle") 
         if duration < 1:
             exposureTime = 1
         elif duration > 999:
@@ -218,3 +218,8 @@ class APTCamera(ICamera):
         self.__latestImage = newPath
         self.connected = False # close connection to avoid APT issued disconnect problems.
         logger.debug(newPath)
+
+    def reset(self):
+        self.__exposing = False
+        self.__waitingDON = False
+        self.connected = False

@@ -3,6 +3,7 @@
 # -*- coding: UTF-8 -*-
 
 from libs.appdirs.appdirs import AppDirs
+from units import deg2hms, deg2dms
 import logging, base64
 logger = logging.getLogger("astrotortilla.Bookmark")
 logger.setLevel(logging.DEBUG)
@@ -26,7 +27,7 @@ class Bookmark(object):
                 try:
                     name = name.decode(trying.pop())
                 except:pass
-        self.__name = unicode(name)
+        self.__name = unicode(name).strip() or u"%s/%s"%(deg2hms(position.RA), deg2dms(position.dec))
         self.__position = position
         self.__angle = angle
 
@@ -54,10 +55,9 @@ class Bookmark(object):
         position = Coordinate(ra.strip(), dec.strip())
         angle = float(angle.strip())
         name = name.strip()
-        #try:
-        if 1:
+        try:
             if name[:4] == "(b64":
                 enc,name = name[5:].split(")", 1)
                 name = base64.b64decode(name).decode(enc or "utf8")
-        #except: pass
+        except: pass
         return Bookmark(name, position, angle)
