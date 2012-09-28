@@ -82,7 +82,7 @@ Name: "{commondesktop}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Task
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: quicklaunchicon
 
 [Run]
-Filename: "{tmp}\{#VCRedist}"; Parameters: "/q:a /c:""install /l /q"""; WorkingDir: {tmp}; Flags: skipifdoesntexist; StatusMsg: "Checking for and installing ""Microsoft Visual C++ Redistributable Package"" if needed, This can take several minutes..."
+Filename: "{tmp}\{#VCRedist}"; WorkingDir: {tmp}; Flags: skipifdoesntexist; StatusMsg: "Checking for and installing ""Microsoft Visual C++ Redistributable Package"" if needed, This can take several minutes..."
 Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://sourceforge.net/projects/astrotortilla/files/cygwin-custom/tortilla.gpg -s http://sourceforge.net/projects/astrotortilla/files/cygwin-custom"; Description: "{cm:Install2,Cygwin,astrometry.net}";
 Filename: "{app}\AstroTortilla.exe"; Description: "{cm:LaunchProgram,AstroTortilla}"; Flags: nowait postinstall skipifsilent
 

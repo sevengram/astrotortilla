@@ -13,8 +13,8 @@ fit for any purpose.
 
 Version history
 ---------------
-current:
-        LX200 non-conformance fixes, new config settings enabled
+v0.3    Error fixes for APT, bookmark support,
+        LX200 non-conformance fixes, new config settings enabled,
 	Nebulosity 3 support, solver error handling improvements
 v0.2.10 Astro Photography Tool support, JNow epoch support
 v0.2.9 Initial bookmark support, 64 bit build support, WCS info bugfixes
@@ -45,15 +45,16 @@ Using AstroTortilla
 
 To be written in more detail later on.
 
-Intent of AstroTortilla is to enable using the imaging camera for determining the
-need for slew corrections.  Using the imaging camera ensures that the GoTo is
-slewed dead-on on the camera view.
+Intent of AstroTortilla is to enable using the imaging camera for determining
+the need for slew corrections.  Using the imaging camera ensures that the GoTo
+is slewed dead-on on the camera view.
 
 The images obtained from a camera are evaluated by a plate solving application,
 and initially a wrapper for astrometry.net is implemented. The code for
 astrometry.net is freely available, but the astrometric indexes are available
 upon request only. For details see the GETTING-INDICES file in the
-astrometry.net source package or on the http://astrometry.net/ website.
+astrometry.net source package or on the http://astrometry.net/ website. You can
+also generate the index files from various star catalogues, such as Tycho2.
 
 All copyrights and trademarks are recognized and respected.
 
@@ -83,21 +84,20 @@ The AstroTortilla is tested on the latest available ASCOM platform available on
 the release date. ASCOM support requires the Python win32all extensions [5].
 
 
-Nebulosity2
------------
+Nebulosity 2 and 3
+------------------
 
-If you are using Nebulosity 2.4+, you might want to use it with AstroTortilla to
-make sure your imaging camera is pointing to the correct location.
+If you are using Nebulosity 2.4+, you might want to use it with AstroTortilla
+to make sure your imaging camera is pointing to the correct location.
 AstroTortilla can use the new TCP/IP based scripting feature, and depends on
 Python win32 extensions and pywinauto package for automating the interactions.
 Note:
 Nebulosity 2.3 is no longer supported.
-Nebulosity 3 is not yet supported.
 
 Astro Photography Tool
 ----------------------
 
-Preliminary support for Astro Photography tool.
+Astro Photography tool is supported by AstroTortilla.
 
 References
 ----------

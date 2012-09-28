@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-08-29 23:38+FLE Daylight Time\n"
+"POT-Creation-Date: 2012-09-28 14:32+FLE Daylight Time\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -142,64 +142,64 @@ msgstr ""
 msgid "Dispatching Maxim.CCDCamera failed"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:77
+#: astrotortilla\camera\NebulosityCamera.py:139
 msgid "Nebulosity Path"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:78
+#: astrotortilla\camera\NebulosityCamera.py:140
 msgid "2 or 3"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:78
+#: astrotortilla\camera\NebulosityCamera.py:140
 msgid "Nebulosity 2 or 3"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:79
+#: astrotortilla\camera\NebulosityCamera.py:141
 msgid "Set camera"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:79
+#: astrotortilla\camera\NebulosityCamera.py:141
 msgid "Set camera model on capture"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:79
+#: astrotortilla\camera\NebulosityCamera.py:141
 msgid "True or False"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:80
+#: astrotortilla\camera\NebulosityCamera.py:142
 msgid "Set ext filter"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:80
+#: astrotortilla\camera\NebulosityCamera.py:142
 msgid "Set ext filter before solving"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:80
-#: astrotortilla\camera\NebulosityCamera.py:81
+#: astrotortilla\camera\NebulosityCamera.py:142
+#: astrotortilla\camera\NebulosityCamera.py:143
 msgid "Filter index or -1"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:81
+#: astrotortilla\camera\NebulosityCamera.py:143
 msgid "Set filter"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:81
+#: astrotortilla\camera\NebulosityCamera.py:143
 msgid "Set filter before solving"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:82
+#: astrotortilla\camera\NebulosityCamera.py:144
 msgid "%(date)s = current date, %(night)s = current date at dusk"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:82
+#: astrotortilla\camera\NebulosityCamera.py:144
 msgid "After capture directory"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:82
+#: astrotortilla\camera\NebulosityCamera.py:144
 msgid "Reset directory to"
 msgstr ""
 
-#: astrotortilla\camera\NebulosityCamera.py:295
+#: astrotortilla\camera\NebulosityCamera.py:367
 msgid "Nebulosity not responding to script loading"
 msgstr ""
 
@@ -208,68 +208,68 @@ msgstr ""
 msgid "Not selected"
 msgstr ""
 
-#: astrotortilla\engine.py:406
+#: astrotortilla\engine.py:408
 msgid "ERROR: No solver selected."
 msgstr ""
 
-#: astrotortilla\engine.py:410
+#: astrotortilla\engine.py:412
 msgid "Solving..."
 msgstr ""
 
-#: astrotortilla\engine.py:423
+#: astrotortilla\engine.py:425
 msgid "Solved in %.1fs"
 msgstr ""
 
-#: astrotortilla\engine.py:425
+#: astrotortilla\engine.py:427
 msgid "No solution in %.1fs"
 msgstr ""
 
-#: astrotortilla\engine.py:432 astrotortilla\engine.py:445
+#: astrotortilla\engine.py:434 astrotortilla\engine.py:447
 msgid "ERROR: No camera connected."
 msgstr ""
 
-#: astrotortilla\engine.py:438 astrotortilla\gui\MainFrame.py:856
+#: astrotortilla\engine.py:440 astrotortilla\gui\MainFrame.py:856
 msgid "Connecting to camera..."
 msgstr ""
 
-#: astrotortilla\engine.py:448 astrotortilla\engine.py:455
+#: astrotortilla\engine.py:450 astrotortilla\engine.py:457
 msgid "Exposing: %.2f seconds"
 msgstr ""
 
-#: astrotortilla\engine.py:458 astrotortilla\gui\MainFrame.py:889
+#: astrotortilla\engine.py:460 astrotortilla\gui\MainFrame.py:889
 msgid "Waiting for camera"
 msgstr ""
 
-#: astrotortilla\engine.py:464
+#: astrotortilla\engine.py:466
 msgid "Reading image from camera"
 msgstr ""
 
-#: astrotortilla\engine.py:467
+#: astrotortilla\engine.py:469
 msgid "Aborted."
 msgstr ""
 
-#: astrotortilla\engine.py:469
+#: astrotortilla\engine.py:471
 msgid "Camera did not produce an image to solve"
 msgstr ""
 
-#: astrotortilla\engine.py:471
-msgid "An error occurred."
+#: astrotortilla\engine.py:473
+msgid "Camera error: "
 msgstr ""
 
-#: astrotortilla\engine.py:474 astrotortilla\gui\MainFrame.py:227
+#: astrotortilla\engine.py:476 astrotortilla\gui\MainFrame.py:227
 msgid ""
 msgstr ""
 
-#: astrotortilla\engine.py:486 astrotortilla\engine.py:497
-#: astrotortilla\engine.py:505
+#: astrotortilla\engine.py:488 astrotortilla\engine.py:499
+#: astrotortilla\engine.py:507
 msgid "ERROR: No telescope connected."
 msgstr ""
 
-#: astrotortilla\engine.py:508
+#: astrotortilla\engine.py:510
 msgid "Waiting for scope to stop"
 msgstr ""
 
-#: astrotortilla\engine.py:535
+#: astrotortilla\engine.py:537
 msgid "Re-centering..."
 msgstr ""
 
@@ -809,11 +809,11 @@ msgstr ""
 msgid "JNow or J2000"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:74
+#: astrotortilla\solver\AstrometryNetSolver.py:75
 msgid "Local astrometry.net"
 msgstr ""
 
-#: astrotortilla\solver\AstrometryNetSolver.py:186
+#: astrotortilla\solver\AstrometryNetSolver.py:197
 msgid "Parsing results..."
 msgstr ""
 
