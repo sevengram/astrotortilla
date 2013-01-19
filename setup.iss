@@ -77,7 +77,7 @@ Name: "{group}\User guide (English)"; Filename: "{app}\docs\AstroTortilla_user_g
 Name: "{group}\Pikaopas (Finnish)"; Filename: "{app}\docs\AstroTortilla_pikaopas.pdf"
 Name: "{group}\Käyttöohje (Finnish)"; Filename: "{app}\docs\AstroTortilla_kayttoohje.pdf"
 Name: "{group}\{cm:UninstallProgram,AstroTortilla}"; Filename: "{uninstallexe}"
-Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://sourceforge.net/projects/astrotortilla/files/cygwin-custom/tortilla.gpg -s http://sourceforge.net/projects/astrotortilla/files/cygwin-custom"
+Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://astrotorilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi/"
 Name: "{commondesktop}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: quicklaunchicon
 

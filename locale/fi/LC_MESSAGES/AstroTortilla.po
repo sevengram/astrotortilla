@@ -64,7 +64,7 @@ msgid "Default camera"
 msgstr "Oletuskamera"
 
 #: astrotortilla\camera\ASCOMCamera.py:146 astrotortilla\gui\MainFrame.py:346
-#: astrotortilla\gui\MainFrame.py:603
+#: astrotortilla\gui\MainFrame.py:607
 msgid "Not connected"
 msgstr "Ei yhdistetty"
 
@@ -118,7 +118,7 @@ msgid "Choose file to solve"
 msgstr "Valitse tiedosto ratkottavaksi"
 
 #: astrotortilla\camera\FileOpenCamera.py:149
-#: astrotortilla\gui\MainFrame.py:918 astrotortilla\gui\MainFrame.py:965
+#: astrotortilla\gui\MainFrame.py:926 astrotortilla\gui\MainFrame.py:973
 msgid "Image files"
 msgstr "Kuvatiedostot"
 
@@ -224,7 +224,7 @@ msgstr "Ei ratkennut, %.1fs"
 msgid "ERROR: No camera connected."
 msgstr "VIRHE: Kameraa ei ole yhdistetty."
 
-#: astrotortilla\engine.py:440 astrotortilla\gui\MainFrame.py:856
+#: astrotortilla\engine.py:440 astrotortilla\gui\MainFrame.py:864
 msgid "Connecting to camera..."
 msgstr "Yhdistet‰‰n kameraan..."
 
@@ -232,7 +232,7 @@ msgstr "Yhdistet‰‰n kameraan..."
 msgid "Exposing: %.2f seconds"
 msgstr "Valotetaan: %.2f sekuntia"
 
-#: astrotortilla\engine.py:460 astrotortilla\gui\MainFrame.py:889
+#: astrotortilla\engine.py:460 astrotortilla\gui\MainFrame.py:897
 msgid "Waiting for camera"
 msgstr "Odotetaan kameraa"
 
@@ -261,7 +261,11 @@ msgstr "VIRHE: Jalustaa ei ole yhdistetty"
 msgid "Waiting for scope to stop"
 msgstr "Odotetaan jalustan pys‰htymist‰"
 
-#: astrotortilla\engine.py:537
+#: astrotortilla\engine.py:525
+msgid "ERROR: Telescope connection lost"
+msgstr "VIRHE: Jalustan yhteys kadotettu"
+
+#: astrotortilla\engine.py:542
 msgid "Re-centering..."
 msgstr "Keskitet‰‰n..."
 
@@ -379,8 +383,8 @@ msgstr "Poistu sovelluksesta"
 msgid "Exit"
 msgstr "Poistu"
 
-#: astrotortilla\gui\MainFrame.py:156 astrotortilla\gui\MainFrame.py:915
-#: astrotortilla\gui\MainFrame.py:962
+#: astrotortilla\gui\MainFrame.py:156 astrotortilla\gui\MainFrame.py:923
+#: astrotortilla\gui\MainFrame.py:970
 msgid "Goto Image"
 msgstr "Avaa kuva ja siirry"
 
@@ -432,7 +436,7 @@ msgstr "Rektaskensio"
 msgid "Declination"
 msgstr "Deklinaatio"
 
-#: astrotortilla\gui\MainFrame.py:270 astrotortilla\gui\MainFrame.py:593
+#: astrotortilla\gui\MainFrame.py:270 astrotortilla\gui\MainFrame.py:597
 msgid "No camera"
 msgstr "Ei kameraa"
 
@@ -452,7 +456,7 @@ msgstr "Kent‰n koko:"
 msgid "Rotation:"
 msgstr "Kierto:"
 
-#: astrotortilla\gui\MainFrame.py:300 astrotortilla\gui\MainFrame.py:629
+#: astrotortilla\gui\MainFrame.py:300 astrotortilla\gui\MainFrame.py:633
 msgid "Normal"
 msgstr "Normaali"
 
@@ -484,125 +488,125 @@ msgstr "Valotus:"
 msgid "Exposure time in seconds"
 msgstr "Valotusaika sekunneissa"
 
-#: astrotortilla\gui\MainFrame.py:387
+#: astrotortilla\gui\MainFrame.py:388
 msgid "Current:"
 msgstr "Nyt:"
 
-#: astrotortilla\gui\MainFrame.py:394
+#: astrotortilla\gui\MainFrame.py:395
 msgid "Target:"
 msgstr "Kohde:"
 
-#: astrotortilla\gui\MainFrame.py:410
+#: astrotortilla\gui\MainFrame.py:411
 msgid "Sync scope"
 msgstr "Synkronoi jalusta"
 
-#: astrotortilla\gui\MainFrame.py:417
+#: astrotortilla\gui\MainFrame.py:418
 msgid "Repeat until within"
 msgstr "Toista kunnes alle"
 
-#: astrotortilla\gui\MainFrame.py:424 astrotortilla\gui\MainFrame.py:732
-#: astrotortilla\gui\MainFrame.py:930 astrotortilla\gui\MainFrame.py:977
+#: astrotortilla\gui\MainFrame.py:425 astrotortilla\gui\MainFrame.py:736
+#: astrotortilla\gui\MainFrame.py:938 astrotortilla\gui\MainFrame.py:985
 msgid "Capture and Solve"
 msgstr "Valota ja ratko"
 
-#: astrotortilla\gui\MainFrame.py:431
+#: astrotortilla\gui\MainFrame.py:432
 msgid "Solver"
 msgstr "Ratkoja"
 
-#: astrotortilla\gui\MainFrame.py:446
+#: astrotortilla\gui\MainFrame.py:447
 msgid "Solver configuration"
 msgstr "Ratkojan asetukset"
 
-#: astrotortilla\gui\MainFrame.py:472
+#: astrotortilla\gui\MainFrame.py:473
 msgid "Re-slew to target"
 msgstr "Keskit‰ kohde"
 
-#: astrotortilla\gui\MainFrame.py:615
+#: astrotortilla\gui\MainFrame.py:619
 msgid "Previous solution"
 msgstr "Edellinen ratkaisu"
 
-#: astrotortilla\gui\MainFrame.py:627
+#: astrotortilla\gui\MainFrame.py:631
 msgid "Flipped"
 msgstr "Peilikuva"
 
-#: astrotortilla\gui\MainFrame.py:634 astrotortilla\gui\MainFrame.py:799
+#: astrotortilla\gui\MainFrame.py:638 astrotortilla\gui\MainFrame.py:807
 msgid "Last error: %s"
 msgstr "Viimeisin virhe: %s"
 
-#: astrotortilla\gui\MainFrame.py:651
+#: astrotortilla\gui\MainFrame.py:655
 msgid "Camera error"
 msgstr "Kameravirhe"
 
-#: astrotortilla\gui\MainFrame.py:699
+#: astrotortilla\gui\MainFrame.py:703
 msgid "Aborting..."
 msgstr "Keskeytet‰‰n..."
 
-#: astrotortilla\gui\MainFrame.py:701 astrotortilla\gui\MainFrame.py:923
-#: astrotortilla\gui\MainFrame.py:969
+#: astrotortilla\gui\MainFrame.py:705 astrotortilla\gui\MainFrame.py:931
+#: astrotortilla\gui\MainFrame.py:977
 msgid "Abort solver"
 msgstr "Keskeyt‰ ratkoja"
 
-#: astrotortilla\gui\MainFrame.py:718
+#: astrotortilla\gui\MainFrame.py:722
 msgid "ASCOM Telescope sync error"
 msgstr "ASCOM synkronointi virhe"
 
-#: astrotortilla\gui\MainFrame.py:722
+#: astrotortilla\gui\MainFrame.py:726
 msgid "Telescope communication error"
 msgstr "Jalustakommunikaatiovirhe"
 
-#: astrotortilla\gui\MainFrame.py:817
+#: astrotortilla\gui\MainFrame.py:825
 msgid "Invalid data"
 msgstr "Virheellinen tietue"
 
-#: astrotortilla\gui\MainFrame.py:822
+#: astrotortilla\gui\MainFrame.py:830
 msgid "Load settings"
 msgstr "Lataa asetukset"
 
-#: astrotortilla\gui\MainFrame.py:825 astrotortilla\gui\MainFrame.py:838
+#: astrotortilla\gui\MainFrame.py:833 astrotortilla\gui\MainFrame.py:846
 msgid "Config files"
 msgstr "Asetustiedostot"
 
-#: astrotortilla\gui\MainFrame.py:835
+#: astrotortilla\gui\MainFrame.py:843
 msgid "Save settings"
 msgstr "Tallenna asetukset"
 
-#: astrotortilla\gui\MainFrame.py:849
+#: astrotortilla\gui\MainFrame.py:857
 msgid "Error saving settings"
 msgstr "Virhe tallettaessa asetuksia"
 
-#: astrotortilla\gui\MainFrame.py:865 astrotortilla\gui\MainFrame.py:882
+#: astrotortilla\gui\MainFrame.py:873 astrotortilla\gui\MainFrame.py:890
 msgid "Drifting: %.2f seconds"
 msgstr "Valutaan: %.2f sekuntia"
 
-#: astrotortilla\gui\MainFrame.py:895
+#: astrotortilla\gui\MainFrame.py:903
 msgid "Drifting done."
 msgstr "Valunta tehty."
 
-#: astrotortilla\gui\MainFrame.py:929 astrotortilla\gui\MainFrame.py:976
+#: astrotortilla\gui\MainFrame.py:937 astrotortilla\gui\MainFrame.py:984
 msgid "Solver error"
 msgstr "Ratkojavirhe"
 
-#: astrotortilla\gui\MainFrame.py:939
+#: astrotortilla\gui\MainFrame.py:947
 msgid "No current solution"
 msgstr "Ei valmista ratkaisua."
 
-#: astrotortilla\gui\MainFrame.py:941
+#: astrotortilla\gui\MainFrame.py:949
 msgid "Creating bookmark from current solution"
 msgstr "Luodaan kirjanmerkki‰ t‰m‰nhetkisest‰ ratkaisusta"
 
-#: astrotortilla\gui\MainFrame.py:945
+#: astrotortilla\gui\MainFrame.py:953
 msgid "Bookmark name"
 msgstr "Kirjanmerkin nimi"
 
-#: astrotortilla\gui\MainFrame.py:945
+#: astrotortilla\gui\MainFrame.py:953
 msgid "Enter a name for the bookmark"
 msgstr "Annan kirjanmerkin nimi"
 
-#: astrotortilla\gui\MainFrame.py:952
+#: astrotortilla\gui\MainFrame.py:960
 msgid "Done"
 msgstr "Valmis"
 
-#: astrotortilla\gui\MainFrame.py:958
+#: astrotortilla\gui\MainFrame.py:966
 msgid "Creating bookmark from image"
 msgstr "Luodaan kirjanmerkki‰ kuvasta"
 
@@ -805,18 +809,26 @@ msgid "Shell command for Cygwin execution"
 msgstr "Cygwin komentirivik‰sky"
 
 #: astrotortilla\solver\AstrometryNetSolver.py:29
+msgid "Hide Cygwin"
+msgstr "Piilota Cygwin"
+
+#: astrotortilla\solver\AstrometryNetSolver.py:29
+msgid "Hide Cygwin window while solving"
+msgstr "Piilota Cygwin-ikkuna ratkonnan ajaksi"
+
+#: astrotortilla\solver\AstrometryNetSolver.py:30
 msgid "JNOW or J2000"
 msgstr "JNow tai J2000"
 
-#: astrotortilla\solver\AstrometryNetSolver.py:29
+#: astrotortilla\solver\AstrometryNetSolver.py:30
 msgid "JNow or J2000"
 msgstr "JNow vai J2000"
 
-#: astrotortilla\solver\AstrometryNetSolver.py:75
+#: astrotortilla\solver\AstrometryNetSolver.py:76
 msgid "Local astrometry.net"
 msgstr "Paikallinen astrometry.net"
 
-#: astrotortilla\solver\AstrometryNetSolver.py:197
+#: astrotortilla\solver\AstrometryNetSolver.py:199
 msgid "Parsing results..."
 msgstr "Parsitaan tuloksia..."
 

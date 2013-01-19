@@ -382,6 +382,7 @@ class mainFrame(wx.Frame):
         self.numCtrlExposure.SetLimited(True)
         self.numCtrlExposure.SetLimitOnFieldChange(True)
         self.numCtrlExposure.SetValue(5.0)
+        self.numCtrlExposure.Bind(wx.EVT_TEXT, self.__exposureChanged)
 
         self.lblScopeCurrent = wx.StaticText(id=wxID_MAINFRAMELBLSCOPECURRENT,
               label=_('Current:'), name='lblScopeCurrent', parent=self,
@@ -475,6 +476,9 @@ class mainFrame(wx.Frame):
         self.chkSlewTarget.Bind(wx.EVT_CHECKBOX, self.OnChkSlewTargetCheckbox,
               id=wxID_MAINFRAMECHKSLEWTARGET)
 
+    def __exposureChanged(self, event_args):
+        self.engine.setExposure(self.numCtrlExposure.GetValue())
+
     def __init__(self, parent):
         self._init_ctrls(parent)
         self.engine = TortillaEngine()
@@ -492,7 +496,7 @@ class mainFrame(wx.Frame):
 
         # Bind self.OnClose to window closing event
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-
+        self.numCtrlExposure.SetValue(self.engine.getExposure()) # set default exposure value
         self.bookmarkMenuStart = self.menuBookmarks.GetMenuItemCount()
         self.bookmarkMenuItems = []
         self.bookmarkMap = {}
@@ -678,7 +682,7 @@ class mainFrame(wx.Frame):
             self.chkSlewTarget.SetValue(True)
             self.chkSync.SetValue(True)
 
-    def showTracebackDialog(traceback, header):
+    def showTracebackDialog(self, traceback, header):
         diag = wx.MessageDialog(parent=self, 
                 message=traceback.format_exc(), 
                    caption=header,
@@ -742,6 +746,7 @@ class mainFrame(wx.Frame):
 
     def OnScopePollTimer(self, event):
         if not self.engine.getTelescope():
+            self.choiceScope.SetSelection(0)
             self.scopePollTimer.Stop()
             map(hide, (self.txtScopeTracking, self.txtScopeSlewing))
             self.txtScopeTracking.Update()
@@ -752,6 +757,9 @@ class mainFrame(wx.Frame):
                 self.chkSlewTarget,
                 self.chkRepeat
                 ))
+            return
+        if not self.engine.getTelescope().connected:
+            self.engine.deselectTelescope()
             return
         if self.engine.getTelescope().parked:
                 enable(self.btnScopePark)
@@ -925,7 +933,7 @@ class mainFrame(wx.Frame):
                 self.engine.gotoImage(fileName)
             except:
                 import traceback
-                logger.error("Solver error occurred: %"%traceback.format_exc())
+                logger.error("Solver error occurred: %s"%traceback.format_exc())
                 self.showTracebackDialog(traceback.format_exc(), _("Solver error"))
             self.btnGO.SetLabel(_("Capture and Solve"))
             self._updateCamera()

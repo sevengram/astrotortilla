@@ -50,6 +50,7 @@ class ASCOMTelescope(ITelescope):
         self.__tracking = None
         self.__trackingTime = 0
         self.__scopeIFVersion = 0
+        self.__errorCounter = 0
         if TRACE: logger.debug("<init")
 
     def __invalidateCache(self):
@@ -58,11 +59,26 @@ class ASCOMTelescope(ITelescope):
         self.__parkedTime = 0
         self.__slewingTime = 0
         self.__trackingTime = 0
+        self._operation_ok = True
     
     def __del__(self):
         del self.__chooser
         del self.__scope
         super(ASCOMTelescope, self).__del__()
+
+    @property
+    def _operation_ok(self):
+        return self.__errorCounter == 0
+
+    @_operation_ok.setter
+    def _operation_ok(self, value):
+        if not value:
+            self.__errorCounter += 1
+        else:
+            self.__errorCounter = 0
+        if self.__errorCounter > 10:
+            logger.error("10 errors in a row, disconnecting.")
+            self.connected = False
 
     @classmethod
     def getName(cls):
@@ -76,9 +92,17 @@ class ASCOMTelescope(ITelescope):
     def connected(self):
         "Is the telescope connected"
         if TRACE: logger.debug("<>connected")
+        rval = False
         if not self.__scope:
-            return False
-        return self.__scope.Connected
+            return rval
+        try:
+            rval= self.__scope.Connected
+            self._operation_ok = True
+        except:
+            logger.error("ASCOM Error trying to retrieve connection status")
+            self.__scope = None
+            self._operation_ok = False
+        return rval
 
     def _connect(self):
         "Connect the scope"
@@ -128,12 +152,17 @@ class ASCOMTelescope(ITelescope):
             return None
         now = time.time()
         if now - self.__positionTime > self._maxAge:
-            # convert RA from hours to degrees
-            logger.debug("request position")
-            RA = self.__scope.RightAscension*360./24
-            dec = self.__scope.Declination
-            self.__position = Coordinate(RA, dec)
-            self.__positionTime = now
+            try:
+                # convert RA from hours to degrees
+                logger.debug("request position")
+                RA = self.__scope.RightAscension*360./24
+                dec = self.__scope.Declination
+                self.__position = Coordinate(RA, dec)
+                self.__positionTime = now
+                self._operation_ok = True
+            except:
+                logger.error("ASCOM Error: Getting RA/DEC failed")
+                self._operation_ok = False
         if TRACE: logger.debug("<position")
         return self.__position
 
@@ -208,8 +237,13 @@ class ASCOMTelescope(ITelescope):
         now = time.time()
         if now - self.__slewingTime > self._maxAge:
             logger.debug("request slewing attribute")
-            self.__slewing = self.__scope.Slewing
-            self.__slewingTime = now
+            try:
+                self.__slewing = self.__scope.Slewing
+                self.__slewingTime = now
+                self._operation_ok = False
+            except:
+                logger.error("ASCOM error reading slewing status")
+                self._operation_ok = False
         if TRACE: logger.debug("<slewing")
         return self.__slewing
 
@@ -223,9 +257,14 @@ class ASCOMTelescope(ITelescope):
 
         now = time.time()
         if now - self.__trackingTime > self._maxAge:
-            logger.debug("request tracking status")
-            self.__tracking = self.__scope.Tracking
-            self.__trackingTime = now
+            try:
+                logger.debug("request tracking status")
+                self.__tracking = self.__scope.Tracking
+                self.__trackingTime = now
+                self._operation_ok = True
+            except:
+                self._operation_ok = False
+                logger.error("ASCOM error reading tracking status")
         if TRACE: logger.debug("<tracking")
         return self.__tracking
 

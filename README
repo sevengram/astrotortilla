@@ -1,6 +1,6 @@
 AstroTortilla
 =============
-Copyright 2012 AstroTortilla Team <astrotortilla-devel@lists.sourceforge.net>
+Copyright 2012-2013 AstroTortilla Team <astrotortilla-devel@lists.sourceforge.net>
 Copyright 2010-2011 Antti Kuntsi
 
 The AstroTortilla project aims to automate repetitive tasks during a modern day
@@ -13,6 +13,8 @@ fit for any purpose.
 
 Version history
 ---------------
+v0.3.5	Error fixes for ASCOM mount access, exposure time corrections, 
+	documentation updates
 v0.3    Error fixes for APT, bookmark support,
         LX200 non-conformance fixes, new config settings enabled,
 	Nebulosity 3 support, solver error handling improvements
@@ -51,10 +53,14 @@ is slewed dead-on on the camera view.
 
 The images obtained from a camera are evaluated by a plate solving application,
 and initially a wrapper for astrometry.net is implemented. The code for
-astrometry.net is freely available, but the astrometric indexes are available
-upon request only. For details see the GETTING-INDICES file in the
-astrometry.net source package or on the http://astrometry.net/ website. You can
-also generate the index files from various star catalogues, such as Tycho2.
+astrometry.net is freely available. You need a set of astrometric index files
+from http://broiler.astrometry.net/~dstn/4000/ in order to solve your images.
+You most likely do not need all the files there-in, see the AstroTortilla
+documentation for assistance and details.
+
+If you wish to obtain the 'old' index files, see the GETTING-INDICES file in
+the astrometry.net source package or on the http://astrometry.net/ website. You
+can also generate the index files from various star catalogues, such as Tycho2.
 
 All copyrights and trademarks are recognized and respected.
 
@@ -76,6 +82,9 @@ make sure you have the required packages installed and at least with version
 AstrometryNetPackages.txt for list of known packages. To ensure speedy
 execution, make sure to disable the bash autocomplete package in Cygwin.
 
+The AstroTortilla installer contains a shortcut for starting Cygwin setup for
+isntalling a pre-packaged astrometry.net solver. See documentation for more
+details.
 
 ASCOM
 -----
@@ -94,10 +103,21 @@ Python win32 extensions and pywinauto package for automating the interactions.
 Note:
 Nebulosity 2.3 is no longer supported.
 
+AstroTortilla supports setting binning and filters for capturing. Using 2x
+binning is recommended over downscaling for quicker solving.
+
 Astro Photography Tool
 ----------------------
 
-Astro Photography tool is supported by AstroTortilla.
+Astro Photography tool is supported by AstroTortilla, just make sure APT is
+running and you have successfully taken a well-focused image with it.
+
+MaxIm DL
+--------
+
+AstroTortilla has been tested with MaxIm DL 5.23, and supports setting the
+image binning and forced imaging filter. It is recommended to use 2x binning
+instead of downscaling for quicker solving.
 
 References
 ----------

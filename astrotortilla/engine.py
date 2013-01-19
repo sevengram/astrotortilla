@@ -519,6 +519,11 @@ class TortillaEngine(object):
             except:
                 pass
         self.setProgress(-1)
+        if not self.__telescope:
+            self.lastCorrection = None
+            self.__status.pop()
+            self.setStatus(_("ERROR: Telescope connection lost"))
+            return None
         targetPos = self.__telescope.position
         currentSolution=self.solveCamera()
         if not currentSolution:

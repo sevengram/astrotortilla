@@ -38,7 +38,11 @@ class DlgHelpAbout(wx.Dialog):
         self.richTextCtrl1 = wx.richtext.RichTextCtrl(id=wxID_DLGHELPABOUTRICHTEXTCTRL1,
               parent=self, pos=wx.Point(16, 32), size=wx.Size(248, 200),
               style=wx.richtext.RE_MULTILINE,
-              value=_('AstroTortilla is aimed for automating telescope GoTo corrections using plate-solving. It uses a simple wrapper library for telescope control, image capture and plate-solving. See the files README and LICENSE for details.\n\nAstroTortilla and the library are licensed under the GNU General Public License v2.\n\nAstroTortilla and the library use:\n') +' * Python\n * PyWX\n * win32all for Python\n * Python Win32 GUI Automation\n * Python Imaging Library (PIL)\n * Astrometry.net astrometrical plate-solving SW\n * CygWin (for executing Astrometry.net)\n\nCopyright 2010-2011 Antti Kuntsi <mickut@gmail.com>')
+              value=_('AstroTortilla is aimed for automating telescope GoTo corrections using plate-solving. It uses a simple wrapper library for telescope control, image capture and plate-solving. See the files README and LICENSE for details.\n\nAstroTortilla and the library are licensed under the GNU General Public License v2.\n\nAstroTortilla and the library use:\n') +
+                        ' * Python\n * PyWX\n * win32all for Python\n * Python Win32 GUI Automation\n * Python Imaging Library (PIL)\n * Astrometry.net astrometrical plate-solving SW\n * CygWin (for executing Astrometry.net)\n\n' +
+                        'http://astrotortilla.sf.net/\n\n'+
+                        'Copyright 2012-2013 AstroTortilla team <astrotortilla-devel@lists.sourceforge.net>\n' +
+                        'Copyright 2010-2011 Antti Kuntsi')
         self.richTextCtrl1.SetLabel('text')
 
     def __init__(self, parent):
