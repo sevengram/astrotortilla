@@ -441,7 +441,10 @@ class TortillaEngine(object):
             if not self.__camera.canAutoConnect and not self.__camera.connected:
                 self.__camera.connected = True
             if self.__camera.needsCameraName and not self.__camera.camera:
-                self.__camera.camera = self.__camera.cameraList[0]
+                if self.__camera.cameraList:
+                    self.__camera.camera = self.__camera.cameraList[0]
+                else:
+                    raise Exception(_("No window matches search pattern"))
             exposure = exposure or self.getExposure()
             if not self.__camera.connected:
                 self.setStatus(_("ERROR: No camera connected."))

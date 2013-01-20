@@ -3,9 +3,9 @@ rem build with py2exe
 rem
 setlocal
 
-if exist "\python27\python.exe" (
-	set PYTHON="\python27\python.exe"
-	set PYTHONPATH="\python27"
+if exist "\python27-32bit\python.exe" (
+	set PYTHON="\python27-32bit\python.exe"
+	set PYTHONPATH="\python27-32bit"
 )
 
 if exist "\program files\Inno Setup 5\iscc.exe" (
@@ -24,8 +24,8 @@ echo InnoSetup compiler not found.
 GOTO END
 )
 
-echo #define VCRedist "vcredist_x64.exe" > current_build.iss
-echo #define Platform "x64" >> current_build.iss
+echo #define VCRedist "vcredist_x86.exe" > current_build.iss
+echo #define Platform "x86" >> current_build.iss
 
 echo *** rebuilding localization files ***
 pushd locale\fi\LC_MESSAGES

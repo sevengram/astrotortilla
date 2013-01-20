@@ -3,13 +3,8 @@
 
 #define AstroTortilla "AstroTortilla"
 #define TortillaVersion GetFileVersion(AddBackslash(SourcePath) + "Dist\\AstroTortilla.exe")
-#ifexist "vcredist_x64.exe"
-#define VCRedist "vcredist_x64.exe"
-#define Platform "x64"
-#else
-#define VCRedist "vcredist_x86.exe"
-#define Platform "x86"
-#endif
+; Auto-select based on which build was made (using buildXX.bat)
+#include "current_build.iss"
 ; InnoTools Downloader 0.3.5 from
 ; http://www.sherlocksoftware.org/page.php?id=51
 #include "it_download.iss"
@@ -56,25 +51,27 @@ finnish.And=%1 ja %2
 CygPageTitle=Cygwin location
 CygPageSubtitle=Select a directory where Cygwin and astrometry.net are to be installed
 CygRootTip=Cygwin root folder
+CygLocalDirectoryTip=Local Cygwin package cache (not within Cygwin root)
 finnish.CygPageTitle=Cygwin asennus
 finnish.CygPageSubtitle=Valitse Cygwin ja astrometry.net -asennuksen juurihakemisto
 finnish.CygRootTip=Juurihakemisto
+finnish.CygLocalDirectoryTip=Paikallinen Cygwin pakettihakemisto (ei Cygwin juuren alla)
 IndexMirrorSelectionHelp=To select the indexes to download, first determine the widest and narrowest fields of view you use while astrophotographing. You can use an online plate-solver or calculate the fields of view if you do not know them yet.
-finnish.IndexMirrorSelectionHelp=Valitse ladattavat indeksit siten, että valinta kattaa käyttämiesi kokoonpanojen laajimman ja kapeimman kuvakentän. Voit käyttää online-ratkojaa tai laskea kuva-alasi jos et vielä tiedä niitä.
 IndexOnlineSolver=Online plate-solver
-finnish.IndexOnlineSolver=Online-ratkoja
 IndexSelectTitle=Astrometric Index selection
-finnish.IndexSelectTitle=Astrometristen indeksien valinta
 IndexSelectSubtitle=Select which astrometric indexes you would like to download.
-finnish.IndexSelectSubtitle=Valitse ladattavat astrometriset indeksit.
 LblSelectMirror=Download indexes from
-finnish.LblSelectMirror=Lataa indeksit
 LblMirrorInternational=international server
-finnish.LblMirrorInternational=Kansainväliseltä palvelimelta
 LblMirrorFinland=from server in Finland
-finnish.LblMirrorFinland=Suomen palvelimelta
 LblWideFov=Index covering features size of your widest field of view
 LblNarrowFov=Index with features of 10-30% of your narrowest field of view
+finnish.IndexMirrorSelectionHelp=Valitse ladattavat indeksit siten, että valinta kattaa käyttämiesi kokoonpanojen laajimman ja kapeimman kuvakentän. Voit käyttää online-ratkojaa tai laskea kuva-alasi jos et vielä tiedä niitä.
+finnish.IndexOnlineSolver=Online-ratkoja
+finnish.IndexSelectTitle=Astrometristen indeksien valinta
+finnish.IndexSelectSubtitle=Valitse ladattavat astrometriset indeksit.
+finnish.LblSelectMirror=Lataa indeksit
+finnish.LblMirrorInternational=Kansainväliseltä palvelimelta
+finnish.LblMirrorFinland=Suomen palvelimelta
 finnish.LblWideFov=Laajimman kuva-alasi kattava indeksi
 finnish.LblNarrowFov=Kapeimmasta kuva-alastasi 10-30% kokoinen indeksi
 ErrorIndexOrder=Please ensure the narrow indexes are not wider than wide indexes.
@@ -118,13 +115,13 @@ Name: "{group}\User guide (English)"; Filename: "{app}\docs\AstroTortilla_user_g
 Name: "{group}\Pikaopas (Finnish)"; Filename: "{app}\docs\AstroTortilla_pikaopas.pdf"
 Name: "{group}\Käyttöohje (Finnish)"; Filename: "{app}\docs\AstroTortilla_kayttoohje.pdf"
 Name: "{group}\{cm:UninstallProgram,AstroTortilla}"; Filename: "{uninstallexe}"
-Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi  -R {code:CygwinRootDir|C:\cygwin\}"
+Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi  -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"
 Name: "{commondesktop}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{tmp}\{#VCRedist}"; WorkingDir: {tmp}; Flags: skipifdoesntexist; Check: VCRedistNeedsInstall; StatusMsg: "Checking for and installing ""Microsoft Visual C++ Redistributable Package"" if needed, This can take several minutes..."
-Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi -O -q -R {code:CygwinRootDir|C:\cygwin\}"; Description: "{cm:Install2,Cygwin,astrometry.net}"; AfterInstall: UncompressIndexFiles
+Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi -O -q -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Description: "{cm:Install2,Cygwin,astrometry.net}"; AfterInstall: UncompressIndexFiles
 Filename: "{app}\AstroTortilla.exe"; Description: "{cm:LaunchProgram,AstroTortilla}"; Flags: nowait postinstall skipifsilent
 
 [INI]
@@ -201,13 +198,11 @@ begin
   // are installed for the current user
   if IsWin64 then
   begin
-    Result := not (VCVersionInstalled(VC_2008_REDIST_X64) and 
-                 VCVersionInstalled(VC_2008_SP1_REDIST_X64));
+    Result := not (VCVersionInstalled(VC_2008_REDIST_X64));
   end
   else
   begin
-    Result := not (VCVersionInstalled(VC_2008_REDIST_X86) and 
-                 VCVersionInstalled(VC_2008_SP1_REDIST_X86));
+    Result := not (VCVersionInstalled(VC_2008_REDIST_X86));
   end;
 end;
 procedure URLLabelOnClick(Sender: TObject);
@@ -346,9 +341,11 @@ begin
     CustomMessage('CygPageSubtitle'),
     '',
     False,
-    'cygwin');
+    '');
   CygDirPage.Add(CustomMessage('CygRootTip'));
   CygDirPage.Values[0] := 'C:\cygwin\';
+  CygDirPage.Add(CustomMessage('CygLocalDirectoryTip'));
+  CygDirPage.Values[1] := 'C:\temp\cygcache\';
   CygDirPageId := CygDirPage.ID;
 
   IdxPage := CreateIndexWizardPage(CygDirPageId);
@@ -370,6 +367,17 @@ begin
     Result := not IsComponentSelected('cygwin');
   if PageID = IdxPageId then
     Result := not IsComponentSelected('indexfiles');
+end;
+
+function CygwinCacheDir(Param:string):string;
+var
+  cygCache : String;
+begin
+  cygCache := CygDirPage.Values[1];
+  if cygCache = '' then
+    cygCache := Param;
+   Result := AddBackslash(cygCache);
+
 end;
 
 function CygwinRootDir(Param: string):string;
