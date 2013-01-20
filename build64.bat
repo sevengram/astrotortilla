@@ -26,6 +26,9 @@ GOTO END
 
 echo #define VCRedist "vcredist_x64.exe" > current_build.iss
 echo #define Platform "x64" >> current_build.iss
+echo [Setup]>> current_build.iss 
+echo ArchitecturesAllowed=x64>> current_build.iss
+echo ArchitecturesInstallIn64BitMode=x64>> current_build.iss
 
 echo *** rebuilding localization files ***
 pushd locale\fi\LC_MESSAGES

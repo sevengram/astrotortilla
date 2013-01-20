@@ -27,6 +27,7 @@ LicenseFile=LICENSE
 Compression=lzma
 SolidCompression=yes
 OutputBaseFilename={#AstroTortilla}-{#TortillaVersion}-{#Platform}
+AlwaysShowComponentsList=yes
 
 
 [Languages]
@@ -80,16 +81,22 @@ UncompressTitle=Uncompressing index files
 UncompressDescription=Setup is now uncompressing the downloaded astrometric index files...
 finnish.UncompressTitle=Puretaan indeksej‰
 finnish.UncompressDescription=Puretaan ladattuja astrometrisi‰ indeksitiedostoja...
+IndexesOnly=Install additional astrometric index files
+CygwinAndIndexes=Update Cygwin, astrometry.net and install index files
+finnish.IndexesOnly=Lis‰‰ uusia astrometrisi‰ indeksej‰
+finnish.CygwinAndIndexes=P‰ivit‰ Cygwin, astrometry.net ja asenna indeksej‰
 
 [Types]
 Name: "full"; Description: "{cm:FullInstallation}"
 Name: "noindexes"; Description: "{cm:NoIndexes}"
 Name: "nocygwin"; Description: "{cm:NoCygwin}"
+Name: "indexonly"; Description: "{cm:IndexesOnly}"
+Name: "cygwinindex"; Description: "{cm:CygwinAndIndexes}"
 
 [Components]
-Name: "AstroTortilla"; Types: full nocygwin noindexes; Description: "AstroTortilla"      
-Name: "cygwin"; Types: full noindexes; Description: "{cm:And,Cygwin,astrometry.net}"
-Name: "indexfiles"; Types: full; Description: "{cm:AstrometricIndexes}"
+Name: "AstroTortilla"; Types: full nocygwin noindexes; Description: "AstroTortilla"; Flags: checkablealone
+Name: "cygwin"; Types: full noindexes cygwinindex; Description: "{cm:And,Cygwin,astrometry.net}"; Flags: checkablealone
+Name: "indexfiles"; Types: full indexonly cygwinindex; Description: "{cm:AstrometricIndexes}"; Flags: checkablealone
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
@@ -121,7 +128,7 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\AstroTortilla"; Fi
 
 [Run]
 Filename: "{tmp}\{#VCRedist}"; WorkingDir: {tmp}; Flags: skipifdoesntexist; Check: VCRedistNeedsInstall; StatusMsg: "Checking for and installing ""Microsoft Visual C++ Redistributable Package"" if needed, This can take several minutes..."
-Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi -O -q -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Description: "{cm:Install2,Cygwin,astrometry.net}"; AfterInstall: UncompressIndexFiles
+Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi -O -q -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Description: "{cm:Install2,Cygwin,astrometry.net}"; AfterInstall: RebaseAndUncompress
 Filename: "{app}\AstroTortilla.exe"; Description: "{cm:LaunchProgram,AstroTortilla}"; Flags: nowait postinstall skipifsilent
 
 [INI]
@@ -196,7 +203,7 @@ begin
   // this statement, the following won't install your VC redist only when
   // the Visual C++ 2010 Redist (x86) and Visual C++ 2010 SP1 Redist(x86)
   // are installed for the current user
-  if IsWin64 then
+  if Is64BitInstallMode then
   begin
     Result := not (VCVersionInstalled(VC_2008_REDIST_X64));
   end
@@ -274,31 +281,11 @@ begin
   IndexList.Add('index 4018, 63KB, 16.7 to 23.3 deg');
   IndexList.Add('index 4019, 38KB, 23.3 to 33.3 deg');
 
-  LblWideFov := TLabel.Create(Page);
-  with LblWideFov do
-  begin
-    Parent := Page.Surface;
-    Top := PlaceBelow(ServerSelection, 0);
-    Caption := CustomMessage('LblWideFov')
-  end;
-
-  WideFovCombo := TNewComboBox.Create(Page);
-  with WideFovCombo do
-  begin
-    Parent := Page.Surface;
-    Top := PlaceBelow(LblWideFov, 0);
-    Style := csDropDown;
-    Items := IndexList;
-    Left := ScaleX(16);
-    Width := Page.SurfaceWidth - ScaleX(16);
-    ItemIndex := 19;
-  end;
-
   LblNarrowFov := TLabel.Create(Page);
   with LblNarrowFov do
   begin
     Parent := Page.Surface;
-    Top := PlaceBelow(WideFovCombo, 0);
+    Top := PlaceBelow(ServerSelection, 8);
     Caption := CustomMessage('LblNarrowFov')
   end;
 
@@ -314,21 +301,38 @@ begin
     ItemIndex := 14;
   end;
 
+  LblWideFov := TLabel.Create(Page);
+  with LblWideFov do
+  begin
+    Parent := Page.Surface;
+    Top := PlaceBelow(NarrowFovCombo, 8);
+    Caption := CustomMessage('LblWideFov')
+  end;
+
+  WideFovCombo := TNewComboBox.Create(Page);
+  with WideFovCombo do
+  begin
+    Parent := Page.Surface;
+    Top := PlaceBelow(LblWideFov, 0);
+    Style := csDropDown;
+    Items := IndexList;
+    Left := ScaleX(16);
+    Width := Page.SurfaceWidth - ScaleX(16);
+    ItemIndex := 19;
+  end;
+
   URLLabel := TNewStaticText.Create(Page);
   with URLLabel do
   begin
     Parent := Page.Surface;
     Caption := CustomMessage('IndexOnlineSolver') + ' http://nova.astrometry.net/';
-    Top := PlaceBelow(NarrowFovCombo, 32);
+    Top := PlaceBelow(WideFovCombo, 32);
     Cursor := crHand;
     OnClick := @URLLabelOnClick;
     { Alter Font *after* setting Parent so the correct defaults are inherited first }
     Font.Style := URLLabel.Font.Style + [fsUnderline];
     Font.Color := clBlue;
   end;
-
-    //
-    //CustomMessage('LblNarrowFov')
 
   Result := Page;
 end;
@@ -466,9 +470,9 @@ begin
     Result := True;
 end;
 
-procedure UncompressIndexFiles();
+procedure RebaseAndUncompress();
 var
-  targets, bunzip: String;
+  targets, bunzip, rebase: String;
   ResultCode : Integer;
   Progress : TOutputProgressWizardPage;
 begin;
@@ -481,10 +485,14 @@ begin;
   end;
   Progress.Show();
   try
+    Log('Running rebase all just in case');
+    rebase := AddBackslash(CygwinRootDir('C:\cygwin\')) + 'bin\ash.exe';
+    ShellExec('', rebase, '/bin/rebaseall', '',SW_HIDE,ewWaitUntilTerminated,ResultCode);
     Log('Uncompressing astrometric indexes');
     targets :=  '/usr/share/astrometry/data/*.bz2';
     bunzip :=    AddBackslash(CygwinRootDir('C:\cygwin\')) + 'bin\bunzip2.exe';
     ShellExec('', bunzip, targets, '',SW_HIDE,ewWaitUntilTerminated,ResultCode);
+
   finally
     Progress.Hide;
   end;
