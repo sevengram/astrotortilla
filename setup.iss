@@ -102,6 +102,10 @@ CreateCygwinStartMenu=Create Cygwin setup menu entry
 finnish.StartMenu=Aloitusvalikko
 finnish.CreateStartMenu=Lisää aloitusvalikkoon
 finnish.CreateCygwinStartMenu=Lisää Cygwin-setup aloitusvalikkoon
+CygwinUninstallNotice=The Cygwin installation (and index files) in %1 was not removed as it may be shared by other programs. You can delete the %1 folder manually if you have no use for Cygwin.
+finnish.CygwinUninstallNotice=Cygwin-asennusta (ja indeksitiedostoja) %1 hakemistossa ei poistettu, koska se voi olla muiden ohjelmien käytössä. Voit tuhota %1 -hakemiston mikäli et tarvitse Cygwiniä mihinkään.
+CygwinUninstallNoticeNoDir=The Cygwin installation (and index files) was not removed as it may be shared by other programs. You can simply delete the Cygwin folder manually if you have no use for Cygwin.
+finnish.CygwinUninstallNoticeNoDir=Cygwin-asennusta (ja indeksitiedostoja) ei poistettu, koska se voi olla muiden ohjelmien käytössä. Voit tuhota Cygwin -hakemiston mikäli et tarvitse Cygwiniä mihinkään.
 
 [Types]
 Name: "full"; Description: "{cm:FullInstallation}"
@@ -112,9 +116,9 @@ Name: "cygwinindex"; Description: "{cm:CygwinAndIndexes}"
 Name: "custom"; Description: "{cm:Custom}"; Flags: iscustom
 
 [Components]
-Name: "AstroTortilla"; Types: full nocygwin noindexes; Description: "AstroTortilla"; Flags: checkablealone
-Name: "cygwin"; Types: full noindexes cygwinindex; Description: "{cm:And,Cygwin,astrometry.net}"; Flags: checkablealone; ExtraDiskSpaceRequired: 367001600
-Name: "indexfiles"; Types: full indexonly cygwinindex; Description: "{cm:AstrometricIndexes}"; Flags: checkablealone 
+Name: "AstroTortilla"; Types: full nocygwin noindexes; Description: "AstroTortilla"; Flags: checkablealone disablenouninstallwarning
+Name: "cygwin"; Types: full noindexes cygwinindex; Description: "{cm:And,Cygwin,astrometry.net}"; Flags: checkablealone disablenouninstallwarning; ExtraDiskSpaceRequired: 367001600
+Name: "indexfiles"; Types: full indexonly cygwinindex; Description: "{cm:AstrometricIndexes}"; Flags: checkablealone disablenouninstallwarning 
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; Components: AstroTortilla
@@ -134,6 +138,8 @@ Source: "README.txt"; DestDir: "{app}"; Flags: isreadme; Components: AstroTortil
 Source: {#VCRedist}; DestDir: {tmp}; Flags: ignoreversion deleteafterinstall
 Source: "setup.exe"; DestDir: "{app}"; Components: cygwin
 
+[Registry]
+Root: HKCU; Subkey: "Software\AstroTortilla"; ValueType: string; ValueName: "CygwinRoot"; ValueData: "{code:CygwinRootDir|C:\cygwin\}"; Flags: uninsdeletekey
 
 [Icons]
 Name: "{group}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: startmenu
@@ -168,6 +174,7 @@ var
   IdxPageId, IntlServerRadioBtn: Integer;
   ServerSelection : TNewCheckListBox; // Index downloading server selector
   NarrowFovCombo,WideFovCombo : TNewComboBox; // Index limits
+  cygNotice: String; // Uninstallation notice text
   
 type
   INSTALLSTATE = Longint;
@@ -380,7 +387,7 @@ begin
     False,
     '');
   CygDirPage.Add(CustomMessage('CygRootTip'));
-  CygDirPage.Values[0] := GetPreviousData('CygwinRoot', 'C:\cygwin\');;
+  CygDirPage.Values[0] := GetPreviousData('CygwinRoot', 'C:\cygwin\');
   CygDirPage.Add(CustomMessage('CygLocalDirectoryTip'));
   CygDirPage.Values[1] := GetPreviousData('CygwinCache', 'C:\temp\cygcache\');
   CygDirPageId := CygDirPage.ID;
@@ -398,6 +405,7 @@ begin
 end;
 
 procedure UncompressIndexFiles(); forward;
+function CygwinRootDir(Param: string):string; forward;
 procedure CurStepChanged(CurStep: TSetupStep);
 begin;
   { 
@@ -409,6 +417,29 @@ begin;
     UncompressIndexFiles();
   end;
 end;
+
+function InitializeUninstall():Boolean;
+var
+  cygDir: String;
+begin
+  if RegQueryStringValue(HKEY_CURRENT_USER, 'Software\AstroTortilla', 'CygwinRoot', cygDir) then
+    begin
+    cygNotice := '{cm:CygwinUninstallNotice,'+cygDir+'}';
+    end
+  else
+    begin
+    cygNotice := '{cm:CygwinUninstallNoticeNoDir}';
+    end;
+  Result := True;
+end;
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  if CurUninstallStep = usPostUninstall then
+    begin
+    MsgBox(ExpandConstant(cygNotice), mbInformation, MB_OK);
+    end;
+end;
+
 function ShouldSkipPage(PageID: Integer): Boolean;
 begin
   Result := false;
