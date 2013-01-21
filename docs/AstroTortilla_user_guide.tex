@@ -269,7 +269,7 @@ of your frame.
 If \emph{Repeat until..} was checked, a new frame is exposed and used to refine the pointing 
 even further. After two or three rounds your target should be exactly at the crosshair.
 Be sure not to input a threshold value too low (i.e., lower than the mechanical pointing accuracy of your mount),
-else the iteration might never stop.
+else AstroTortilla will repeat the process until the iteration limit (default of five iterations) is reached.
 
 \subsection{Tools menu}
 \subsubsection{Goto image tool}
@@ -337,9 +337,13 @@ For more information about the V-drift method, see
 \surl{http://www.astrophotoinsight.com/node/568}.
 
 To use the tool, point your telescope at a reasonably bright star and select
-\emph{Tools $\rightarrow$ Drift shot}.  AstroTortilla then starts a 30 second
-exposure and moves the mount around during it. You can then examine the
-resulting image to see if your alignment causes any declination drift.
+\emph{Tools $\rightarrow$ Drift shot}.  AstroTortilla then starts a exposing 
+a frame and moves the mount back and forth. You can choose an exposure time of 
+your choice in the Camera panel. The Drift shot exposure will, however, always 
+be at least 30 seconds, even if a lower value is entered.
+
+After the exposure is done, you can examine the resulting image in your camera 
+control software to determine if your alignment causes any declination drift.
 
 \subsection{Bookmarks}
 
