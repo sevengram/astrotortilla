@@ -1,0 +1,54 @@
+\documentclass[english]{article}
+%\usepackage{sansseriftitles}
+\usepackage{1inchmargins}
+\usepackage[iso]{isodate}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\tabcolsep}{8pt}
+
+\hypersetup{
+    colorlinks=true,
+    urlcolor=blue,
+}
+
+\newcommand{\surl}[1]{{\small \url{#1}}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex}
+
+
+\begin{document}
+
+
+\centerline{\sf \Huge Getting Started with AstroTortilla}
+\centerline{Latest update: \today}
+
+This is a document describing the steps necessary to start using AstroTortilla in a nutshell.
+For further information of any details, please refer to the full documentation (AstroTortilla User
+Guide).
+
+\section{Run the AstroTortilla installer}
+
+Download and run the AstroTortilla installer from \surl{http://astrotortilla.sf.net/}. 
+
+The installer will also automatically install the Cygwin environment and Astrometry.net built inside it. Choose to \textbf{Install AstroTortilla, Cygwin, astrometry and index files.}
+
+The installer will ask you which index files you'd like it to fetch. Select suitable index levels based on your imaging field of view as described in the AstroTortilla User Guide section 3.3.
+
+\section{Run and configure AstroTortilla}
+
+In AstroTortilla, select how to connect to your camera and your telescope/mount.
+
+\section{Slew to a target}
+
+Using your favorite planetarium software, slew your ASCOM-telescope to an object on the sky.
+
+\section{Correct the pointing with AstroTortilla}
+
+Check all three boxes in the Actions panel and hit Capture and Solve. After a while, enjoy your object in the center of your frame, despite your inaccurate GoTo calibration!
+ 
+
+\end{document}
