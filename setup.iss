@@ -28,7 +28,12 @@ Compression=lzma
 SolidCompression=yes
 OutputBaseFilename={#AstroTortilla}-{#TortillaVersion}-{#Platform}
 AlwaysShowComponentsList=yes
+WizardImageFile=tortilla-164x314.bmp
+WizardSmallImageFile=tortilla-small.bmp
+SetupIconFile=astrotortilla.ico
 
+[Messages]
+BeveledLabel={#AstroTortilla} {#TortillaVersion}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -76,7 +81,7 @@ finnish.LblMirrorFinland=Suomen palvelimelta
 finnish.LblWideFov=Laajin taso (valitse laajinta kuva-alaasi vastaava koko)
 finnish.LblNarrowFov=Kapein taso (valitse n. 20%:a kapeimmasta kuva-alastasi vastaava koko)
 ErrorIndexOrder=Please ensure the narrowest level is not wider than widest level.
-finnish.ErrorIndexOrder=Tarkista ettei kapein taso laajinta tasoa laajempi.
+finnish.ErrorIndexOrder=Tarkista, ettei kapein taso ole laajinta tasoa laajempi.
 UncompressTitle=Uncompressing index files
 UncompressDescription=Setup is now uncompressing the downloaded astrometric index files...
 finnish.UncompressTitle=Puretaan indeksejä
@@ -85,6 +90,18 @@ IndexesOnly=Install additional astrometric index files
 CygwinAndIndexes=Update Cygwin, astrometry.net and install index files
 finnish.IndexesOnly=Lisää uusia astrometrisiä indeksejä
 finnish.CygwinAndIndexes=Päivitä Cygwin, astrometry.net ja asenna indeksejä
+RebaseTitle=Cygwin maintenance
+RebaseDescription=Please wait, while setup is rebasing Cygwin DLLs...
+finnish.RebaseTitle=Cygwin ylläpito
+finnish.RebaseDescription=Odota, kun asennusohjelma tarkistaa Cygwin DLL tiedostot...
+Custom=Custom installation
+finnish.Custom=Mukautettu asennus
+StartMenu=Start menu
+CreateStartMenu=Create Start menu entries
+CreateCygwinStartMenu=Create Cygwin setup menu entry
+finnish.StartMenu=Aloitusvalikko
+finnish.CreateStartMenu=Lisää aloitusvalikkoon
+finnish.CreateCygwinStartMenu=Lisää Cygwin-setup aloitusvalikkoon
 
 [Types]
 Name: "full"; Description: "{cm:FullInstallation}"
@@ -92,43 +109,46 @@ Name: "noindexes"; Description: "{cm:NoIndexes}"
 Name: "nocygwin"; Description: "{cm:NoCygwin}"
 Name: "indexonly"; Description: "{cm:IndexesOnly}"
 Name: "cygwinindex"; Description: "{cm:CygwinAndIndexes}"
+Name: "custom"; Description: "{cm:Custom}"; Flags: iscustom
 
 [Components]
 Name: "AstroTortilla"; Types: full nocygwin noindexes; Description: "AstroTortilla"; Flags: checkablealone
-Name: "cygwin"; Types: full noindexes cygwinindex; Description: "{cm:And,Cygwin,astrometry.net}"; Flags: checkablealone
-Name: "indexfiles"; Types: full indexonly cygwinindex; Description: "{cm:AstrometricIndexes}"; Flags: checkablealone
+Name: "cygwin"; Types: full noindexes cygwinindex; Description: "{cm:And,Cygwin,astrometry.net}"; Flags: checkablealone; ExtraDiskSpaceRequired: 367001600
+Name: "indexfiles"; Types: full indexonly cygwinindex; Description: "{cm:AstrometricIndexes}"; Flags: checkablealone 
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; Components: AstroTortilla
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1; Components: AstroTortilla
+Name: "startmenu"; Description: "{cm:CreateStartMenu}"; GroupDescription: "{cm:StartMenu}"; Flags: checkedonce
+Name: "cygstartmenu"; Description: "{cm:CreateCygwinStartMenu}"; GroupDescription: "{cm:StartMenu}"; Flags: checkedonce
 
 [Files]
-Source: "dist\AstroTortilla.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "dist\*"; DestDir: "{app}";
-Source: "dist\docs\*"; DestDir: "{app}\docs";
-Source: "dist\locale\*"; DestDir: "{app}\locale"; Flags: recursesubdirs
-Source: "LICENSE"; DestDir: "{app}";
-Source: "AstrometryNetPackages.txt"; DestDir: "{app}";
-Source: "README.txt"; DestDir: "{app}"; Flags: isreadme
+Source: "dist\AstroTortilla.exe"; DestDir: "{app}"; Flags: ignoreversion ; Components: AstroTortilla
+Source: "dist\*"; DestDir: "{app}"; Components: AstroTortilla
+Source: "dist\docs\*"; DestDir: "{app}\docs"; Components: AstroTortilla
+Source: "dist\locale\*"; DestDir: "{app}\locale"; Flags: recursesubdirs; Components: AstroTortilla
+Source: "LICENSE"; DestDir: "{app}"; Components: AstroTortilla
+Source: "AstrometryNetPackages.txt"; DestDir: "{app}"; Components: AstroTortilla
+Source: "README.txt"; DestDir: "{app}"; Flags: isreadme; Components: AstroTortilla
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#VCRedist}; DestDir: {tmp}; Flags: ignoreversion deleteafterinstall
-Source: "setup.exe"; DestDir: "{app}";
+Source: "setup.exe"; DestDir: "{app}"; Components: cygwin
 
 
 [Icons]
-Name: "{group}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"
-Name: "{group}\Getting started (English)"; Filename: "{app}\docs\Getting_Started_with_AstroTortilla.pdf"
-Name: "{group}\User guide (English)"; Filename: "{app}\docs\AstroTortilla_user_guide.pdf"
-Name: "{group}\Pikaopas (Finnish)"; Filename: "{app}\docs\AstroTortilla_pikaopas.pdf"
-Name: "{group}\Käyttöohje (Finnish)"; Filename: "{app}\docs\AstroTortilla_kayttoohje.pdf"
-Name: "{group}\{cm:UninstallProgram,AstroTortilla}"; Filename: "{uninstallexe}"
-Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi  -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"
+Name: "{group}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: startmenu
+Name: "{group}\Getting started (English)"; Filename: "{app}\docs\Getting_Started_with_AstroTortilla.pdf"; Tasks: startmenu
+Name: "{group}\User guide (English)"; Filename: "{app}\docs\AstroTortilla_user_guide.pdf"; Tasks: startmenu
+Name: "{group}\Pikaopas (Finnish)"; Filename: "{app}\docs\AstroTortilla_pikaopas.pdf"; Tasks: startmenu
+Name: "{group}\Käyttöohje (Finnish)"; Filename: "{app}\docs\AstroTortilla_kayttoohje.pdf"; Tasks: startmenu
+Name: "{group}\{cm:UninstallProgram,AstroTortilla}"; Filename: "{uninstallexe}"; Tasks: startmenu
+Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi  -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Tasks: cygstartmenu
 Name: "{commondesktop}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{tmp}\{#VCRedist}"; WorkingDir: {tmp}; Flags: skipifdoesntexist; Check: VCRedistNeedsInstall; StatusMsg: "Checking for and installing ""Microsoft Visual C++ Redistributable Package"" if needed, This can take several minutes..."
-Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi -O -q -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Description: "{cm:Install2,Cygwin,astrometry.net}"; AfterInstall: RebaseAndUncompress
+Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi -O -q -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Description: "{cm:Install2,Cygwin,astrometry.net}"; AfterInstall: RebaseCygwinDLLs
 Filename: "{app}\AstroTortilla.exe"; Description: "{cm:LaunchProgram,AstroTortilla}"; Flags: nowait postinstall skipifsilent
 
 [INI]
@@ -227,9 +247,10 @@ end;
 function CreateIndexWizardPage(FollowsPage:integer) : TWizardPage;
 var
   Page : TWizardPage;
-  descMirror, URLLabel : TNewStaticText;
+  descMirror, URLLabel, URLLinkText : TNewStaticText;
   LblWideFov, LblNarrowFov : TLabel;
   IndexList : TStringList;
+  IntlServerSelected : Boolean;
 begin
   // Setup index file selection form
   Page := CreateCustomPage(FollowsPage, CustomMessage('IndexSelectTitle'), CustomMessage('IndexSelectSubtitle'));
@@ -244,6 +265,8 @@ begin
   end;
   descMirror.AdjustHeight();
   ServerSelection := TNewCheckListBox.Create(Page);
+  IntlServerSelected := GetPreviousData('ServerSelection', 'True') = 'True';
+
   with ServerSelection do
   begin
     Top := PlaceBelow(descMirror, 0);
@@ -255,9 +278,10 @@ begin
     WantTabs := True;
     ShowLines := False;
     AddGroup(CustomMessage('LblSelectMirror'), '', 0, nil);
-    IntlServerRadioBtn := AddRadioButton(CustomMessage('LblMirrorInternational'), '', 0, True, True, nil);
-    AddRadioButton(CustomMessage('LblMirrorFinland'), '', 0, False, True, nil);
+    IntlServerRadioBtn := AddRadioButton(CustomMessage('LblMirrorInternational'), '', 0, IntlServerSelected, True, nil);
+    AddRadioButton(CustomMessage('LblMirrorFinland'), '', 0, not IntlServerSelected, True, nil);
   end;
+
   IndexList := TStringList.Create();
   
   IndexList.Add('index 4000, 11GB, 2 to 2.8 arcmin');
@@ -298,7 +322,7 @@ begin
     Items := IndexList;
     Left := ScaleX(16);
     Width := Page.SurfaceWidth - ScaleX(16);
-    ItemIndex := 14;
+    ItemIndex := StrToInt(GetPreviousData('NarrowFovIndex', IntToStr(14)));
   end;
 
   LblWideFov := TLabel.Create(Page);
@@ -318,19 +342,28 @@ begin
     Items := IndexList;
     Left := ScaleX(16);
     Width := Page.SurfaceWidth - ScaleX(16);
-    ItemIndex := 19;
+    ItemIndex := StrToInt(GetPreviousData('WideFovIndex', IntToStr(19)));
   end;
 
   URLLabel := TNewStaticText.Create(Page);
   with URLLabel do
   begin
     Parent := Page.Surface;
-    Caption := CustomMessage('IndexOnlineSolver') + ' http://nova.astrometry.net/';
+    Caption := CustomMessage('IndexOnlineSolver') + ': ';
     Top := PlaceBelow(WideFovCombo, 32);
+  end;
+
+  URLLinkText := TNewStaticText.Create(Page);
+  with URLLinkText do
+  begin
+    Parent := Page.Surface;
+    Caption := 'http://nova.astrometry.net/';
+    Top := PlaceBelow(WideFovCombo, 32);
+    Left := URLLabel.Left + URLLabel.Width;
     Cursor := crHand;
     OnClick := @URLLabelOnClick;
     { Alter Font *after* setting Parent so the correct defaults are inherited first }
-    Font.Style := URLLabel.Font.Style + [fsUnderline];
+    Font.Style := URLLinkText.Font.Style + [fsUnderline];
     Font.Color := clBlue;
   end;
 
@@ -347,9 +380,9 @@ begin
     False,
     '');
   CygDirPage.Add(CustomMessage('CygRootTip'));
-  CygDirPage.Values[0] := 'C:\cygwin\';
+  CygDirPage.Values[0] := GetPreviousData('CygwinRoot', 'C:\cygwin\');;
   CygDirPage.Add(CustomMessage('CygLocalDirectoryTip'));
-  CygDirPage.Values[1] := 'C:\temp\cygcache\';
+  CygDirPage.Values[1] := GetPreviousData('CygwinCache', 'C:\temp\cygcache\');
   CygDirPageId := CygDirPage.ID;
 
   IdxPage := CreateIndexWizardPage(CygDirPageId);
@@ -364,6 +397,18 @@ begin
 
 end;
 
+procedure UncompressIndexFiles(); forward;
+procedure CurStepChanged(CurStep: TSetupStep);
+begin;
+  { 
+    Uncompress index-files after installation phase unless cygwin is installed as well.
+    In that case the index files are uncompressed after cygwin rebase incase cygwin install/update broke the DLLs and need a rebaseall.
+  }
+  if (CurStep = ssPostInstall) and (not IsComponentSelected('cygwin')) and IsComponentSelected('indexfiles') then
+  begin
+    UncompressIndexFiles();
+  end;
+end;
 function ShouldSkipPage(PageID: Integer): Boolean;
 begin
   Result := false;
@@ -441,6 +486,7 @@ begin
     end;
 end;
 
+
 function NextButtonClick(CurPageID: Integer): Boolean;
 var
   curIndex : Integer;
@@ -470,9 +516,34 @@ begin
     Result := True;
 end;
 
-procedure RebaseAndUncompress();
+
+procedure RebaseCygwinDLLs();
 var
-  targets, bunzip, rebase: String;
+  rebase: String;
+  ResultCode : Integer;
+  Progress : TOutputProgressWizardPage;
+begin;
+  Progress := CreateOutputProgressPage(CustomMessage('RebaseTitle'), CustomMessage('RebaseDescription'));
+  with Progress.ProgressBar do
+  begin
+    State := npbsNormal;
+    Style := npbstMarquee;
+    Visible := True;
+  end;
+  Progress.Show();
+  try
+    Log('Running rebase all just in case');
+    rebase := AddBackslash(CygwinRootDir('C:\cygwin\')) + 'bin\ash.exe';
+    ShellExec('', rebase, '-c /bin/rebaseall -v', '',SW_SHOW,ewWaitUntilTerminated,ResultCode);
+  finally
+    Progress.Hide;
+  end;
+  UncompressIndexFiles();
+end;
+
+procedure UncompressIndexFiles();
+var
+  bunzip, targets: String;
   ResultCode : Integer;
   Progress : TOutputProgressWizardPage;
 begin;
@@ -485,14 +556,10 @@ begin;
   end;
   Progress.Show();
   try
-    Log('Running rebase all just in case');
-    rebase := AddBackslash(CygwinRootDir('C:\cygwin\')) + 'bin\ash.exe';
-    ShellExec('', rebase, '/bin/rebaseall', '',SW_HIDE,ewWaitUntilTerminated,ResultCode);
     Log('Uncompressing astrometric indexes');
     targets :=  '/usr/share/astrometry/data/*.bz2';
     bunzip :=    AddBackslash(CygwinRootDir('C:\cygwin\')) + 'bin\bunzip2.exe';
     ShellExec('', bunzip, targets, '',SW_HIDE,ewWaitUntilTerminated,ResultCode);
-
   finally
     Progress.Hide;
   end;
@@ -503,11 +570,11 @@ var
   IndexDir: String;
   FindRec: TFindRec;
 begin
+    // delete all index-40*.bz2-files
     IndexDir := AddBackslash(CygwinRootDir('C:\cygwin\')) + 'usr\share\astrometry\data\';
-    if FindFirst(IndexDir+'\*.bz2', FindRec) then begin
+    if FindFirst(IndexDir+'\index-40*.bz2', FindRec) then begin
     try
       repeat
-        // delete all bz2-files, ignore directories just to be safe
         Log('Removing temporary file ' + FindRec.Name);
         DeleteFile(IndexDir + FindRec.Name);
       until not FindNext(FindRec);
@@ -515,4 +582,24 @@ begin
       FindClose(FindRec);
     end;
   end;
+end;
+
+procedure RegisterPreviousData(PreviousDataKey: Integer);
+var
+  serverChoice : String;
+begin
+  if ServerSelection.State[IntlServerRadioBtn] then
+    begin
+    serverChoice := 'True';
+    end
+  else
+    begin
+    serverChoice := 'False';
+    end;
+
+  SetPreviousData(PreviousDataKey, 'CygwinRoot', CygDirPage.Values[0]);
+  SetPreviousData(PreviousDataKey, 'CygwinCache', CygDirPage.Values[1]);  
+  SetPreviousData(PreviousDataKey, 'ServerSelection', serverChoice);
+  SetPreviousData(PreviousDataKey, 'NarrowFovIndex', IntToStr(NarrowFovCombo.ItemIndex));
+  SetPreviousData(PreviousDataKey, 'WideFovIndex', IntToStr(WideFovCombo.ItemIndex));
 end;

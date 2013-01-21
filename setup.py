@@ -25,7 +25,7 @@ setup(
                 "other_resources":[
                     (u"VERSION", 1, VERSION)
                     ],
-#                "icon_resources":[(0, "astrotortilla.ico")],
+                "icon_resources":[(1, "astrotortilla.ico"), (42, "astrotortilla-16.ico")],
                 "dest_base":"AstroTortilla",
             }
         ],
