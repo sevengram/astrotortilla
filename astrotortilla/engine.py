@@ -124,7 +124,7 @@ class TortillaEngine(object):
     def version(self):
         version = ""
         try:
-            version = LoadResource(0, u'VERSION', 1)
+            version = ".".join(LoadResource(0, u'VERSION', 1).split(".")[:2])
         except:
             pass
         if not version.strip():
