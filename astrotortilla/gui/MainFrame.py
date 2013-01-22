@@ -5,6 +5,7 @@ import logging
 logger = logging.getLogger("astrotortilla.Main")
 
 import wx
+from wx.lib.anchors import LayoutAnchors
 import wx.grid
 import wx.lib.masked.numctrl
 import DlgHelpAbout
@@ -203,16 +204,15 @@ class mainFrame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_MAINFRAME, name='mainFrame',
-              parent=prnt, pos=wx.Point(948, 105), size=wx.Size(410, 380),
+              parent=prnt, pos=wx.Point(948, 105), size=wx.Size(410, 384),
               style=wx.DEFAULT_FRAME_STYLE, title='AstroTortilla')
         self._init_utils()
         self.SetMenuBar(self.menuBar1)
         self.SetThemeEnabled(True)
         self.SetToolTipString('')
-        self.SetMaxSize(wx.Size(410, 380))
-        self.SetMinSize(wx.Size(410, 380))
+        self.SetMinSize(wx.Size(410, 384))
         self.SetAutoLayout(True)
-        self.SetClientSize(wx.Size(394, 342))
+        self.SetClientSize(wx.Size(394, 346))
 
         self.statusBar1 = wx.StatusBar(id=wxID_MAINFRAMESTATUSBAR1,
               name='statusBar1', parent=self, style=0)
@@ -221,6 +221,11 @@ class mainFrame(wx.Frame):
         self._init_coll_statusBar1_Fields(self.statusBar1)
         self.SetStatusBar(self.statusBar1)
 
+        self.progress = wx.Gauge(id=wxID_MAINFRAMEPROGRESS, name='progress',
+              parent=self.statusBar1, pos=wx.Point(300, 1), range=100,
+              size=wx.Size(100, 22), style=wx.GA_HORIZONTAL)
+        self.progress.SetToolTipString('')
+
         self.Telescope = wx.StaticBox(id=wxID_MAINFRAMETELESCOPE,
               label=_('Telescope'), name='Telescope', parent=self,
               pos=wx.Point(8, 0), size=wx.Size(384, 80), style=0)
@@ -228,16 +233,22 @@ class mainFrame(wx.Frame):
         self.Telescope.SetHelpText('')
         self.Telescope.SetWindowVariant(wx.WINDOW_VARIANT_NORMAL)
         self.Telescope.SetThemeEnabled(False)
+        self.Telescope.SetConstraints(LayoutAnchors(self.Telescope, True, True,
+              True, False))
 
         self.mainCamera = wx.StaticBox(id=wxID_MAINFRAMEMAINCAMERA,
               label=_('Camera'), name='mainCamera', parent=self, pos=wx.Point(8,
               80), size=wx.Size(384, 88), style=0)
         self.mainCamera.SetToolTipString('')
+        self.mainCamera.SetConstraints(LayoutAnchors(self.mainCamera, True,
+              True, True, False))
 
         self.staticBox1 = wx.StaticBox(id=wxID_MAINFRAMESTATICBOX1,
               label=_('Actions'), name='staticBox1', parent=self,
               pos=wx.Point(256, 168), size=wx.Size(136, 134), style=0)
         self.staticBox1.SetToolTipString('')
+        self.staticBox1.SetConstraints(LayoutAnchors(self.staticBox1, False,
+              True, True, False))
 
         self.camSetup = wx.Button(id=wxID_MAINFRAMECAMSETUP, label=_('Setup'),
               name='camSetup', parent=self, pos=wx.Point(16, 128),
@@ -300,11 +311,15 @@ class mainFrame(wx.Frame):
               label=_('Normal'), name='lblMirror', parent=self,
               pos=wx.Point(344, 144), size=wx.Size(33, 13), style=0)
         self.lblMirror.SetToolTipString('')
+        self.lblMirror.SetConstraints(LayoutAnchors(self.lblMirror, True,
+              True, True, False))
 
         self.lblActions = wx.StaticText(id=wxID_MAINFRAMELBLACTIONS,
               label=_('After solve:'), name='lblActions', parent=self,
               pos=wx.Point(264, 184), size=wx.Size(120, 13), style=0)
         self.lblActions.SetToolTipString('')
+        self.lblActions.SetConstraints(LayoutAnchors(self.lblActions, False,
+              True, True, False))
 
         self.numCtrlAccuracy = wx.lib.masked.numctrl.NumCtrl(id=wxID_MAINFRAMENUMCTRLACCURACY,
               name='numCtrlAccuracy', parent=self, pos=wx.Point(280, 248),
@@ -317,10 +332,14 @@ class mainFrame(wx.Frame):
         self.numCtrlAccuracy.SetMax(60)
         self.numCtrlAccuracy.SetLimitOnFieldChange(True)
         self.numCtrlAccuracy.SetValue(1.0)
+        self.numCtrlAccuracy.SetConstraints(LayoutAnchors(self.numCtrlAccuracy,
+              False, True, True, False))
 
         self.lblArcmin = wx.StaticText(id=wxID_MAINFRAMELBLARCMIN,
               label=_('arcmin'), name='lblArcmin', parent=self,
               pos=wx.Point(328, 248), size=wx.Size(56, 13), style=0)
+        self.lblArcmin.SetConstraints(LayoutAnchors(self.lblArcmin, False, True,
+              True, False))
 
         self.lblCamRA = wx.StaticText(id=wxID_MAINFRAMELBLCAMRA, label=_('RA:'),
               name='lblCamRA', parent=self, pos=wx.Point(120, 112),
@@ -411,6 +430,8 @@ class mainFrame(wx.Frame):
               label=_('Sync scope'), name='chkSync', parent=self,
               pos=wx.Point(264, 200), size=wx.Size(120, 13), style=0)
         self.chkSync.SetValue(True)
+        self.chkSync.SetConstraints(LayoutAnchors(self.chkSync, False, True,
+              True, False))
         self.chkSync.Bind(wx.EVT_CHECKBOX, self.OnChkSyncCheckbox,
               id=wxID_MAINFRAMECHKSYNC)
 
@@ -418,6 +439,8 @@ class mainFrame(wx.Frame):
               label=_('Repeat until within'), name='chkRepeat', parent=self,
               pos=wx.Point(264, 232), size=wx.Size(120, 13), style=0)
         self.chkRepeat.SetValue(False)
+        self.chkRepeat.SetConstraints(LayoutAnchors(self.chkRepeat, False, True,
+              True, False))
         self.chkRepeat.Bind(wx.EVT_CHECKBOX, self.OnChkRepeatCheckbox,
               id=wxID_MAINFRAMECHKREPEAT)
 
@@ -425,6 +448,8 @@ class mainFrame(wx.Frame):
               label=_('Capture and Solve'), name='btnGO', parent=self,
               pos=wx.Point(264, 272), size=wx.Size(120, 23), style=0)
         self.btnGO.SetToolTipString('')
+        self.btnGO.SetConstraints(LayoutAnchors(self.btnGO, False, True, True,
+              False))
         self.btnGO.Bind(wx.EVT_BUTTON, self.OnBtnGOButton,
               id=wxID_MAINFRAMEBTNGO)
 
@@ -433,10 +458,14 @@ class mainFrame(wx.Frame):
               168), size=wx.Size(240, 134), style=0)
         self.staticBox2.SetToolTipString('')
         self.staticBox2.SetAutoLayout(True)
+        self.staticBox2.SetConstraints(LayoutAnchors(self.staticBox2, True,
+              True, True, True))
 
         self.choiceSolver = wx.Choice(choices=[], id=wxID_MAINFRAMECHOICESOLVER,
               name='choiceSolver', parent=self, pos=wx.Point(16, 184),
               size=wx.Size(130, 21), style=0)
+        self.choiceSolver.SetConstraints(LayoutAnchors(self.choiceSolver, True,
+              True, False, False))
         self.choiceSolver.Bind(wx.EVT_CHOICE, self.OnChoiceSolverChoice,
               id=wxID_MAINFRAMECHOICESOLVER)
 
@@ -448,6 +477,7 @@ class mainFrame(wx.Frame):
         self.configGrid.SetColLabelSize(0)
         self.configGrid.SetRowLabelSize(100)
         self.configGrid.SetDefaultColSize(100)
+        self.configGrid.SetConstraints(LayoutAnchors(self.configGrid, True, True, True, True))
         self.configGrid.Bind(wx.EVT_MOTION, self.OnConfigGridMotion)
         self.configGrid.Bind(wx.grid.EVT_GRID_CELL_CHANGE,
               self.OnConfigGridGridCellChange)
@@ -464,15 +494,12 @@ class mainFrame(wx.Frame):
         self.choiceCam.Bind(wx.EVT_CHOICE, self.OnChoiceCamChoice,
               id=wxID_MAINFRAMECHOICECAM)
 
-        self.progress = wx.Gauge(id=wxID_MAINFRAMEPROGRESS, name='progress',
-              parent=self.statusBar1, pos=wx.Point(300, 1), range=100,
-              size=wx.Size(100, 22), style=wx.GA_HORIZONTAL)
-        self.progress.SetToolTipString('')
-
         self.chkSlewTarget = wx.CheckBox(id=wxID_MAINFRAMECHKSLEWTARGET,
               label=_('Re-slew to target'), name='chkSlewTarget', parent=self,
               pos=wx.Point(264, 216), size=wx.Size(120, 13), style=0)
         self.chkSlewTarget.SetValue(True)
+        self.chkSlewTarget.SetConstraints(LayoutAnchors(self.chkSlewTarget,
+              False, True, True, False))
         self.chkSlewTarget.Bind(wx.EVT_CHECKBOX, self.OnChkSlewTargetCheckbox,
               id=wxID_MAINFRAMECHKSLEWTARGET)
 
@@ -509,10 +536,28 @@ class mainFrame(wx.Frame):
         self.bookmarkMap = {}
         self.updateBookmarkMenu()
         self._updateCamera()
-
+        x=y=w=h=-1
+        try:
+            x=self.engine.config.getint("Session", "GuiX")
+            y=self.engine.config.getint("Session", "GuiY")
+            w=self.engine.config.getint("Session", "GuiW")
+            h=self.engine.config.getint("Session", "GuiH")
+        except:
+            pass
+        if h != -1:
+            self.SetPosition((x,y))
+            self.SetSize((w,h))
     
     def OnClose(self, event):
         "Save settings on exit"
+        try:
+            x,y = self.GetPosition()
+            w,h = self.GetSize()
+            self.engine.config.set("Session", "GuiX", str(x))
+            self.engine.config.set("Session", "GuiY", str(y))
+            self.engine.config.set("Session", "GuiW", str(w))
+            self.engine.config.set("Session", "GuiH", str(h))
+        except: pass
         try:
             self.engine.saveConfig()
         except:
