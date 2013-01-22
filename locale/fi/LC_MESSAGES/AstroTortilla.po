@@ -99,7 +99,7 @@ msgstr "Ikkunan otsake"
 
 #: astrotortilla\camera\CaptureCamera.py:69
 msgid "Screen capture"
-msgstr "Kuvan kaappaus"
+msgstr "Ruutukaappaus"
 
 #: astrotortilla\camera\CaptureCamera.py:109
 msgid "'%s' is not a known window"
