@@ -1,13 +1,15 @@
-\documentclass[finnish]{article}
+\documentclass{article}
 \usepackage[finnish]{babel}
-\usepackage{sansseriftitles}
 \usepackage{1inchmargins}
 %\usepackage[iso]{isodate}
 \usepackage{hyperref}
 \usepackage{color}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-
+\usepackage{booktabs}
+\usepackage{amsmath}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\tabcolsep}{8pt}
 
 
 \hypersetup{
@@ -20,450 +22,334 @@
 \begin{document}
 
 
-\centerline{\sf \Huge AstroTortilla k‰yttˆohje}
-%\centerline{Viimeisin p‰ivitys: \today}
+\centerline{\sf \Huge AstroTortilla k√§ytt√∂ohje}
+\centerline{Viimeisin p√§ivitys: \today}
 
 \tableofcontents
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2ex}
 
+\newpage
 
 \section{Johdanto}
 
-AstroTortilla on suunniteltu automatisoimaan t‰htikuvauksessa jatkuvasti
-toistuvia tyˆvaiheita hyˆdynt‰m‰ll‰ ns. astrometrist‰ ratkaisua ja yhdist‰m‰ll‰
-eri ohjelmistoja toisiinsa rajapinnan avulla. Sokealla astrometrisell‰
-ratkaisulla on mahdollista napata kuva mist‰ tahansa p‰in taivasta, selvitt‰‰
-kuvan tarkka paikka ja k‰ytt‰‰ sit‰ kaukoputken GoTo-jalustan suuntatiedon
-korjaamiseen.
+\emph{Astrometrinen ratkaisu sokkona} tunnistaa mink√§ tahansa t√§htikuvan 
+sijainnin taivaalla tiet√§m√§tt√§ kuvasta mit√§√§n etuk√§teen. \emph{AstroTortilla} 
+hy√∂dynt√§√§ sokkoa ratkaisua kertoakseen seurantajalustallesi mihin p√§in kaukoputkesi
+osoittaa. T√§m√§n ansiosta t√§htikuvaus tietokoneella muuttuu helpommaksi kuin koskaan - ilman lis√§hintaa.
 
-K‰‰nnytt‰ess‰ taivaalla suuria p‰tki‰ GoTo-toiminnolla, ei haluttu t‰htitaivaan
-kohde yleens‰ p‰‰dyk‰‰n kuvaruudun keskustaan tai v‰ltt‰m‰tt‰ koko ruutuun.
-AstroTortilla mahdollistaa toistuvien korjausten tekemisen automaattisesti
-niin, ett‰ haluttu kohde saadaan keskelle kuvaa useimmiten yhdell‰ tai kahdella
-hypp‰yksell‰ - vaikka GoTo olisi kalibroitu miten huonosti tahansa.
+AstroTortilla yhdist√§√§ ohjelmistot joita jo k√§yt√§t (kameraa ja jalustaa k√§skytt√§v√§t ohjelmat) 
+ja laittaa ne juttelemaan kuvakentti√§ ratkaisevan ohjelman kanssa.
 
-Hyˆdynt‰m‰ll‰ kuvien ratkaisua tietokoneohjatun seurantajalustan kanssa myˆs
-jalustan napasuuntaus helpottuu merkitt‰v‰sti. Anna vain AstroTortillan
-katsella ymp‰rilleen hetken jonka j‰lkeen k‰‰ntele suuntausnuppeja sen verran
-kuin ohjelma neuvoo. Ohjelmasta lˆytyy myˆs n‰pp‰r‰ apuv‰line perinteisen, ns.
-driftaus-suuntauksen nopeuttamiseksi.
+Vaikka tekisit miten pitki√§ \emph{GoTo}-k√§√§nn√∂ksi√§ tahansa taivasta pitkin, 
+AstroTortilla keskitt√§√§ haluamasi kohteen automaattisesti \emph{t√§sm√§lleen} 
+keskelle kuvaruutua -- vaikka jalustasi kalibrointi olisi miten ep√§tarkka hyv√§ns√§.
 
-Paikallisen ruokavalion perustaa, \emph{Meksikolaista tortillaa} k‰ytet‰‰n
-k‰‰rim‰‰n liha ja kasvikset yhdeksi helposti syˆt‰v‰ksi paketiksi.
-\emph{AstroTortilla} k‰‰rii yhteen tarvittavat tietokoneohjelmat herkulliseksi
-yˆlliseksi v‰lipalaksi t‰htitaivaan alla.
+Kuvakenttien sijainnin ratkaisemista hy√∂dynt√§m√§ll√§ my√∂s napasuuntaus sujuu helposti, parissa minuutissa.
+Anna AstroTortillan katsella hetki ymp√§rilleen, niin ohjelma kertoo sinulle napasuuntausvirheesi asteissa.
+Joudut kuitenkin itse k√§√§ntelem√§√§n suuntausruuveja!
+
+Paikallisen ruokavalion perustaa, \emph{Meksikolaista tortillaa} k√§ytet√§√§n
+k√§√§rim√§√§n liha ja kasvikset yhdeksi helposti sy√∂t√§v√§ksi paketiksi.
+\emph{AstroTortilla} k√§√§rii yhteen tarvittavat tietokoneohjelmat herkulliseksi
+y√∂palaksi t√§htitaivaan alla.
  
 
 \section{Tuetut tietokoneohjelmat ja laitteistot} 
 \subsection{Kameran ohjaus}
 
-AstroTortilla voi ohjata mit‰ tahansa t‰htikameraa (CCD, digij‰rkk‰ri yms.)
-k‰ytt‰m‰ll‰ jotakin tuetuista kameraohjelmista, joita ovat Stark Labsin \textbf{\emph{Nebulosity 2}}, Diffraction
-Limitedin \textbf{\emph{Maxim DL}} sek‰ Incanus Ltd:n \textbf{\emph{Astro Photography Tool}}. Lis‰ksi kameraan voi ottaa suoran
-yhteyden  \hbox{\textbf{\emph{ASCOM-rajapinnan}}} avulla, vaikkei se kent‰ll‰
-olekaan kovin hyˆdyllist‰.
+AstroTortillaa k√§ytt√§√§ksesi tarvitset tavan siirt√§√§ kuvia kamerastasi tietokoneelle. Tuettuja keinoja ovat t√§ll√§ hetkell√§
+\begin{itemize}
+\item \textbf{{Maxim DL}} 
+\item \textbf{{Nebulosity 2/3}} 
+\item \textbf{{Astro Photography Tool}} 
+\item \textbf{{Ruutukaappaus}} mist√§ tahansa muusta ohjelmasta (esim. \emph{PHD Guiding} tai \emph{BackyardEOS})
+\item Suora yhteys kameraan \textbf{ASCOM}-ajurilla
+\item \textbf{Tiedoston avaaminen kovalevylt√§} manuaalisesti
+\end{itemize}
 
-Myˆs Stark Labsin \emph{PHD Guiding} -ohjelmaa tai mit‰ tahansa muutakin kameran kuvan ruudulla n‰ytt‰v‰‰ ohjelmaa voi k‰ytt‰‰ AstroTortillan \textbf{\emph{kuvaruutukaappaus}}-ominaisuuden avulla. 
-
-Lis‰ksi mik‰li kamerasi osaa tallentaa kuvia tietokoneen levylle, AstroTortillan saa lukemaan kuvat yksinkertaisesti \textbf{\emph{valitsemalla kuvat levylt‰}}.
-Tulevaisuudessa AstroTortilla osaa myˆs vahtia m‰‰ritetty‰ hakemistoa levyll‰ ja ryhty‰ toimiin aina uuden kuvan ilmestyess‰ hakemistoon.
-
-Projektiin osallistuminen esim. rakentamalla tuki uusille kamerasoftille on eritt‰in tervetullutta ja halukkaille on tarjolla kannustusta ja teknist‰ apua.
+Tulevaisuudessa mukana on toivottavasti my√∂s varta vasten rakennettu tuki \emph{BackyardEOS}:lle ja muille t√§htikuvausohjelmille. Jos haluat toteuttaa tuen lempiohjelmistollesi, ota yhteytt√§!
 
 \subsection{GoTo-jalustan ohjaus}
 
-AstroTortilla tukee t‰ll‰ hetkell‰ kaikkia
-\hbox{\textbf{\emph{ASCOM-rajapinnan}}} kautta yhteensopivia tietokoneohjattuja
-seurantajalustoja. Ohjelman kehitt‰j‰t k‰ytt‰v‰t EQMOD-ohjelman avulla
-ohjattuja Sky-Watcherin HEQ5 ja EQ6 -jalustoja.
+AstroTortilla tukee kaikkia \hbox{\textbf{ASCOM-rajapinnan}} kautta tietokoneohjattavia
+seurantajalustoja. Ohjelmaa kehitet√§√§n ja testataan Komakalliolla k√§ytt√§en 
+Sky-Watcherin HEQ5- ja EQ6-jalustoja EQMOD-ohjelman avulla.
 
-ASCOM-rajapinnan k‰yttˆ rajoittaa ohjelman toimivuuden t‰ll‰ hetkell‰
-Microsoftin Windows-k‰yttˆ\-j‰rjestelmiin. INDI-rajapinnan tukeminen on
-suunnitelmissa ja toivottavasti tulevaisuudessa mahdollistaa AstroTortillan
-k‰ytˆn myˆs Linux/Unix-ymp‰ristˆiss‰.
+ASCOM rajoittaa ohjelman toimivuuden Windows-koneille. 
 
-\subsection{Astrometriset ratkojaohjelmat}
+\subsection{Astrometrinen ratkaisu}
 
-AstroTortilla perustuu t‰ll‰ hetkell‰ \textbf{\emph{Astrometry.net}}-projektin
-ratkojaan. Ohjelmaa voi k‰ytt‰‰ joko paikallisesti Windowsilla Linux-tyyppisen
-Cygwin-ymp‰ristˆn avulla tai Astrometry.netin nettiratkojalla. AstroTortillan
-on tulevaisuudessa myˆs tarkoitus tukea havaintokeskuksen l‰hiverkossa esim.
-Linuxilla pyˆriv‰‰ Astrometry.net -palvelinta.
+Astrometrinen ratkominen on laji, jossa pyrit√§√§n tunnistamaan t√§htien muodostamia kuvioita.
+Kun oikeat t√§hdet on ratkaistu, voidaan niiden avulla p√§√§tell√§ kuvan atrkat koordinaatit taivaalla,
+kuvakent√§n korkeus, leveys ja kiertokulma taivaan koordinaattiakseleihin n√§hden, 
+kuvan pikseleiden mittakaava taivaalla kaarisekunneissa. Mik√§li kameran pikseleiden 
+fyysinen koko tunnetaan, voidaan laskea my√∂s kaukoputken polttov√§li tarkasti.
 
-Toinen vaihtoehto olisi k‰ytt‰‰ DC-3 Dreamsin \emph{PinPoint Astrometric
-Engine}‰, mutta tukea t‰lle ei ole viel‰ toteutettu. Valitettavasti
-AstroTortillan ei ole mahdollista hyˆdynt‰‰ Maxim DL:n mukana tulevaa ilmaista
-\emph{PinPoint LE}:t‰, sill‰ sit‰ ei voi ohjata et‰rajapinnan kautta.
+Normaalisti kuvakent√§n ratkaisu vaatii t√§htikatalogin eli tietokannan t√§htien sijainneista sek√§ 
+karkea arvio siit√§, minne p√§in kamera osoittaa.
 
-\section{Astrometrinen ratkaisu}
+\subsubsection{Astrometry.net}
 
-Kuvien astrometrinen ratkominen on laji, jossa pyrit‰‰n tunnistamaan
-(tietokoneella) t‰htien muodostamia kuvioita t‰htikuvissa. Kun kuvan t‰hdet on
-tunnistettu, voidaan t‰t‰ ratkaisua k‰ytt‰‰ selvitt‰m‰‰n kuvan keskustan tarkat
-koordinaatit taivaalla, kuvakent‰n korkeus ja leveys, kuvakent‰n kiertokulma
-taivaan koordinaattiakseleihin n‰hden, kuvan pikseleiden kulmamittakaava
-kaarisekunneissa taivaalla, ja mik‰li kennon pikselin koko mikrometrein‰ on
-tiedossa, saadaan selville objektiivin tarkka polttov‰li alle millimetrin
-tarkkuudella.
+Vallankumouksellisen mullistavassa Astrometry.net-projektissa kehitell√§√§n
+ty√∂kalua, jolla saadaan astrometrinen ratkaisu mille tahansa t√§htikuvalle
+\emph{ilman mit√§√§n etuk√§teistietoa} kuvasta. Projektin ohjelmisto, algoritmit 
+ja l√§hdekoodi ovat vapaasti saatavilla. Ratkaisun l√∂ytyminen nopeasti t√§ysin sokkona
+perustuu siihen, ett√§ suurin osa raskaasta laskennasta tehd√§√§n etuk√§teen luetteloimalla
+nelj√§n t√§hden muodostamia kuvioita ja lajittelemalla niit√§ nokkelalla tavalla valtaviin
+tietorakenteisiin.
 
-Normaalisti astrometrist‰ ratkaisua varten tarvitaan t‰htikatalogi eli
-tietokanta t‰htien sijainneista, sek‰ karkea arvio siit‰, minne p‰in kamera
-osoitti kuvaa otettaessa.
+Astrometry.net on t√§t√§ kirjoitettaessa betatestausvaiheessa. Projektin 
+online-k√§ytt√∂liittym√§ l√∂ytyy osoitteesta \surl {http://nova.astrometry.net/}.
+Astrometry.neti√§ voi my√∂s ajaa paikallisesti Linux, Unix, MacOS tai
+Cygwin for Windows -ymp√§rist√∂iss√§.
 
-\subsection{Astrometry.net}
+AstroTortilla k√§ytt√§√§ Astrometry.netin paikallista versiota Cygwin-ymp√§rist√∂n avulla.
+Asentaminen on tehty erityisen helpoksi -- AstroTortillan asennusohjelma lataa ja 
+asentaa kaiken tarvittavan automaattisesti.
 
-Vallankumouksellisen mullistavassa Astrometry.net-projektissa kehitell‰‰n
-tyˆkalua, jolla saadaan astrometrinen ratkaisu mille tahansa t‰htikuvalle
-\emph{ilman mit‰‰n etuk‰teistietoa} kuvan parametreista. Projektin
-ratkaisuohjelma, algoritmit ja l‰hdekoodi ovat vapaasti saatavilla. T‰ysin
-sokkona suoritetun ratkomisen kantava idea on laskenta-ajan lyhent‰minen
-rakentamalla etuk‰teen valtavia luetteloja mahdollisista nelj‰n t‰hden
-muodostamisista kuvioista kaikissa suunnissa taivaalla.
+Tulevaisuudessa AstroTortilla saattaa tukea my√∂s kuvien ratkaisemista internet-k√§ytt√∂liittym√§ll√§
+niille, joiden kuvauslaitteisto on vaatimaton kovalevytilan ja laskentatehon, mutta ei nettiyhteyden suhteen.
+T√§ll√§ hetkell√§ se on kuitenkin mahdotonta Astrometry.netin puolivalmiin online API:n takia.
 
-Astrometry.net on kirjoitushetkell‰ betatestausvaiheessa. Projektilla on
-online-k‰yttˆliittym‰ osoitteessa \surl{http://nova.astrometry.net/}.
-Astrometry.net-ohjelmaa voi myˆs ajaa paikallisesti Linux, Unix, MacOS tai
-Cygwin for Windows -ymp‰ristˆiss‰.
+\newpage
 
-AstroTortilla on yhteensopiva sek‰ online-version ett‰ paikallisella koneella
-pyˆriv‰n Astrometry.netin kanssa {\color{red}(no jos rehellisi‰ ollaan niin
-online-palikka ei viel‰ toimi)}. Online-version k‰yttˆ‰ varten sinun on
-rekisterˆidytt‰v‰ palveluun saadaksesi oman API-numeron. Et tarvitse erillisi‰
-Astrometry.net-k‰ytt‰j‰tunnuksia, vaan mik‰ tahansa OpenID-tunnus (esim. Gmail)
-toimii.
+\section{AstroTortillan asennus}
 
-Online-ratkojan k‰ytt‰minen edellytt‰‰ ett‰ kuvaus-PC:ll‰si on yhteys
-internettiin ja saattaa olla hitaampaa kuin paikallisella koneella ratkominen.
-Toisaalta s‰‰st‰t Cygwinin asennuksen vaivan etk‰ tarvitse muutamaa gigatavua
-tilaa indekseille kiintolevylt‰si. Online-ratkojan k‰yttˆ on erityisen n‰pp‰r‰‰
-voidaksesi kokeilla AstroTortillan k‰yttˆ‰ ilman mittavaa esivalmistelua.
+Asentaminen on helppoa, sill√§ AstroTortillan asennusohjelma sis√§lt√§√§ nyky√§√§n
+kaiken tarvittavan. Koneellesi asennetaan automaattisesti Cygwin-ymp√§rist√∂ toimivalla
+toimivalla astrometry.net-versiolla. Asennusohjelma lataa my√∂s ratkaisijaohjelman tarvitsemat
+indeksitiedostot (t√§htiluettelot). Voit r√§√§t√§l√∂id√§ haettavien tiedostojen m√§√§r√§n oman kaukoputkesi n√§k√∂kent√§lle sopivaksi.
 
-\section{AstroTortillan, Cygwinin ja Astrometry.netin asentaminen}
+Cygwin-asennus vie noin 300 megatavua tilaa kiintolevylt√§si. Sen lis√§ksi ett√§ Cygwin on
+v√§ltt√§m√§t√∂n Linux-pohjaisen astrometry.netin k√§ytt√§miseen Windowsissa, se tarjoaa 
+n√§pp√§r√§n kokoelman Linux-tyylisi√§ komentorivity√∂kaluja joista saatat hy√∂ty√§ tai sitten et.
+AstroTortillan k√§ytt√§miseen et kuitenkaan tarvitse komentorivi√§.
 
-Ajaaksesi Linux-pohjaista Astrometry.neti‰ paikallisesti Windows-koneella
-joudut asentamaan Cygwin-\-emulaattori\-ymp‰ristˆn. Asennus on helppoa, koska 
-sek‰ Cygwinin ett‰ Astrometry.netin asennus on niputettu AstroTortillan omaan 
-asennusohjelmaan.
+Indeksitiedostot eli t√§htiluettelot sen sijaan viev√§t viel√§ enemm√§n tilaa. 
+Kameralinsseill√§ ja lyhyill√§ linssiputkilla otettujen kuvien ratkaisemiseen 
+riitt√§√§ noin yhden gigatavun kokoinen paketti indeksej√§. Kapeammat kuvakent√§t 
+(eli pidemm√§t polttov√§lit) vaativat lis√§√§ indeksitasoja. Jokainen uusi taso on 
+kaksi kertaa edellist√§ suurempi ja koko t√§ydellinen indeksipaketti vie noin 25 gigatavua tilaa.
 
-Cygwin-asennus vie noin 350 megatavua tilaa kiintolevylt‰si ja sis‰lt‰‰
-valikoiman linuxtyˆkaluja joita et todenn‰kˆisesti tarvitse.
+Viitt√§ kaariminuuttia pienempien kenttien ratkominen ei ole mahdollista.
 
-Astrometry.netin indeksit (t‰htikatalogit) tosin viev‰t viel‰ enemm‰n tilaa.
-Lyhyill‰ optiikoilla kuvattujen laajakulmaotosten (teleobjektiiveihin tai
-pieniin kaukoputkiin asti) ratkaisemiseen onneksi riitt‰‰ vain kourallinen
-indeksej‰ ja noin yksi gigatavu levytilaa. Kapeampien kuvakenttien ratkaisuun
-tarvittavat indeksit kasvavat t‰st‰ eksponentiaalisesti ja koko indeksipaketti
-vie noin 24 gigatavua levytilaa. Pienin Astrometry.netin ratkaistavissa oleva
-kentt‰ on noin viiden kaariminuutin levyinen.
+\subsection{Lataa asennusohjelma}
 
+Asennusohjelma l√∂ytyy osoitteesta \surl{http://astrotortilla.sourceforge.net/}. 
+Tarkista ett√§ lataat uusimman version. Tallenna ja k√§ynnist√§ \texttt{AstroTortilla-<versio>.exe}. 
 
-\textbf{1. Asennusohjelman hakeminen}
+Jos tied√§t mit√§ 64-bittisyys tarkoittaa, kokeile x64-versiota.
 
-Asennusohjelma lˆytyy osoitteesta
-\surl{http://astrotortilla.sourceforge.net/}. Etusivun vihre‰ latauskuvake ei
-palveluntarjoajasta johtuvista syist‰ aina osoita uusimpaan versioon, joten 
-kannattaa tarkistaa uusin versio Downloads-sivulta. 
-Tallenna ja k‰ynnist‰ \texttt{AstroTortilla-<versio>.exe}. T‰m‰n j‰lkeen voit
-asentaa ohjelman normaaliin tapaan klikkailemalla Next-nappulaa, kunnes voit 
-valita haluatko asentaa Cygwinin ja Astrometry.netin AstroTortillan mukana.
+\subsection{Valitse asennettavat osat}
 
-Ensimm‰isell‰ asennuskerralla valitse myˆs Cygwinin ja Astrometry.netin asennus.
-Kun seuraavan kerran asennat AstroTortillasta uuden version, voit asentaa pelk‰n 
-AstroTortillan, Cygwin palikoineen on jo koneellasi.
+Klikkailtuasi l√§pi asennuksen alun, valitse mit√§ haluat asentaa.
 
-AstroTortillan asennusohjelma k‰ynnist‰‰ nyt Cygwinin asennusohjelman. T‰ss‰ voit
-samaten painella toistuvasti
-Next-nappulaa kunnes asennusohjelma pyyt‰‰ sinua valitsemaan latauspalvelimen
-("Choose a Download Site").
+\begin{description}
+\item [Asenna AstroTortilla, Cygwin, astrometry.net ja indeksit (Oletus)] \hfill \\
+Oletusvalinta. Valitse t√§m√§ ensimm√§isell√§ kerralla asentaaksesi kaiken tarvittavan.
 
-\textbf{2. Latauspalvelinten valitseminen} 
+\item [Asenna AstroTortilla, Cygwin, astrometry.net ilman indeksej√§]\hfill \\
+Use this option if you don't yet know your Field of View, or want to get the index files later for some other reason.
 
-Seuraavaksi t‰ytyy valita sourceforge.netin
-sivusto Astrometry.netin lataamiseksi ja jokin toinen
-sivusto varsinaisen Cygwinin lataamiseksi. Palvelinten listassa
-\\\surl{http://downloads.sourceforge.net} on valmiiksi valittuna. T‰m‰n
-lis‰ksi valitse yksi muu palvelin klikkaamalla sit‰ listassa Ctrl-n‰pp‰in
-painettuna. Mik‰ tahansa k‰y, mutta jokin l‰hell‰ sijaitseva (esim.
-ftp://ftp.sunet.se) saattaa nopeuttaa asennusta.
+\item [Asenna vain AstroTortilla] \hfill \\
+T√§ll√§ voit p√§ivitt√§√§ vanhentuneen tai poistetun AstroTortillan koskematta toimivaan Astrometry.net-asennukseen Cygwiniss√§.
 
-Ennen jatkamista, \textbf{tarkista ett‰ molemmat kaksi palvelinta ovat listassa
-valittuina!!!} V‰‰r‰t klikkailut asennuksen t‰ss‰ vaiheessa ovat yleisin syy 
-AstroTortillan toimimattomuuteen.
+\item [Lis√§√§ uusia astrometrisi√§ indeksej√§] \hfill \\
+Jos et asentanut indeksej√§ ensimm√§isell√§ kerralla tai haluat valita lis√§√§ tasoja, valitse t√§m√§.
 
-T‰m‰n j‰lkeen klikkaile Nexti‰. Jos n‰kyviin ilmestyy ylim‰‰r‰isi‰
-ikkunoita, klikkaa OK. Lataamisen ja asennuksen lopuksi klikkaa Finish.
-
-\textbf{3. Indeksien lataaminen}
-
-Toistaiseksi, saadaksesi k‰yttˆˆn Astrometry.netin tarvitsemat indeksit, sinun
-on hyv‰ksytt‰v‰ niiden k‰yttˆehdot ja l‰hetett‰v‰ s‰hkˆpostia Astrometry.netin
-kehitt‰jille t‰‰lt‰ lˆytyvien ohjeiden mukaan:
-\\\surl{http://trac.astrometry.net/browser/trunk/src/astrometry/GETTING-INDICES}. 
-
-Huomaa
-ett‰ t‰ll‰ hetkell‰ indeksien jakaminen eteenp‰in on kielletty‰ ja t‰m‰ on
-viel‰ jonkin aikaa ainoa tapa niiden saamiseksi. Kuten ohjeessa lukee,
-hakemukseen on liitett‰v‰ selv‰ kuvaus siit‰ mihin indeksej‰ aikoo k‰ytt‰‰.
-T‰h‰n kelpaa vastaukseksi hyvin, ett‰ tahdot k‰ytt‰‰ Astrometry.neti‰
-hyˆdynt‰v‰‰ AstroTortilla-ohjelmaa. T‰m‰n j‰lkeen kehitt‰j‰t ottavat sinuun
-yhteytt‰ pikimmiten ja antavat linkin, josta valtavan indeksikasan voi ladata
-koneelleen.
-
-Yrit‰mme parhaillaan saada generoiduksi oman indeksikatalogin jota voimme jakaa
-eteenp‰in omilla ehdoillamme (t‰ysin vapaasti). Siihen menness‰ indeksit on 
-kuitenkin haettava Astrometry.netin kautta heid‰n asettamien lisenssiehtojen
-mukaisesti.
-
-\textbf{4. Indeksien purkaminen}
-
-Ladattuasi haluamasi indeksit, on niiden pakattujen bz2-tiedostojen sis‰ltˆ 
-purettava oikeaan hakemistoon. Jos osaat purkaa bz2-tiedostoja windowsissa 
-jollain pakkausohjelmalla (WinRAR, 7-zip jne.) voit halutessasi purkaa pakettien 
-sis‰llˆn myˆs k‰sin, kunhan varmistut siit‰ ett‰ operaation j‰lkeen alla n‰kyv‰
-hakemisto sis‰lt‰‰ FITS-tiedostoja. 
-
-Mik‰li et osaa purkaa paketteja itse, seuraa alla olevaa ohjetta:
-
-Laita lataamasi indeksipaketit hakemistoon \texttt{C:\textbackslash
-cygwin\textbackslash usr\textbackslash share\textbackslash
-astrometry\textbackslash data\textbackslash } tai vastaavaan, jos asensit
-Cygwinin muulle asemalle. T‰m‰n j‰lkeen avaa Cygwin-komentorivi (kuvake tyˆpˆyd‰ll‰),
-komenna \texttt{cd /usr/share/astrometry/data} jonka j‰lkeen komenna
-\texttt{tar xjf *.bz2}. 
-
-Nyt bz2-tiedostojen sis‰ll‰ olevat FITS-tiedostot
-pit‰isi olla purettu data-hakemistoon. Voit varmistaa ett‰ n‰in on, jonka
-j‰lkeen voit poistaa bz2-paketit tilaa viem‰st‰ komentamalla \texttt{rm *.bz2}.
-Voit myˆs poistaa paketit k‰sin windowsin kautta. Varmista ettet vahingossa
-poista myˆs fitsej‰.
-
-\textbf{5. Kuvien ratkominen AstroTortillalla}
-
-Jos mik‰‰n ei mennyt pieleen, voit nyt ratkoa kuvia
-\texttt{solve-field}-komennolla Cygwinin komentorivill‰. Saadaksesi lis‰tietoa
-komennon k‰ytˆst‰ tutustu Astrometry.netin omaan dokumentaatioon.
-
-K‰ytt‰‰ksesi AstroTortillaa sinun ei tarvitse osata k‰ytt‰‰ komentorivi‰.
-Seuraavaksi valitse vain AstroTortillan p‰‰ikkunasta ratkojaohjelmaksi
-\texttt{AstrometryNetSolver}. Voit myˆs joutua vaihtamaan Cygwin-polun
-Astrometry.netiin AstroTortillan asetustaulukossa, mik‰li asensit Cygwinin 
-jonnekin muualle kuin \texttt{C:\textbackslash cygwin} -hakemistoon (lis‰ohjeita alla).
-
-\section{AstroTortillan k‰yttˆ}
-
-\subsection{P‰‰ikkuna}
+\item [P√§ivit√§ Cygwin, astrometry.net ja asenna indeksej√§] \hfill \\
+Kun Astrometry.net p√§ivittyy, teemme uuden Cygwin-version. Valitse t√§m√§ p√§ivitt√§√§ksesi.
+\end{description}
 
 
-AstroTortillan p‰‰ikkuna koostuu nelj‰st‰ paneelista: Telescope (Jalusta),
-Camera (Kamera), Solver (Ratkoja) ja Actions (Toiminnot).
+\subsection{Indeksien valinta}
 
+{\scriptsize \textbf{K√§rsim√§t√∂n?} Jos kuvaat alle 1000 mm polttov√§ill√§, hypp√§√§ yli matematiikasta ja lataa tasot 4004--4019! (n. 2 GB)}
 
-\textbf{\emph{Telescope (Jalusta)}} -paneelissa valitaan k‰ytt‰m‰si
-kaukoputki/jalusta. T‰ll‰ hetkell‰ ainoa vaihtoehto on \texttt{ASCOMTelescope},
-jonka avulla voit yhdist‰‰ mihin tahansa ASCOMyhteensopivaan jalustaan.
+Seuraavaksi valitse mitk√§ indeksitiedostot haluat ladata. Valinta riippuu kuvauslaitteistosi n√§k√∂kent√§st√§.
 
-Toimiakseen j‰rkev‰sti, jalustan ASCOM-ajurin on syyt‰ toimia ns. hubina, eli
-mahdollistaa useamman ohjelman (erityisesti AstroTortillan ja k‰ytt‰m‰si
-karttaohjelman) ottavan yhteyden siihen samanaikaisesti. T‰m‰ on useimpien
-ASCOM-ajureiden, kuten AstroPhysics-jalustojen omien ajureiden sek‰
-Sky-Watcherin jalustoja komentavan EQMOD-ohjelman toimintatapa.  Mik‰li ajurisi
-tukee vain yhden ohjelman k‰ytt‰mist‰ kerrallaan, tutustu ASCOM-standardin
-kotisivuilta lˆytyv‰‰n Plain Old Telescope Handset (POTH) -ohjelmaan, tai
-kokeile jotain muuta ASCOM-hubia.
+Voit k√§ytt√§√§ nettilaskuria n√§k√∂kent√§lle tai arvioida koon t√§ll√§ kaavalla:
+\[
+\text{N√§k√∂kentt√§ (\ensuremath{^\circ})}=\frac{57.3\times\text{Kennon koko}}{\text{Polttov√§li}}
+\]
+Valitse Kennon koko ja Polttov√§li samassa yksik√∂ss√§, esim. 17 mm ja 1200 mm. Kennon kooksi voit valita mink√§ tahansa mitan (korkeus, leveys, l√§vist√§j√§), tarvitset vain suuruusluokan. Muuntaaksesi tuloksen asteista kaariminuuteiksi, kerro 60:ll√§.
 
-\textbf{\emph{Camera (Kamera)}} -paneelissa otetaan yhteys k‰ytt‰m‰‰si
-kameraan. Riippuen kuvausohjelmastasi, valitse joko \texttt{MaximDLCamera}, \texttt{APTCamera} tai
-\texttt{NebulosityCamera}.  
+Astrometry.net etsii kuvistasi nelj√§n t√§hden kuvioita eli \emph{quadeja}. Quadit ovat kooltaan 10\%--100\% kuvasi koosta. Valitse tasoja, jotka sis√§lt√§v√§t t√§m√§n suuruusluokan Quadeja.
 
-Kokeillaksesi jotain muuta kameran kuvan ruudulla n‰ytt‰v‰‰ ohjelmaa, valitse
-\texttt{CaptureCamera}. Asetukset toimivat sellaisenaan PHD Guiding
--ohjelmalle. K‰ytt‰‰ksesi jotain muuta ohjelmaa, s‰‰d‰ kameran kuvan sis‰lt‰v‰
-ikkunan alue asetuksista. 
+\textbf{Esimerkki:} Arvoilla 17 mm ja 1200 mm kuten yll√§, n√§k√∂kentt√§ on noin $0.8^\circ \approx 50'$. Tasot 4004--4009 kattavat quadeja $8'$ ja $60'$ v√§lilt√§. Muutama megatavu lis√§√§ ei tunnu miss√§√§n, joten otetaan kaikki 4004:st√§ 4019:√§√§n asti. N√§m√§ viev√§t yhteens√§ noin 2 gigatavua tilaa.
 
-Ottaaksesi yhteyden ASCOM-yhteensopivaan kameraan, valitse
-\texttt{ASCOMCamera}.
+\begin{table}[!h]
+\centering
+\begin{tabular}{r r r @{ } c @{ } l r @{ } c @{ } l} \toprule
+Indeksitaso 	& Koko (Mt) & \multicolumn{3}{r}{Quadit ($^\circ$)} & \multicolumn{3}{r}{Quadit (')} \\ \midrule
+4000 & 11 Gt 	&  	&--& 		& 2 	&--&	2.8\\
+4001 & 7 Gt 	&  	&--&  	& 2.8	&--&	4\\
+4002 & 4 Gt 	&  	&--&  	& 4 	&--&	5.6\\
+4003 & 2	Gt 	&  	&--&  	& 5.6	&--&	8\\
+4004 & 960  	&  	&--&  	& 8 	&--&	11\\
+4005 & 470  	&  	&--&  	& 11 	&--&	16\\
+4006 & 230  	&  	&--&  	& 16 	&--&	22\\
+4007 & 115  	&    	&--&  	& 22 	&--&	30\\
+4008 & 62  		& 0.5 &--& 0.7	& 30 	&--&	42\\
+4009 & 31  		& 0.7 &--& 1	& 42 	&--&	60\\
+4010 & 15  		& 1 	&--& 1.4	& 60 	&--&	85\\
+4011 & 5.6  	& 1.4	&--& 2	& 85 	&--&	120\\
+4012 & 2.8  	& 2 	&--& 2.8	& 120 &--&	170\\
+4013 & 1.4  	& 2.8	&--& 4 	& 170	&--&	240\\
+4014 & 0.7  	& 4	&--& 5.6	&		&--&		\\
+4015 & 0.4  	& 5.6	&--& 8 	&		&--&		\\
+4016 & 0.2  	& 8	&--& 11	&		&--&		\\
+4017 & 0.09  	& 11	&--& 17	&		&--&		\\
+4018 & 0.06  	& 17	&--& 23	&		&--&		\\
+4019 & 0.04  	& 23	&--& 33	&		&--&		\\ \bottomrule
+\end{tabular}
+\end{table}
 
-Jos haluat k‰ytt‰‰ AstroTortillaa manuaalisesti, voit valita kameraksi
-\texttt{FileOpenCamera}. Painettuasi Capture \& Solve -nappia, AstroTortilla
-pyyt‰‰ sinua valitsemaan haluamasi kuvan kiintolevylt‰.
+Jos palaat asennuksen t√§h√§n kohtaan my√∂hemmin hakeaksesi lis√§√§ tasoja, voit j√§tt√§√§ laajimman indeksin 4019:ksi. 
+AstroTortilla tiet√§√§ mitk√§ indeksit ovat jo asennettuna ja hakee vain puuttuvat.
 
-\textbf{\emph{Solver (Ratkoja)}} -paneelissa valitaan k‰ytett‰v‰ astrometrinen
-ratkaisuohjelma. Jos k‰yt‰t Astrometry.netin online-versiota, valitse
-\texttt{AstrometryNetWebSolver}. Jos olet asentanut Cygwinin ja
-Astrometry.netin omalle koneellesi, valitse \texttt{AstrometryNetSolver}.
+\subsection{Asennuksen viimeistely}
 
-\textbf{\emph{Actions (Toiminnot)}} -paneelissa valitaan mit‰ tehd‰ kuvan
-ottamisen ja onnistuneen astrometrisen ratkaisun j‰lkeen. Voit synkronoida
-(Sync) jalustan eli p‰ivitt‰‰ jalustalle tiedon siit‰, mihin se todellisuudessa
-juuri nyt osoittaa. Lis‰ksi voit tehd‰ korjausliikkeen (Re-slew) eli k‰‰nt‰‰
-jalustan siihen suuntaan johon se luuli aikaisemmin osoittaneensa. Lis‰ksi voit
-toistaa (Repeat) korjausliikkeit‰ automaattisesti niin kauan kunnes olet
-haluamasi raja-arvon sis‰ll‰ oikeista koordinaateista.
+Seuraavaksi klikkaile asennus loppuun. Nyt voit k√§ynnist√§√§ AstroTortillan ja testailla kuvien ratkomista vaikka vanhoilla ruuduillasi.
+Voit my√∂s yhdist√§√§ ASCOM-jalustasimulaattoriin ja katsella planetaario-ohjelmassa kuinka AstroTortilla k√§√§nt√§√§ jalustan kuvan sijaintia kohti.
 
+\section{AstroTortillan k√§ytt√∂}
 
-\textbf{\emph{Tools (Tyˆkalut)}} -valikossa voit siirty‰ jalustalla levylt‰ valittavan
-kuvatiedoston koordinaatteihin (Goto image (Avaa kuva ja siirry)) tai k‰ytt‰‰
-AstroTortillaa seurantajalustasi napasuuntaukseen (Polar alignment
-(Napasuuntausavustaja), Drift shot (Ota valuntasuuntauskuva)).
+\subsection{P√§√§ikkuna}
 
-\subsection{Normaali k‰yttˆtapa}
+AstroTortillan p√§√§ikkuna koostuu nelj√§st√§ paneelista: Jalusta (Telescope), Kamera (Camera), Ratkoja (Solver) ja Toiminnot (Actions).
 
-Kun olet yhdist‰nyt AstroTortillan kameraan, jalustaan ja ratkaisijaan, k‰yt‰
-haluamaasi planetaario-ohjelmaa k‰‰nt‰‰ksesi jalustasi johonkin t‰htitaivaan
-kohteeseen. Nyt Target (Kohde) -kohdassa lukee valitsemasi kohteen koordinaatit
-ja Current (Nyt) -kohdassa samat koordinaatit, koska jalusta olettaa
-osoittavansa sinne minne pit‰‰kin. T‰m‰ ei tosin yleens‰ pid‰ paikkaansa.
+\subsubsection{Jalusta}
 
-Valitse haluamasi toiminnot Actions (Toiminnot) -paneelista (esim. varmuuden
-vuoksi kaikki kolme), valitse sopiva valotusaika ja paina Capture and Solve
-(Valota ja ratko) -nappia.  AstroTortilla valottaa nyt kameraohjelmallasi kuvan
-ja v‰litt‰‰ sen ratkaisijalle. Kun ratkaisu on lˆytynyt, AstroTortilla tiet‰‰
-jalustan todellisen suunnan ja n‰ytt‰‰ sen Camera (Kamera) - paneelissa.
+Valitse pudotusvalikosta \textbf{???} (ASCOM Telescope) jonka j√§lkeen valitse oma jalustasi (voit my√∂s kokeilla ASCOM-simulaattoria).
 
-Jos ruksit Sync scope (Synkronoi jalusta) -toiminnon, jalustan todelliset
-koordinaatit n‰ytet‰‰n myˆs Telescope (Jalusta) -paneelin Current (Nyt)
--kohdassa. Jalustan GoTo-toiminto on nyt synkronoitu oikein.
+Toimiakseen j√§rkev√§sti jalustasi ASCOM-ajurin on syyt√§ toimia ns. hubina, 
+eli mahdollistaa useamman ohjelman olla yhteydess√§ ajuriin yht√§aikaisesti.
+Jos n√§in ei ole, tutustu Plain Old Telescope Handset (POTH):iin.
 
-Jos ruksit Re-slew (Keskit‰ kohde) -toiminnon, AstroTortilla k‰skee jalustaa
-k‰‰ntym‰‰n siihen suuntaan, jossa haluamasi kohde on. Kohteen pit‰isi nyt olla
-keskell‰ ruutua.
+\subsubsection{Kamera}
 
-Jos jalustasi synkronointi oli todella pieless‰ tai kohde ei viel‰k‰‰n ole
-keskell‰ ruutua, ruksimalla Repeat (Toista kunnes) -toiminnon AstroTortilla
-toistaa korjausliikkeit‰ automaattisesti, kunnes on vahvistettu kohteen olevan
-keskell‰ ruutua halutulla tarkkuudella.
+Valitse miten yhdist√§t kamerasi tietokoneeseen. Valmis tuki l√∂ytyy seuraaville ohjelmille: \textbf{Astro Photography Tool}, \textbf{Maxim DL} ja \textbf{Nebulosity}.
 
-%\subsection{K‰yttˆtapa tulevaisuudessa}
-%
-%Yll‰ kuvattu k‰yttˆtapa yksinkertaistuu huomattavasti tulevissa versioissa,
-%joissa AstroTortilla n‰kyy plane\-taario-ohjelmallesi ASCOM-jalustana. T‰llˆin
-%voit antaa haluamallasi ohjelmalla GoTo-k‰skyn kohteeseen, ja AstroTortilla
-%varmistaa automaattisesti kentt‰‰ ratkomalla, ett‰ GoTo-ajon valmistuttua kohde
-%on p‰‰tynyt keskelle kuvakentt‰‰si yhdell‰ klikkauksella.
-%
-%Voit myˆs m‰‰ritt‰‰ AstroTortillan olemaan puuttumatta GoTo-k‰skyihin
-%siirtymiss‰, jotka ovat valitsemaasi kulmaet‰isyytt‰, esim. viitt‰ astetta
-%pienempi‰. T‰llˆin AstroTortilla v‰litt‰‰ GoTok‰skyt suoraan jalustallesi
-%varmistaakseen, ett‰ pienehkˆt jalustan siirtelyt esim. kuvakent‰n rajaamista
-%varten sujuvat joutuisasti ja ilman kuvan ratkomiseen kuluvia viiveit‰.
+Jos k√§yt√§t jotain muuta ohjelmaa, valitse \textbf{Ruutukaappaus} (Screen capture). Annetut asetukset toimivat PHD Guidingille. 
+Muille ohjelmille saat itse ronkkia asetukset kuntoon.
 
+Manuaaliseen k√§ytt√∂√∂n tai sis√§tiloissa testaamista varten valitse \textbf{Avaa kuva ???}. AstroTortilla pyyt√§√§ sinua avaamaan kuvan aina halutessaan "valottaa" kameralla.
 
-\subsection{Goto image -tyˆkalu}
+Voit lis√§ksi yhdist√§√§ kameraan suoraan \textbf{ASCOM}-ajurilla.
 
-Goto image -tyˆkalulla voit ratkaista kovalevyll‰ olevan kohteen koordinaatit
-ja k‰‰nt‰‰ jalustan niit‰ kohti automaattisesti. Tyˆkalu on k‰tev‰ kun esim.
-haluat jatkaa edellisen yˆn valotussarjaa t‰sm‰lleen samalla suuntauksella tai
-matkia vaikkapa Hubblen suosikkikuvasi rajausta.
+\subsubsection{Ratkoja}
 
-K‰ytt‰‰ksesi tyˆkalua, valitse \emph{Tools $\rightarrow$ Goto image (Tyˆkalut
-$\rightarrow$ Avaa kuva ja siirry)} ja valitse haluamasi kuva ilmestyv‰ss‰
-dialogissa. T‰m‰n j‰lkeen AstroTortilla ratkoo kuvan ja k‰‰nt‰‰ jalustasi
-ratkottuihin koordinaatteihin. Valittavan kuvan on oltava FITS-, JPEG-, TIFF-
+T√§ss√§ ainoa vaihtoehto on paikallinen astrometry.net. Voit muuttaa ratkaisijan asetuksia asetustaulukossa.
+
+\subsubsection{Toiminnot}
+
+T√§ss√§ voit valita mit√§ onnistuneen valotuksen ja ratkaisun j√§lkeen tapahtuu.
+\begin{description}
+\item[Synkronoi jalusta (Sync Scope)] \hfill \\
+Kerro jalustalle, ett√§ se osoittaa ratkaistuihin koordinaatteihin.
+\item[Keskit√§ kohde] \hfill \\
+K√§√§nn√§ jalusta sinne, mihin GoTo \emph{luuli} osoittavansa aiemmin.
+\item[Toista kunnes alle ... arcmin ] \hfill \\
+Toista kuvaus, ratkaisu ja k√§√§ntyminen kunnes kohde on t√§sm√§lleen keskell√§ (valitsemallasi tarkkuudella).
+\end{description}
+
+\subsection{Normaali k√§ytt√∂tapa}
+
+Yhdistetty√§si laitteesi ja ohjelmasi, k√§√§nn√§ jalusta johonkin kohteeseen 
+jalustasi ohjausohjelmalla tai jollain t√§htikarttaohjelmalla.
+K√§√§ntymisen j√§lkeen Kohde (Target) -kentt√§ n√§ytt√§√§ valitsemasi kohteen koordinaatit. Nyt (Current) -kentt√§ n√§ytt√§√§ samat koordinaatit,
+koska toistaiseksi jalusta luulee olevansa t√§ydellinen. N√§in ei kuitenkaan yleens√§ ole.
+
+Ruksi haluamasi valinnat Toiminnot-paneelista (esim. kaikki kolme) ja valitse valotusaika Kamera-paneelissa.
+Paina Valota ja ratko (Capture and Solve).
+
+AstroTortilla valottaa nyt kuvan ja toimittaa sen kameralta ratkaisijalle. Onnistuneen
+ratkaisun j√§lkeen AstroTortilla tiet√§√§ tarkalleen, mihin kaukoputki \emph{todella} osoittaa ja n√§ytt√§√§
+ratkaistut koordinaatit Kamera-paneelissa.
+
+Jos ruksit \emph{Synkronoi jalusta}, todelliset koordinaatit n√§kyv√§t nyt my√∂s Nyt-kent√§ss√§ ja jalustasi on GoTo-kalibroitu yhdell√§ pisteell√§.
+
+Jos \emph{Keskit√§ kohde} oli valittuna, AstroTortilla l√§hett√§√§ jalustalle siirtymiskomennon todellisesta paikasta aiottuun paikkaan. T√§m√§n j√§lkeen kohteen pit√§isi yleens√§ jo olla kuvan keskell√§.
+
+Jos valitsit \emph{Toista kunnes...}, AstroTortilla korjaa suuntaa uuden kuvan perusteella kunnes et√§isyys halutusta paikasta on alle asetetun rajan kaariminuuteissa. Varmista ettet aseta rajaa alemmas kuin jalustasi mekaaninen suuntaustarkkuus. Muuten toiminto j√§√§ polkemaan paikallaan kunnes viiden kierroksen j√§lkeen se lopetetaan.
+
+\subsection{Ty√∂kalut-valikko}
+
+\subsubsection{Avaa kuva ja siirry (Goto image)}
+
+Goto image -ty√∂kalulla voit ratkaista kovalevyll√§ olevan kuvan paikan ja k√§√§nt√§√§ jalustan sit√§ kohti automaattisesti.
+Ty√∂kalu sopii esim. edellisen y√∂n valotussarjan jatkamiseen t√§sm√§lleen samalla suuntauksella. Voit my√∂s sy√∂tt√§√§ vaikkapa jonkun Hubblen kuvan.
+
+Valitse \emph{Ty√∂kalut $\rightarrow$ Avaa kuva ja siirry (Tools $\rightarrow$ Goto image )} ja valitse kuva levylt√§.
+AstroTortilla ratkaisee kuvan paikan ja k√§√§nt√§√§ jalustasi sit√§ kohti. Valittavan kuvan on oltava FITS-, JPEG-, TIFF-
 tai PNM-formaatissa.
 
-K‰ytett‰ess‰ kuvaansiirtymistyˆkalua, AstroTortilla j‰tt‰‰ huomiotta
-Actions-paneeliin ruksatut valinnat ja suorittaa aina toistuvan keskityksen
-kunnes ollaan paneelin alaosaan syˆtetty‰ et‰isyytt‰ l‰hemp‰n‰ ladatun kuvan
-keskustaa. Samoin ratkaisijan etsint‰s‰deparametri (search radius) j‰tet‰‰n
-huomiotta - kuvaan siirtyminen on aina t‰ysin sokko ratkaisu.
+Goto image j√§tt√§√§ huomiotta Toiminnot-paneelin ruksatut valinnat ja suorittaa aina toistuvan keskistyksen.
+My√∂s Ratkoja-paneelin search radius -parametri j√§tet√§√§n huomioimatta, sill√§ kuvaan siirtyminen on aina t√§ysin sokko ratkaisu.
 
+\subsubsection{Napasuuntausavustaja}
 
-\subsection{Jalustan napasuuntaus AstroTortillan avulla}
+Kuvan paikan ratkomista voi hy√∂dynt√§√§ napasuuntauksessa yll√§tt√§v√§n nokkelasti.
+AstroTortillalla voit matkia perinteist√§ valuntasuuntausta (Drift alignment) 
+ilman sille tyypillist√§ pitk√§√§ odottelua. Odottelun aikana tapahtuvan taivaan
+kiertymisen voi n√§et korvata k√§√§nt√§m√§ll√§ jalustaa jota ennen ja j√§lkeen ratkotuista 
+kuvista voi p√§√§tell√§ saman deklinaation muutoksen kuin tietty√§ t√§hte√§ seuraamalla.
 
-AstroTortilla tarjoaa kaksi tyˆkalua seurantajalustan napasuuntauksen
-helpottamiseen.
+Tuntiakselin korkeuskulman virhe lasketaan kahdesta id√§n tai l√§nnen suuntaan kuvatusta ruudusta.
+Vaakasuuntainen virhe saadaan etel√§√§ kohti kuvatusta ruutuparista.
 
-\textbf{Kuvan ratkaisuun perustuva tyˆkalu} pyyt‰‰ k‰‰nt‰m‰‰n jalustasi ensin
-etel‰‰n ja sitten it‰‰n/l‰nteen. K‰‰nt‰misen j‰lkeen AstroTortilla ottaa kaksi
-testikuvaa ja p‰‰ttelee niist‰ napasuuntausvirheen joko korkeus- tai
-sivusuunnassa. Virhe ilmoitetaan asteina, jonka j‰lkeen voit korjata
-napasuuntausta jalustasi s‰‰tˆruuveilla.
+Valitse \emph{Ty√∂kalut $\rightarrow$ Napasuuntausavustaja
+(Tools $\rightarrow$ Polar Alignment)}. Ennen mittausta k√§√§nn√§ kaukoputkesi 
+kohti oikeaa suuntaa.  Korkeusvirheen mittauksessa muista valita pudotusvalikosta, kuvaatko it√§√§n vai l√§nteen.
 
-\textbf{Drift-tyˆkalu} automatisoi nokkelan tyylin perinteiseen
-driftaussuuntaukseen (tarkempi kuvaus alla). T‰t‰ varten et edes tarvitse kuvan
-ratkaisijaa, vaan AstroTortillan tukemat kamera ja jalusta riitt‰v‰t.
+Paina jompaa kumpaa mittausnappulaa, jolloin AstroTortilla
+valottaa kaksi ruutua. Kun valotukset ovat ratkaistu, napasuuntausvirheesi
+asteissa mitattuna n√§kyy ruudulla. K√§√§ntele jalustan suuntausruuveja niiden mukaan.
 
-Tulevissa versioissa AstroTortilla tarjoaa myˆs t‰ysin automaattisen
-napasuuntaustyˆkalun joka katselee hetken eri puolille taivasta ja j‰tt‰‰
-k‰ytt‰j‰lle pelk‰n ruuvien k‰‰ntelyn.
-
-
-\subsection{Napasuuntausavustaja}
-
-Napasuuntaustyˆkalu valottaa kaksi paria kuvia ja siirt‰‰ parin ruutujen
-v‰liss‰ jalustaa puolen asteen verran rektaskensioakselin suunnassa. Kuvista
-ratkaistuja koordinaatteja k‰ytet‰‰n napasuuntausvirheen laskemiseen
-tutkimalla, paljonko deklinaation suuntaista virhett‰ saatiin k‰‰ntym‰ll‰
-ainoastaan rektaskension suunnassa.
-
-Kahta id‰n tai l‰nnen suuntaan kuvattua ruutua k‰ytet‰‰n tuntiakselin
-korkeuskulman virheen laskemiseen, ja kahta etel‰ist‰ meridiaania (olettaen
-ett‰ ollaan Suomessa) kohti kuvattua ruutua tuntiakselin vaakasuuntaisen
-virheen laskemiseen.
-
-K‰ytt‰‰ksesi tyˆkalua, valitse \emph{Tools $\rightarrow$ Polar Alignment
-(Tyˆkalut $\rightarrow$ Napasuuntausavustaja)}. Valitse oikea pallonpuolisko ja
-ennen mittausta k‰‰nn‰ kaukoputkesi kohti oikeaa suuntaa.  Korkeusvirheen
-mittauksessa muista valita pudotusvalikosta, kuvaatko it‰‰n vai l‰nteen.
-
-T‰m‰n j‰lkeen paina jompaa kumpaa mittausnappulaa, jolloin AstroTortilla
-valottaa kaksi ruutua. Kun valotukset ovat valmiita, napasuuntausvirheesi
-asteissa mitattuna n‰kyy ruudulla.  K‰yt‰ t‰t‰ tietoa napasuuntauksen
-korjaamiseen k‰‰nt‰m‰ll‰ jalustasi suuntausruuveja.
-
-Kun mittaat vaakasuuntaista virhett‰, varmista ettet osoita puolta astetta
-l‰hemm‰s meridiaania v‰ltt‰‰ksesi jalustan ns. meridian flippi‰! Varminta on
-osoittaa etel‰meridiaanin l‰nsipuolelle (oikealle puolelle).
+Kun mittaat vaakasuuntaista virhett√§, varmista ettet osoita puolta astetta
+l√§hemm√§s meridiaania v√§ltt√§√§ksesi jalustan ns. meridian flippi√§! Varminta on
+osoittaa etel√§meridiaanin l√§nsipuolelle (oikealle puolelle).
 
 
 
-\subsection{Valuntasuuntaustyˆkalu}
+\subsection{Valuntasuuntausty√∂kalu}
 
-Valumiseen eli driftaamiseen perustuva napasuuntaus on tarkka mutta tyˆl‰s tapa
-napasuunnata seurantajalusta, ja se on helpointa tehd‰ CCD-kameralla verrattuna
-t‰hden seuraamiseen okulaarissa. Drift-suuntauksen kantava idea on, ett‰
-virheellisesti napasuunnatussa jalustassa t‰hti l‰htee valumaan deklinaation
-suunnassa.
+My√∂s perinteisempi napasuuntausty√∂kalu on tarjolla. Jos jostain syyst√§ haluat 
+k√§ytt√§√§ selkeit√§ √∂it√§ driftaten (esim. tarkistaaksesi menik√∂ √§skeinen napasuuntaus oikein),
+AstroTortilla helpottaa t√§hden valumisen havaitsemista kuvassa. Pitk√§n valotuksen aikana jalustaa k√§√§nnet√§√§n ensin it√§√§n ja sitten saman verran takaisin l√§nteen.
 
-Kun kuvataan \textbf{etel‰isen meridiaanin} suuntaan (jos ollaan pohjoisella
-pallonpuoliskolla), jalustan tuntiakselin suuntausvirhe korkeussuunnassa ei
-vaikuta ollenkaan tai l‰hes ollenkaan, vaan havaittu valuma johtuu pelk‰st‰‰n
-\textbf{sivusuuntaisesta} eli atsimutaalisesta virheest‰.  Samoin kuvatessa
-\textbf{it‰isen/l‰ntisen meridiaanin} suuntaan, vain \textbf{korkeussuuntainen}
-napasuuntausvirhe on vastuussa t‰hden valumisesta.
-
-AstroTortilla helpottaa hitaan deklinaatiovalumisen havaitsemista k‰ytt‰m‰ll‰
-nokkelaa tekniikkaa, jonka Robert Vice esitteli AstroPhoto Insight
--verkkolehdess‰ syyskuussa 2005.  Siin‰ jalustaa liikutetaan valotuksen aikana
-hitaasti it‰‰n ja uudestaan saman verran l‰nteen.
-
-Jos t‰hti valuu v‰h‰nk‰‰n deklinaatiosuunnassa, kuvaan piirtyy suippo,
-vaakasuora V-kuvio.  Valotuksen alussa jalustaa pidet‰‰n hetken aikaa
-paikallaan jotta V:n toiseen sakaraan valottuu hieman voimakkaampi piste
-valumisen suunnan tunnistamiseksi.
+Jos t√§hti on valunut deklinaatiosuunnassa, kuvaan piirtyy suippo,
+vaakasuora V-kuvio. V:n toisessa sakarassa on kirkkaampi piste, 
+sill√§ AstroTortilla pit√§√§ jalustaa paikallaan pari sekuntia ennen liikkumista.
 
 Kun suuntaus on kohdallaan, V supistuu yhdeksi vaakasuoraksi viivaksi.
-Lis‰tietoa V-drifttekniikasta voi lukea osoitteesta
-\surl{http://www.astrophotoinsight.com/node/568}.
 
-K‰ytt‰‰ksesi tyˆkalua, k‰‰nn‰ jalusta sopivan kirkkaaseen t‰hteen ja valitse
-\emph{Tools $\rightarrow$ Drift shot (Tyˆkalut $\rightarrow$
-Valuntasuuntauskuva)}. AstroTortilla aloittaa v‰littˆm‰sti 30 sekunnin
-valotuksen ja k‰‰ntelee jalustaa sopivasti sen aikana.  Valotuksen valmistuttua
-n‰et helposti, onko deklinaation valumista havaittavissa.
+K√§√§nn√§ jalusta sopivan kirkkaaseen t√§hteen ja valitse
+\emph{Ty√∂kalut $\rightarrow$
+Valuntasuuntauskuva (Tools $\rightarrow$ Drift shot)}. AstroTortilla aloittaa valotuksen v√§litt√∂m√§sti, jonka j√§lkeen voit katsella tulosta
+kuvausohjelmassasi.
 
-\section{Tekij‰t}
+Voit m√§√§ritt√§√§ valotusajan Kamera-paneelissa, mutta se on aina kuitenkin v√§hint√§√§n 30 sekuntia.
 
-AstroTortillan tekiv‰t
+\subsection{Kirjanmerkit}
 
-\begin{tabular}{l l} 
-Antti Kuntsi (Mickut) &Ohjelman varsinainen kehitys \\ 
-Lauri Kangas (Vostok) &Maxim DL -plugin, ohjetekstit \\ 
-Samuli Vuorinen (naavis) &Napasuuntaustyˆkalu, APT-plugin \\ %Astrometry.net online plugin \\
-Jussi Kantola (ketarax) &Astrometry.netin Cygwin-paketti ja asennusohjelma \\ 
-\end{tabular}
+Kirjanmerkit (Bookmarks) -valikossa voit laittaa talteen ratkaistuja koordinaatteja k√§√§nty√§ksesi niihin my√∂hemmin takaisin.
+Ominaisuus on erityisen hy√∂dyllinen useamman y√∂n valotusprojekteissa, kun olet rajannut kohteen muualle kuin keskelle kuvaa.
+
+Voit tehd√§ kirjanmerkin uusimmasta ratkaisusta tai valita kuvan, joka ratkotaan ensin.
+
+\subsection{Ratkaisun nopeuttaminen}
+
+(T√§ydennet√§√§n my√∂hemmin.)
+
+\section{Tekij√§t}
+
+AstroTortillan tekiv√§t Antti Kuntsi (Mickut), Lauri Kangas (Vostok), Samuli Vuorinen (naavis) ja Jussi Kantola (ketarax).
+
+Ivaylo Staynoville kiitokset AstroTortilla-tuen integroimisesta APT-ohjelmaansa.
 
 
 

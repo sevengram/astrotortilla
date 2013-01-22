@@ -36,7 +36,7 @@
 
 AstroTortilla is a wrapper that makes the software you already use (computer control of your camera and GoTo tracking mount) talk to a plate solver application.
 
-Even when doing a GoTo-slew over a very large distance on the sky, AstroTortilla centers your target within the arcsecond, in one or two iterations - no matter how bad the GoTo-calibration.
+Even when doing a GoTo-slew over a very large distance on the sky, AstroTortilla centers your target within the arcsecond, in one or two iterations -- no matter how bad the GoTo-calibration.
 
 Plate solver assisted GoTo also makes polar alignment a one minute job. Just let AstroTortilla look around and take a few images. The polar alignment error is calculated and shown in degrees. What's left for you is to turn the knobs.
 
@@ -46,17 +46,18 @@ bunch of useful software for a tasty nocturnal snack under the starry night
 sky.
 
 
-\section{Compatibility with other software and equipment} \subsection{Camera
-control}
+\section{Compatibility with other software and equipment} 
+
+\subsection{Camera control}
 
 For using AstroTortilla, you need a way to get the images from the camera to your computer. Currently the following ways to connect a camera are supported:
 \begin{itemize}
-\item \textbf{\emph{Maxim DL}} by Diffraction Limited
-\item \textbf{\emph{Nebulosity 2 and 3}} by Stark Labs
-\item \textbf{\emph{Astro Photography Tool}} by Incanus
-\item \textbf{\emph{Screen capture}} from any other software (like \emph{PHD Guiding} or \emph{BackyardEOS})
-\item Direct connection via \textbf{\emph{ASCOM interface}}
-\item Manually \textbf{\emph{pointing to an image file}} on your hard drive
+\item \textbf{Maxim DL} by Diffraction Limited
+\item \textbf{Nebulosity 2 and 3} by Stark Labs
+\item \textbf{Astro Photography Tool} by Incanus
+\item \textbf{Screen capture} from any other software (like \emph{PHD Guiding} or \emph{BackyardEOS})
+\item Direct connection via \textbf{ASCOM interface}
+\item Manually \textbf{pointing to an image file} on your hard drive
 \end{itemize}
 
 We are looking forward to a native support of \emph{BackyardEOS} as well as other camera control software in the future. Users are encouraged to develop interfaces for support of more imaging software options, just drop us an email!
@@ -64,7 +65,7 @@ We are looking forward to a native support of \emph{BackyardEOS} as well as othe
 \subsection{GoTo mount control}
 
 AstroTortilla currently supports any computerized tracking mount with an
-\hbox{\textbf{\emph{ASCOM interface}}}.  The field testing of AstroTortilla
+\hbox{\textbf{{ASCOM interface}}}.  The field testing of AstroTortilla
 functions under the night sky is carried out with EQMOD software controlling
 Sky-Watcher HEQ5 and EQ6 mounts. Users have also reported successful usage of with Celestron CG-5 and Gemini G42 mounts as well as many other ASCOM-drived mounts.
 
@@ -131,7 +132,7 @@ If you know what 64-bit means, try the x64 version.
 
 Once past the first steps of the installer, choose between the following options on what to install:
 \begin{description}
-\item [Install AstroTortilla, Cygwin, astrometry.net and indexes] \hfill \\
+\item [Install AstroTortilla, Cygwin, astrometry.net and indexes (Default)] \hfill \\
 Normally you should choose this option which will install everything you need. 
 
 \item [Install AstroTortilla, Cygwin and astrometry.net without indexes]\hfill \\
@@ -144,6 +145,7 @@ This option can be used to update an old or uninstalled AstroTortilla and not to
 If you didn't download any index files the first time or upgraded to a longer focal length, fetch more files with this option.
 
 \item [Update Cygwin, astrometry.net and install index files.] \hfill \\
+When Astrometry.net is updated, we'll build you a new Cygwin version. Use this option to update.
 
 \end{description}
 
@@ -165,7 +167,7 @@ Choose the same units for both Sensor size and Focal length, e.g., 17 mm and 120
 
 The plate solver will search through your image for \emph{quads} (four-star constellations) to recognize. The quads will be from 10\% to 100\% the size of your image. Choose a level or a few that contain quads of matching size.
 
-For example with the values 17 mm and 1200 mm as above, $\text{FOV} \approx 0.8^\circ \approx 50'$. Levels 4004 trough 4009 span quads of $8' \text{ to } 60'$. A few more MB doesn't matter, so let's choose everything from 4004 to 4019! Those will take up about 2~GB of space total.
+\textbf{Example:} With the values 17 mm and 1200 mm as above, $\text{FOV} \approx 0.8^\circ \approx 50'$. Levels 4004 trough 4009 span quads of $8' \text{ to } 60'$. A few more MB doesn't matter, so let's choose everything from 4004 to 4019! Those will take up about 2~GB of space total.
 
 \begin{table}[!h]
 \centering
@@ -193,6 +195,8 @@ Index level 	& Size (MB) & \multicolumn{3}{r}{Quads ($^\circ$)} & \multicolumn{3
 4019 & 0.04  	& 23	&--& 33	&		&--&		\\ \bottomrule
 \end{tabular}
 \end{table}
+
+Should you ever run this step again to fetch new index levels, you can leave the widest index as 4019. AstroTortilla is aware of which index files you already have and only downloads the additional ones you want.
 
 \subsection{Finalize installation}
 
@@ -355,6 +359,8 @@ You can add bookmarks from the current solution after pointing the scope somewhe
 \subsection{Speeding up the process}
 
 (To be written in more detail later on.)
+
+\newpage
 
 \section{Credits}
 
