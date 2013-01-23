@@ -7,7 +7,7 @@ from glob import glob
 import os.path
 import platform, sys
 
-VERSION = "0.4.0.1"
+VERSION = "0.4.0.2"
 
 data_files = []
 
@@ -25,7 +25,7 @@ setup(
                 "other_resources":[
                     (u"VERSION", 1, VERSION)
                     ],
-                "icon_resources":[(1, "astrotortilla.ico"), (42, "astrotortilla-16.ico")],
+		"icon_resources":[(0, "astrotortilla.ico"), (1, "astrotortilla-16c.ico"), (42, "astrotortilla-16.ico")],
                 "dest_base":"AstroTortilla",
             }
         ],

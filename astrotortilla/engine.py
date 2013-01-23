@@ -299,14 +299,14 @@ class TortillaEngine(object):
         
     
     def setStatus(self, status):
-        if type(status) not in (str, unicode): return
         failed = []
         for callback in self.__statusCB:
             try:
                 callback(status)
             except:
-                failed.append(callback)
-        if status.strip():
+                if type(status) in (str, unicode):
+                    failed.append(callback)
+        if status and status.strip():
             logger.info(status)
         [self.__callback.remove(cb) for cb in failed]
 
@@ -476,7 +476,7 @@ class TortillaEngine(object):
             self.setStatus(_("Camera error: ")+str(detail))
             import traceback
             logger.error(traceback.format_exc())
-        self.setStatus(_(""))
+        self.setStatus("")
         solution = None
         if img:
             solution = self.solveImage(img)
