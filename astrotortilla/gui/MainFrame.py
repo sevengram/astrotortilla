@@ -10,6 +10,7 @@ import wx.grid
 import wx.lib.masked.numctrl
 import DlgHelpAbout
 import DlgCameraSetup
+import DlgTelescopeSetup
 import PolarAlignFrame
 import LogFrame
 import gettext
@@ -28,7 +29,7 @@ DEBUG = 0 # 1 to enable some debug prints
 def create(parent):
     return mainFrame(parent)
 
-[wxID_MAINFRAME, wxID_MAINFRAMEBTNGO, wxID_MAINFRAMEBTNSCOPEPARK, 
+[wxID_MAINFRAME, wxID_MAINFRAMEBTNGO, wxID_MAINFRAMEBTNSCOPESETUP, 
  wxID_MAINFRAMECAMSETUP, wxID_MAINFRAMECHKREPEAT, wxID_MAINFRAMECHKSLEWTARGET, 
  wxID_MAINFRAMECHKSYNC, wxID_MAINFRAMECHOICECAM, wxID_MAINFRAMECHOICESCOPE, 
  wxID_MAINFRAMECHOICESOLVER, wxID_MAINFRAMECONFIGGRID, 
@@ -39,13 +40,13 @@ def create(parent):
  wxID_MAINFRAMELBLSCOPECURRENT, wxID_MAINFRAMELBLSCOPETARGET, 
  wxID_MAINFRAMELBLSECONDS, wxID_MAINFRAMEMAINCAMERA, 
  wxID_MAINFRAMENUMCTRLACCURACY, wxID_MAINFRAMENUMCTRLEXPOSURE, 
- wxID_MAINFRAMEPROGRESS, wxID_MAINFRAMESTATICBOX1, wxID_MAINFRAMESTATICBOX2, 
- wxID_MAINFRAMESTATUSBAR1, wxID_MAINFRAMETELESCOPE, wxID_MAINFRAMETXTCAM, 
- wxID_MAINFRAMETXTCAMDEC, wxID_MAINFRAMETXTCAMRA, wxID_MAINFRAMETXTCAMSTATUS, 
- wxID_MAINFRAMETXTDEC, wxID_MAINFRAMETXTFIELD, wxID_MAINFRAMETXTRA, 
- wxID_MAINFRAMETXTROTATION, wxID_MAINFRAMETXTSCOPESLEWING, 
- wxID_MAINFRAMETXTSCOPETARGETDEC, wxID_MAINFRAMETXTSCOPETARGETRA, 
- wxID_MAINFRAMETXTSCOPETRACKING, 
+ wxID_MAINFRAMEPROGRESS, wxID_MAINFRAMESTATICBOX1, 
+ wxID_MAINFRAMESTATICBOXSOLVER, wxID_MAINFRAMESTATUSBAR1, 
+ wxID_MAINFRAMETELESCOPE, wxID_MAINFRAMETXTCAM, wxID_MAINFRAMETXTCAMDEC, 
+ wxID_MAINFRAMETXTCAMRA, wxID_MAINFRAMETXTCAMSTATUS, wxID_MAINFRAMETXTDEC, 
+ wxID_MAINFRAMETXTFIELD, wxID_MAINFRAMETXTRA, wxID_MAINFRAMETXTROTATION, 
+ wxID_MAINFRAMETXTSCOPESLEWING, wxID_MAINFRAMETXTSCOPETARGETDEC, 
+ wxID_MAINFRAMETXTSCOPETARGETRA, wxID_MAINFRAMETXTSCOPETRACKING, 
 ] = [wx.NewId() for _init_ctrls in range(45)]
 
 CFGFILE = "astrotortilla.cfg" 
@@ -204,7 +205,7 @@ class mainFrame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_MAINFRAME, name='mainFrame',
-              parent=prnt, pos=wx.Point(948, 105), size=wx.Size(410, 384),
+              parent=prnt, pos=wx.Point(948, 105), size=wx.Size(419, 388),
               style=wx.DEFAULT_FRAME_STYLE, title='AstroTortilla')
         self._init_utils()
         self.SetMenuBar(self.menuBar1)
@@ -212,7 +213,7 @@ class mainFrame(wx.Frame):
         self.SetToolTipString('')
         self.SetMinSize(wx.Size(410, 384))
         self.SetAutoLayout(True)
-        self.SetClientSize(wx.Size(394, 346))
+        self.SetClientSize(wx.Size(403, 350))
 
         self.statusBar1 = wx.StatusBar(id=wxID_MAINFRAMESTATUSBAR1,
               name='statusBar1', parent=self, style=0)
@@ -228,7 +229,7 @@ class mainFrame(wx.Frame):
 
         self.Telescope = wx.StaticBox(id=wxID_MAINFRAMETELESCOPE,
               label=_('Telescope'), name='Telescope', parent=self,
-              pos=wx.Point(8, 0), size=wx.Size(384, 80), style=0)
+              pos=wx.Point(8, 0), size=wx.Size(393, 80), style=0)
         self.Telescope.SetToolTipString(_(''))
         self.Telescope.SetHelpText('')
         self.Telescope.SetWindowVariant(wx.WINDOW_VARIANT_NORMAL)
@@ -238,14 +239,14 @@ class mainFrame(wx.Frame):
 
         self.mainCamera = wx.StaticBox(id=wxID_MAINFRAMEMAINCAMERA,
               label=_('Camera'), name='mainCamera', parent=self, pos=wx.Point(8,
-              80), size=wx.Size(384, 88), style=0)
+              80), size=wx.Size(393, 88), style=0)
         self.mainCamera.SetToolTipString('')
         self.mainCamera.SetConstraints(LayoutAnchors(self.mainCamera, True,
               True, True, False))
 
         self.staticBox1 = wx.StaticBox(id=wxID_MAINFRAMESTATICBOX1,
               label=_('Actions'), name='staticBox1', parent=self,
-              pos=wx.Point(256, 168), size=wx.Size(136, 134), style=0)
+              pos=wx.Point(265, 168), size=wx.Size(136, 134), style=0)
         self.staticBox1.SetToolTipString('')
         self.staticBox1.SetConstraints(LayoutAnchors(self.staticBox1, False,
               True, True, False))
@@ -282,12 +283,12 @@ class mainFrame(wx.Frame):
               pos=wx.Point(120, 96), size=wx.Size(51, 13), style=0)
         self.txtCam.SetToolTipString('')
 
-        self.btnScopePark = wx.Button(id=wxID_MAINFRAMEBTNSCOPEPARK,
-              label=_('Unpark'), name='btnScopePark', parent=self,
+        self.btnScopeSetup = wx.Button(id=wxID_MAINFRAMEBTNSCOPESETUP,
+              label=_(u'Setup'), name=u'btnScopeSetup', parent=self,
               pos=wx.Point(16, 48), size=wx.Size(96, 23), style=0)
-        self.btnScopePark.SetToolTipString(_('Unpark telescope'))
-        self.btnScopePark.Bind(wx.EVT_BUTTON, self.OnBtnScopeParkButton,
-              id=wxID_MAINFRAMEBTNSCOPEPARK)
+        self.btnScopeSetup.SetToolTipString(_(u'Telescope driver workarounds'))
+        self.btnScopeSetup.Bind(wx.EVT_BUTTON, self.OnBtnScopeSetupButton,
+              id=wxID_MAINFRAMEBTNSCOPESETUP)
 
         self.lblField = wx.StaticText(id=wxID_MAINFRAMELBLFIELD,
               label=_('Field size:'), name='lblField', parent=self,
@@ -309,20 +310,20 @@ class mainFrame(wx.Frame):
 
         self.lblMirror = wx.StaticText(id=wxID_MAINFRAMELBLMIRROR,
               label=_('Normal'), name='lblMirror', parent=self,
-              pos=wx.Point(344, 144), size=wx.Size(33, 13), style=0)
+              pos=wx.Point(344, 144), size=wx.Size(42, 13), style=0)
         self.lblMirror.SetToolTipString('')
-        self.lblMirror.SetConstraints(LayoutAnchors(self.lblMirror, True,
-              True, True, False))
+        self.lblMirror.SetConstraints(LayoutAnchors(self.lblMirror, True, True,
+              True, False))
 
         self.lblActions = wx.StaticText(id=wxID_MAINFRAMELBLACTIONS,
               label=_('After solve:'), name='lblActions', parent=self,
-              pos=wx.Point(264, 184), size=wx.Size(120, 13), style=0)
+              pos=wx.Point(273, 184), size=wx.Size(120, 13), style=0)
         self.lblActions.SetToolTipString('')
         self.lblActions.SetConstraints(LayoutAnchors(self.lblActions, False,
               True, True, False))
 
         self.numCtrlAccuracy = wx.lib.masked.numctrl.NumCtrl(id=wxID_MAINFRAMENUMCTRLACCURACY,
-              name='numCtrlAccuracy', parent=self, pos=wx.Point(280, 248),
+              name='numCtrlAccuracy', parent=self, pos=wx.Point(289, 248),
               size=wx.Size(43, 22), style=0, value=1)
         self.numCtrlAccuracy.SetFractionWidth(1)
         self.numCtrlAccuracy.SetIntegerWidth(2)
@@ -337,7 +338,7 @@ class mainFrame(wx.Frame):
 
         self.lblArcmin = wx.StaticText(id=wxID_MAINFRAMELBLARCMIN,
               label=_('arcmin'), name='lblArcmin', parent=self,
-              pos=wx.Point(328, 248), size=wx.Size(56, 13), style=0)
+              pos=wx.Point(337, 248), size=wx.Size(56, 13), style=0)
         self.lblArcmin.SetConstraints(LayoutAnchors(self.lblArcmin, False, True,
               True, False))
 
@@ -428,7 +429,7 @@ class mainFrame(wx.Frame):
 
         self.chkSync = wx.CheckBox(id=wxID_MAINFRAMECHKSYNC,
               label=_('Sync scope'), name='chkSync', parent=self,
-              pos=wx.Point(264, 200), size=wx.Size(120, 13), style=0)
+              pos=wx.Point(273, 200), size=wx.Size(120, 13), style=0)
         self.chkSync.SetValue(True)
         self.chkSync.SetConstraints(LayoutAnchors(self.chkSync, False, True,
               True, False))
@@ -437,7 +438,7 @@ class mainFrame(wx.Frame):
 
         self.chkRepeat = wx.CheckBox(id=wxID_MAINFRAMECHKREPEAT,
               label=_('Repeat until within'), name='chkRepeat', parent=self,
-              pos=wx.Point(264, 232), size=wx.Size(120, 13), style=0)
+              pos=wx.Point(273, 232), size=wx.Size(120, 13), style=0)
         self.chkRepeat.SetValue(False)
         self.chkRepeat.SetConstraints(LayoutAnchors(self.chkRepeat, False, True,
               True, False))
@@ -446,20 +447,20 @@ class mainFrame(wx.Frame):
 
         self.btnGO = wx.Button(id=wxID_MAINFRAMEBTNGO,
               label=_('Capture and Solve'), name='btnGO', parent=self,
-              pos=wx.Point(264, 272), size=wx.Size(120, 23), style=0)
+              pos=wx.Point(273, 272), size=wx.Size(120, 23), style=0)
         self.btnGO.SetToolTipString('')
         self.btnGO.SetConstraints(LayoutAnchors(self.btnGO, False, True, True,
               False))
         self.btnGO.Bind(wx.EVT_BUTTON, self.OnBtnGOButton,
               id=wxID_MAINFRAMEBTNGO)
 
-        self.staticBox2 = wx.StaticBox(id=wxID_MAINFRAMESTATICBOX2,
-              label=_('Solver'), name='staticBox2', parent=self, pos=wx.Point(8,
-              168), size=wx.Size(240, 134), style=0)
-        self.staticBox2.SetToolTipString('')
-        self.staticBox2.SetAutoLayout(True)
-        self.staticBox2.SetConstraints(LayoutAnchors(self.staticBox2, True,
-              True, True, True))
+        self.staticBoxSolver = wx.StaticBox(id=wxID_MAINFRAMESTATICBOXSOLVER,
+              label=_('Solver'), name=u'staticBoxSolver', parent=self,
+              pos=wx.Point(8, 168), size=wx.Size(249, 154), style=0)
+        self.staticBoxSolver.SetToolTipString('')
+        self.staticBoxSolver.SetAutoLayout(True)
+        self.staticBoxSolver.SetConstraints(LayoutAnchors(self.staticBoxSolver,
+              True, True, True, True))
 
         self.choiceSolver = wx.Choice(choices=[], id=wxID_MAINFRAMECHOICESOLVER,
               name='choiceSolver', parent=self, pos=wx.Point(16, 184),
@@ -471,13 +472,14 @@ class mainFrame(wx.Frame):
 
         self.configGrid = wx.grid.Grid(id=wxID_MAINFRAMECONFIGGRID,
               name='configGrid', parent=self, pos=wx.Point(16, 208),
-              size=wx.Size(216, 88), style=0)
+              size=wx.Size(230, 105), style=0)
         self.configGrid.SetAutoLayout(True)
         self.configGrid.SetToolTipString(_('Solver configuration'))
         self.configGrid.SetColLabelSize(0)
         self.configGrid.SetRowLabelSize(100)
         self.configGrid.SetDefaultColSize(100)
-        self.configGrid.SetConstraints(LayoutAnchors(self.configGrid, True, True, True, True))
+        self.configGrid.SetConstraints(LayoutAnchors(self.configGrid, True,
+              True, True, True))
         self.configGrid.Bind(wx.EVT_MOTION, self.OnConfigGridMotion)
         self.configGrid.Bind(wx.grid.EVT_GRID_CELL_CHANGE,
               self.OnConfigGridGridCellChange)
@@ -496,7 +498,7 @@ class mainFrame(wx.Frame):
 
         self.chkSlewTarget = wx.CheckBox(id=wxID_MAINFRAMECHKSLEWTARGET,
               label=_('Re-slew to target'), name='chkSlewTarget', parent=self,
-              pos=wx.Point(264, 216), size=wx.Size(120, 13), style=0)
+              pos=wx.Point(273, 216), size=wx.Size(120, 13), style=0)
         self.chkSlewTarget.SetValue(True)
         self.chkSlewTarget.SetConstraints(LayoutAnchors(self.chkSlewTarget,
               False, True, True, False))
@@ -534,6 +536,7 @@ class mainFrame(wx.Frame):
         self.bookmarkMenuStart = self.menuBookmarks.GetMenuItemCount()
         self.bookmarkMenuItems = []
         self.bookmarkMap = {}
+        disable(self.btnScopeSetup)
         self.updateBookmarkMenu()
         self._updateCamera()
         x=y=w=h=-1
@@ -544,6 +547,7 @@ class mainFrame(wx.Frame):
             h=self.engine.config.getint("Session", "GuiH")
         except:
             pass
+        
         if h != -1:
             self.SetPosition((x,y))
             self.SetSize((w,h))
@@ -635,8 +639,10 @@ class mainFrame(wx.Frame):
         n = event.GetEventObject().GetSelection()
         if n == 0:
             self.engine.deselectTelescope()
+            disable(self.btnScopeSetup)
         else:
             self.engine.selectTelescope(event.GetClientData())
+            enable(self.btnScopeSetup)
             if self.engine.getTelescope():
                 self.scopePollTimer.Start(300)
 
@@ -716,10 +722,15 @@ class mainFrame(wx.Frame):
             dlg.Destroy()
         
 
-    def OnBtnScopeParkButton(self, event):
+    def OnBtnScopeSetupButton(self, event):
         if self.engine.getTelescope() == None:
             return
-        self.engine.getTelescope().parked = not self.engine.getTelescope().parked
+        dlg = DlgTelescopeSetup.DlgTelescopeSetup(self)
+        try:
+            dlg.ShowModal()
+        except: pass
+        finally:
+            dlg.Destroy()
 
     def OnChkSlewTargetCheckbox(self, event):
         state = event.GetEventObject().IsChecked()
@@ -804,7 +815,6 @@ class mainFrame(wx.Frame):
             self.txtScopeTracking.Update()
             self.txtScopeSlewing.Update()
             map(disable, (
-                self.btnScopePark,
                 self.chkSync,
                 self.chkSlewTarget,
                 self.chkRepeat
@@ -813,10 +823,7 @@ class mainFrame(wx.Frame):
         if not self.engine.getTelescope().connected:
             self.engine.deselectTelescope()
             return
-        if self.engine.getTelescope().parked:
-                enable(self.btnScopePark)
-        else:
-                disable(self.btnScopePark)
+
         if self.engine.getTelescope().tracking:
             show(self.txtScopeTracking)
             map(enable, (

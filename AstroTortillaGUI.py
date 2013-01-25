@@ -18,6 +18,7 @@ logger = logging.getLogger("astrotortilla.main")
 
 modules ={u'DlgCameraSetup': [0, '', u'astrotortilla/gui/DlgCameraSetup.py'],
  'DlgHelpAbout': [0, '', u'astrotortilla/gui/DlgHelpAbout.py'],
+ u'DlgTelescopeSetup': [0, '', u'astrotortilla/gui/DlgTelescopeSetup.py'],
  u'LogFrame': [0, 'Log window', u'astrotortilla/gui/LogFrame.py'],
  'MainFrame': [1,
                'Main frame of Application',

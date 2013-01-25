@@ -13,6 +13,8 @@ fit for any purpose.
 
 Version history
 ---------------
+
+v0.4.1	UI responsiveness, log window position, scope driver quirks setup
 v0.4	Window resizing, position and size persistence added
 v0.3.5	Error fixes for ASCOM mount access, exposure time corrections, 
 	documentation updates, installer update, index installation added

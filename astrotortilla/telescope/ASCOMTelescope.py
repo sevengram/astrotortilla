@@ -15,6 +15,7 @@ logger = logging.getLogger("astrotortilla.ASCOMTelescope")
 PROPERTYLIST = {
         "lastselection":("", str, "", "", ""),
         "propertyAgeLimit":("", float, "", "", "1.0"),
+        "slewSettleTime":("", float, "", "", "0.0"),
         "syncMaxWait":("", float, "", "", "2.0"),
         "syncAccuracy":("", float, "", "", "1.0")
         }
@@ -47,6 +48,7 @@ class ASCOMTelescope(ITelescope):
         self.__parkedTime = 0
         self.__slewing = None
         self.__slewingTime = 0
+        self.__slewingStopTime = 0
         self.__tracking = None
         self.__trackingTime = 0
         self.__scopeIFVersion = 0
@@ -238,8 +240,17 @@ class ASCOMTelescope(ITelescope):
         if now - self.__slewingTime > self._maxAge:
             logger.debug("request slewing attribute")
             try:
-                self.__slewing = self.__scope.Slewing
+                wasSlewing = self.__slewing
+                isSlewing = self.__scope.Slewing
                 self.__slewingTime = now
+                if wasSlewing and not isSlewing:
+                    if self.__slewingStopTime == 0:
+                        self.__slewingStopTime = now
+                    if self.__slewingTime >= self.__slewingStopTime + float(self.getProperty("slewSettleTime")):
+                        self.__slewing = isSlewing
+                        self.__slewingStopTime = 0
+                else:
+                    self.__slewing = isSlewing
                 self._operation_ok = False
             except:
                 logger.error("ASCOM error reading slewing status")
