@@ -64,7 +64,7 @@ msgid "Default camera"
 msgstr "Oletuskamera"
 
 #: astrotortilla\camera\ASCOMCamera.py:146 astrotortilla\gui\MainFrame.py:366
-#: astrotortilla\gui\MainFrame.py:665
+#: astrotortilla\gui\MainFrame.py:668
 msgid "Not connected"
 msgstr "Ei yhdistetty"
 
@@ -118,7 +118,7 @@ msgid "Choose file to solve"
 msgstr "Valitse tiedosto ratkottavaksi"
 
 #: astrotortilla\camera\FileOpenCamera.py:149
-#: astrotortilla\gui\MainFrame.py:985 astrotortilla\gui\MainFrame.py:1032
+#: astrotortilla\gui\MainFrame.py:988 astrotortilla\gui\MainFrame.py:1035
 msgid "Image files"
 msgstr "Kuvatiedostot"
 
@@ -204,105 +204,109 @@ msgstr "Nebulosity ei vastaa"
 msgid "Not selected"
 msgstr "Ei valittu"
 
-#: astrotortilla\engine.py:408
+#: astrotortilla\engine.py:423
 msgid "ERROR: No solver selected."
 msgstr "VIRHE: Ratkojaa ei ole valittu."
 
-#: astrotortilla\engine.py:412
+#: astrotortilla\engine.py:427
 msgid "Solving..."
 msgstr "Ratkotaan..."
 
-#: astrotortilla\engine.py:425
+#: astrotortilla\engine.py:440
 msgid "Solved in %.1fs"
 msgstr "Ratkaistu %.1f sekunnissa"
 
-#: astrotortilla\engine.py:427
+#: astrotortilla\engine.py:442
 msgid "No solution in %.1fs"
 msgstr "Ei ratkennut, %.1fs"
 
-#: astrotortilla\engine.py:434 astrotortilla\engine.py:450
+#: astrotortilla\engine.py:449 astrotortilla\engine.py:465
 msgid "ERROR: No camera connected."
 msgstr "VIRHE: Kameraa ei ole yhdistetty."
 
-#: astrotortilla\engine.py:440 astrotortilla\gui\MainFrame.py:923
+#: astrotortilla\engine.py:455 astrotortilla\gui\MainFrame.py:926
 msgid "Connecting to camera..."
 msgstr "Yhdistet‰‰n kameraan..."
 
-#: astrotortilla\engine.py:447
+#: astrotortilla\engine.py:462
 msgid "No window matches search pattern"
 msgstr "Yksik‰‰n ikkuna ei vastaa hakulauseketta"
 
-#: astrotortilla\engine.py:453 astrotortilla\engine.py:460
+#: astrotortilla\engine.py:468
 msgid "Exposing: %.2f seconds"
 msgstr "Valotetaan: %.2f sekuntia"
 
-#: astrotortilla\engine.py:463 astrotortilla\gui\MainFrame.py:956
+#: astrotortilla\engine.py:480
+msgid "Exposing: %.1f seconds"
+msgstr "Valotetaan: %.1f sekuntia"
+
+#: astrotortilla\engine.py:482 astrotortilla\gui\MainFrame.py:959
 msgid "Waiting for camera"
 msgstr "Odotetaan kameraa"
 
-#: astrotortilla\engine.py:469
+#: astrotortilla\engine.py:491
 msgid "Reading image from camera"
 msgstr "Luetaan kuvaa kameralta"
 
-#: astrotortilla\engine.py:472
+#: astrotortilla\engine.py:494
 msgid "Aborted."
 msgstr "Keskeytetty"
 
-#: astrotortilla\engine.py:474
+#: astrotortilla\engine.py:496
 msgid "Camera did not produce an image to solve"
 msgstr "Kamera ei tuottanut kuvaa ratkottavaksi"
 
-#: astrotortilla\engine.py:476
+#: astrotortilla\engine.py:498
 msgid "Camera error: "
 msgstr "Kameravirhe: "
 
-#: astrotortilla\engine.py:491 astrotortilla\engine.py:502
-#: astrotortilla\engine.py:510
+#: astrotortilla\engine.py:514 astrotortilla\engine.py:525
+#: astrotortilla\engine.py:533
 msgid "ERROR: No telescope connected."
 msgstr "VIRHE: Jalustaa ei ole yhdistetty"
 
-#: astrotortilla\engine.py:513
+#: astrotortilla\engine.py:536
 msgid "Waiting for scope to stop"
 msgstr "Odotetaan jalustan pys‰htymist‰"
 
-#: astrotortilla\engine.py:528
+#: astrotortilla\engine.py:551
 msgid "ERROR: Telescope connection lost"
 msgstr "VIRHE: Jalustan yhteys kadotettu"
 
-#: astrotortilla\engine.py:545
+#: astrotortilla\engine.py:568
 msgid "Re-centering..."
 msgstr "Keskitet‰‰n..."
 
-#: astrotortilla\gui\DlgCameraSetup.py:25
-#: astrotortilla\gui\DlgCameraSetup.py:46
+#: astrotortilla\gui\DlgCameraSetup.py:26
+#: astrotortilla\gui\DlgCameraSetup.py:49
 msgid "Camera Setup"
 msgstr "Kameran asetukset"
 
-#: astrotortilla\gui\DlgCameraSetup.py:40 astrotortilla\gui\DlgHelpAbout.py:25
+#: astrotortilla\gui\DlgCameraSetup.py:43 astrotortilla\gui\DlgHelpAbout.py:25
 msgid "Close"
 msgstr "Sulje"
 
-#: astrotortilla\gui\DlgCameraSetup.py:52
+#: astrotortilla\gui\DlgCameraSetup.py:55
 msgid "Camera interface selection"
 msgstr "Kameran valinta"
 
-#: astrotortilla\gui\DlgCameraSetup.py:57
+#: astrotortilla\gui\DlgCameraSetup.py:60
 msgid "Camera:"
 msgstr "Kamera:"
 
-#: astrotortilla\gui\DlgCameraSetup.py:61
+#: astrotortilla\gui\DlgCameraSetup.py:64
 msgid "Refresh list"
 msgstr "P‰ivit‰ lista"
 
-#: astrotortilla\gui\DlgCameraSetup.py:63
+#: astrotortilla\gui\DlgCameraSetup.py:66
 msgid "Refresh camera selection list"
 msgstr "P‰ivit‰ kameravalintalista"
 
-#: astrotortilla\gui\DlgCameraSetup.py:68
+#: astrotortilla\gui\DlgCameraSetup.py:71
 msgid "Binning:"
 msgstr "Binnaus:"
 
-#: astrotortilla\gui\DlgCameraSetup.py:75
+#: astrotortilla\gui\DlgCameraSetup.py:78
 msgid "Camera binning"
 msgstr "Kameran binnaus"
 
@@ -422,8 +426,8 @@ msgstr "Poistu sovelluksesta"
 msgid "Exit"
 msgstr "Poistu"
 
-#: astrotortilla\gui\MainFrame.py:158 astrotortilla\gui\MainFrame.py:982
-#: astrotortilla\gui\MainFrame.py:1029
+#: astrotortilla\gui\MainFrame.py:158 astrotortilla\gui\MainFrame.py:985
+#: astrotortilla\gui\MainFrame.py:1032
 msgid "Goto Image"
 msgstr "Avaa kuva ja siirry"
 
@@ -475,7 +479,7 @@ msgstr "Rektaskensio"
 msgid "Declination"
 msgstr "Deklinaatio"
 
-#: astrotortilla\gui\MainFrame.py:282 astrotortilla\gui\MainFrame.py:655
+#: astrotortilla\gui\MainFrame.py:282 astrotortilla\gui\MainFrame.py:658
 msgid "No camera"
 msgstr "Ei kameraa"
 
@@ -491,7 +495,7 @@ msgstr "Kent‰n koko:"
 msgid "Rotation:"
 msgstr "Kierto:"
 
-#: astrotortilla\gui\MainFrame.py:312 astrotortilla\gui\MainFrame.py:691
+#: astrotortilla\gui\MainFrame.py:312 astrotortilla\gui\MainFrame.py:694
 msgid "Normal"
 msgstr "Normaali"
 
@@ -539,8 +543,8 @@ msgstr "Synkronoi jalusta"
 msgid "Repeat until within"
 msgstr "Toista kunnes alle"
 
-#: astrotortilla\gui\MainFrame.py:449 astrotortilla\gui\MainFrame.py:799
-#: astrotortilla\gui\MainFrame.py:997 astrotortilla\gui\MainFrame.py:1044
+#: astrotortilla\gui\MainFrame.py:449 astrotortilla\gui\MainFrame.py:802
+#: astrotortilla\gui\MainFrame.py:1000 astrotortilla\gui\MainFrame.py:1047
 msgid "Capture and Solve"
 msgstr "Valota ja ratko"
 
@@ -556,92 +560,92 @@ msgstr "Ratkojan asetukset"
 msgid "Re-slew to target"
 msgstr "Keskit‰ kohde"
 
-#: astrotortilla\gui\MainFrame.py:677
+#: astrotortilla\gui\MainFrame.py:680
 msgid "Previous solution"
 msgstr "Edellinen ratkaisu"
 
-#: astrotortilla\gui\MainFrame.py:689
+#: astrotortilla\gui\MainFrame.py:692
 msgid "Flipped"
 msgstr "Peilikuva"
 
-#: astrotortilla\gui\MainFrame.py:696 astrotortilla\gui\MainFrame.py:866
+#: astrotortilla\gui\MainFrame.py:699 astrotortilla\gui\MainFrame.py:869
 msgid "Last error: %s"
 msgstr "Viimeisin virhe: %s"
 
-#: astrotortilla\gui\MainFrame.py:713
+#: astrotortilla\gui\MainFrame.py:716
 msgid "Camera error"
 msgstr "Kameravirhe"
 
-#: astrotortilla\gui\MainFrame.py:766
+#: astrotortilla\gui\MainFrame.py:769
 msgid "Aborting..."
 msgstr "Keskeytet‰‰n..."
 
-#: astrotortilla\gui\MainFrame.py:768 astrotortilla\gui\MainFrame.py:990
-#: astrotortilla\gui\MainFrame.py:1036
+#: astrotortilla\gui\MainFrame.py:771 astrotortilla\gui\MainFrame.py:993
+#: astrotortilla\gui\MainFrame.py:1039
 msgid "Abort solver"
 msgstr "Keskeyt‰ ratkoja"
 
-#: astrotortilla\gui\MainFrame.py:785
+#: astrotortilla\gui\MainFrame.py:788
 msgid "ASCOM Telescope sync error"
 msgstr "ASCOM synkronointi virhe"
 
-#: astrotortilla\gui\MainFrame.py:789
+#: astrotortilla\gui\MainFrame.py:792
 msgid "Telescope communication error"
 msgstr "Jalustakommunikaatiovirhe"
 
-#: astrotortilla\gui\MainFrame.py:884
+#: astrotortilla\gui\MainFrame.py:887
 msgid "Invalid data"
 msgstr "Virheellinen tietue"
 
-#: astrotortilla\gui\MainFrame.py:889
+#: astrotortilla\gui\MainFrame.py:892
 msgid "Load settings"
 msgstr "Lataa asetukset"
 
-#: astrotortilla\gui\MainFrame.py:892 astrotortilla\gui\MainFrame.py:905
+#: astrotortilla\gui\MainFrame.py:895 astrotortilla\gui\MainFrame.py:908
 msgid "Config files"
 msgstr "Asetustiedostot"
 
-#: astrotortilla\gui\MainFrame.py:902
+#: astrotortilla\gui\MainFrame.py:905
 msgid "Save settings"
 msgstr "Tallenna asetukset"
 
-#: astrotortilla\gui\MainFrame.py:916
+#: astrotortilla\gui\MainFrame.py:919
 msgid "Error saving settings"
 msgstr "Virhe tallettaessa asetuksia"
 
-#: astrotortilla\gui\MainFrame.py:932 astrotortilla\gui\MainFrame.py:949
+#: astrotortilla\gui\MainFrame.py:935 astrotortilla\gui\MainFrame.py:952
 msgid "Drifting: %.2f seconds"
 msgstr "Valutaan: %.2f sekuntia"
 
-#: astrotortilla\gui\MainFrame.py:962
+#: astrotortilla\gui\MainFrame.py:965
 msgid "Drifting done."
 msgstr "Valunta tehty."
 
-#: astrotortilla\gui\MainFrame.py:996 astrotortilla\gui\MainFrame.py:1043
+#: astrotortilla\gui\MainFrame.py:999 astrotortilla\gui\MainFrame.py:1046
 msgid "Solver error"
 msgstr "Ratkojavirhe"
 
-#: astrotortilla\gui\MainFrame.py:1006
+#: astrotortilla\gui\MainFrame.py:1009
 msgid "No current solution"
 msgstr "Ei valmista ratkaisua."
 
-#: astrotortilla\gui\MainFrame.py:1008
+#: astrotortilla\gui\MainFrame.py:1011
 msgid "Creating bookmark from current solution"
 msgstr "Luodaan kirjanmerkki‰ t‰m‰nhetkisest‰ ratkaisusta"
 
-#: astrotortilla\gui\MainFrame.py:1012
+#: astrotortilla\gui\MainFrame.py:1015
 msgid "Bookmark name"
 msgstr "Kirjanmerkin nimi"
 
-#: astrotortilla\gui\MainFrame.py:1012
+#: astrotortilla\gui\MainFrame.py:1015
 msgid "Enter a name for the bookmark"
 msgstr "Annan kirjanmerkin nimi"
 
-#: astrotortilla\gui\MainFrame.py:1019
+#: astrotortilla\gui\MainFrame.py:1022
 msgid "Done"
 msgstr "Valmis"
 
-#: astrotortilla\gui\MainFrame.py:1025
+#: astrotortilla\gui\MainFrame.py:1028
 msgid "Creating bookmark from image"
 msgstr "Luodaan kirjanmerkki‰ kuvasta"
 

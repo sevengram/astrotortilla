@@ -30,7 +30,7 @@ OutputBaseFilename={#AstroTortilla}-{#TortillaVersion}-{#Platform}
 AlwaysShowComponentsList=yes
 WizardImageFile=tortilla-164x314.bmp
 WizardSmallImageFile=tortilla-small.bmp
-SetupIconFile=astrotortilla-16c.ico
+;SetupIconFile=astrotortilla-16c.ico
 
 [Messages]
 BeveledLabel={#AstroTortilla} {#TortillaVersion}

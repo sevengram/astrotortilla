@@ -124,12 +124,24 @@ class TortillaEngine(object):
     def version(self):
         version = ""
         try:
-            version = ".".join(LoadResource(0, u'VERSION', 1).split(".")[:2])
+            version = LoadResource(0, u'VERSION', 1).rstrip("0.")
+            tag = self.version_tag
+            if tag.strip():
+                version += " " + tag
         except:
             pass
         if not version.strip():
             version = "unversioned"
         return version
+
+    @property
+    def version_tag(self):
+        tag = ""
+        try:
+            tag = LoadResource(0, u'VERSIONTAG', 2)
+        except:
+            pass
+        return tag
 
     def loadConfig(self, fileName=None):
         if fileName:
@@ -177,7 +189,10 @@ class TortillaEngine(object):
         if self.config.has_option("Camera-%s"%self.__cameraName, "binning"):
             self.__camera.binning = self.config.getint("Camera-%s"%self.__cameraName, "binning")
         if self.config.has_option("Camera-%s"%self.__cameraName, "camera"):
-            self.__camera.camera = self.config.get("Camera-%s"%self.__cameraName, "camera")
+            try:
+                self.__camera.camera = self.config.get("Camera-%s"%self.__cameraName, "camera")
+            except:
+                pass
     
     def __saveCameraConfig(self):
         "Save current camera properties and other settings"
@@ -453,17 +468,24 @@ class TortillaEngine(object):
             self.setStatus(_("Exposing: %.2f seconds")%exposure)
             self.__camera.capture(exposure)
             tEnd = time() + exposure
+            tLast = exposure
             while not self.__camera.imageReady and self.__camera.cameraState not in (CameraState.Error, ):
-                sleep(0.1)
+                sleep(0.02)
                 tLeft = tEnd - time()
                 if tLeft >= 0:
-                    self.setStatus(_("Exposing: %.2f seconds")%tLeft)
                     self.setProgress((1. - tLeft/exposure)*100)
+                if int(tLeft*2) != tLast:
+                    tLast = int(tLeft*2)
+                    if tLeft >= 0:
+                        self.setStatus(_("Exposing: %.1f seconds")%tLeft)
+                    else:
+                        self.setStatus(_("Waiting for camera"))
                 else:
-                    self.setStatus(_("Waiting for camera"))
+                    self.setStatus(None)
                 if self.__abortAction: break;
             self.setProgress(-1)
             if self.__camera.cameraState == CameraState.Error:
+                logger.debug("Camera in error state")
                 self.__abortAction = True
             if self.__camera.imageReady and not self.__abortAction:
                 self.setStatus(_("Reading image from camera"))
@@ -474,6 +496,7 @@ class TortillaEngine(object):
                 self.setStatus(_("Camera did not produce an image to solve"))
         except Exception, detail:
             self.setStatus(_("Camera error: ")+str(detail))
+            self.setProgress(-1)
             import traceback
             logger.error(traceback.format_exc())
         self.setStatus("")

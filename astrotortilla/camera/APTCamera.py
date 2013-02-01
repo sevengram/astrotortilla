@@ -70,6 +70,7 @@ class APTCamera(ICamera):
         "E01": CameraState.Error,
         "E02": CameraState.Error,
         "NCC": CameraState.Error,
+        "USC": CameraState.Error,
         }
     def __init__(self):
         super(APTCamera, self).__init__()
@@ -77,15 +78,33 @@ class APTCamera(ICamera):
         self.__connected = False
         self.__buffersize = 512
         self.__latestImage = None
-        self.__exposing = True # internal state keeping flag
-        self.__waitingDON = False # out-of-state transition flag
+        self.__exposing = False # internal state keeping flag
+        self.__waitingDON = 0 # time to wait for DON from APT (at least old versions sent this)
         self.propertyList = PROPERTYLIST
+        self.__bin = 1
 
     def __del__(self):
         if self.__socket:
             self.__socket.close()
             self.__socket = None
         super(APTCamera, self).__del__()
+
+    @property
+    def binning(self):
+        "Current binning setting"
+        return self.__bin
+
+    @binning.setter
+    def binning(self, bin):
+        "Set bin value, 1<= `bin` <= `maxBin`"
+        if not (1 <= bin <= self.maxBin):
+            raise ValueError("bin value must be 1 <= value < maxBin")
+        self.__bin = int(bin)
+
+    @property
+    def maxBin(self):
+        "Maximum supported binning level"
+        return 9
 
     @classmethod
     def getName(cls):
@@ -146,7 +165,7 @@ class APTCamera(ICamera):
     @property
     def cameraState(self):
         "Current camera state, see ASCOM cameraState parameter"
-        if self.__waitingDON: # Capturing started, not done yet
+        if self.__waitingDON > time.time(): # Capturing started, not done yet
             return CameraState.Exposing
         return APTCamera.status[self.aptCmd("S")]
 
@@ -154,15 +173,14 @@ class APTCamera(ICamera):
     def imageReady(self):
         if self.__latestImage != None:
             return True
-        if self.__waitingDON:
+        if self.__waitingDON > time.time():
             r,s,x = select([self.__socket], [],[],.02)
             if not r:
                 return False
             try:
                 don=self.__socket.recv(3)
                 if don == "DON":
-                    self.__waitingDON = False
-                    self.__exposing = CameraState.Idle
+                    self.__waitingDON = 0
                     self.__getImage()
                     logger.debug("Image ready")
                     return True
@@ -173,13 +191,15 @@ class APTCamera(ICamera):
                 import traceback
                 logger.error(traceback.format_exc())
                 self.connected = False
-                self.__waitingDON = False
+                self.__waitingDON = 0
                 self.__connected= True
         # Fall thru on connection failure, reconnect and wait for idle status
-        if self.cameraState == CameraState.Idle and self.__exposing == CameraState.Exposing:
-            self.__exposing = False
-            self.__waitingDON = False
-            logger.debug("Recovering connection, APT is idle")
+        status = self.cameraState
+        if status in (CameraState.Exposing, CameraState.Busy):
+            logger.debug("Camera still busy")
+            return False
+        if status == CameraState.Idle and self.__exposing:
+            self.__waitingDON = 0
             self.__getImage()
             return True
         else:
@@ -191,17 +211,15 @@ class APTCamera(ICamera):
             raise Exception("APT: Camera not idle") 
         if duration < 1:
             exposureTime = 1
-        elif duration > 999:
-            exposureTime = 999
         else:
             exposureTime = duration
 
         self.__latestImage = None
         try:
-            reply = self.aptCmd("C1%03i" % exposureTime)
+            reply = self.aptCmd("C%1i%03i" % (self.__bin, exposureTime))
             if "ROK" not in reply:
                 raise Exception("APT: Unexpected response: %s"%reply)
-            self.__waitingDON = True
+            self.__waitingDON = time.time() + exposureTime
             self.__exposing = True
         except Exception:
             raise 
@@ -211,9 +229,11 @@ class APTCamera(ICamera):
 
     def __getImage(self):
         self.__exposing = False
+        logger.debug("Requesting file location")
         reply = self.aptCmd("G")
         newPath = os.path.join(self.workingDirectory, os.path.basename(reply))
         shutil.copyfile(reply, newPath)
+        logger.debug("Removing APT handle on file")
         self.aptCmd("R")
         self.__latestImage = newPath
         self.connected = False # close connection to avoid APT issued disconnect problems.
@@ -221,5 +241,5 @@ class APTCamera(ICamera):
 
     def reset(self):
         self.__exposing = False
-        self.__waitingDON = False
+        self.__waitingDON = 0
         self.connected = False

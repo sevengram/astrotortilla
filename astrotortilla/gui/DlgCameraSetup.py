@@ -2,6 +2,7 @@
 
 import wx
 import wx.grid
+from wx.lib.anchors import LayoutAnchors
 
 import gettext
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
@@ -35,6 +36,8 @@ class DlgCameraSetup(wx.Dialog):
         self.gridCameraConf.Bind(wx.EVT_MOTION, self.OnGridCameraConfMotion)
         self.gridCameraConf.Bind(wx.grid.EVT_GRID_CELL_CHANGE,
               self.OnGridCameraConfGridCellChange)
+        self.gridCameraConf.SetConstraints(LayoutAnchors(self.gridCameraConf, True, True,
+              True, True))
 
         self.btnClose = wx.Button(id=wxID_DLGCAMERASETUPBTNCLOSE,
               label=_('Close'), name='btnClose', parent=self, pos=wx.Point(216,
@@ -97,13 +100,18 @@ class DlgCameraSetup(wx.Dialog):
             self.gridCameraConf.SetRowLabelValue(i, key)
             i += 1
         wx.EVT_MOTION(self.gridCameraConf.GetGridWindow(), self.OnGridCameraConfMotion)
-        self.gridCameraConf.AutoSizeColumns()
+        self.gridCameraConf.AutoSizeColumn(0)
         self.gridCameraConf.ForceRefresh()
+        self.gridCameraConf.AutoSizeColumn(0)
+        self.gridCameraConf.SetColMinimalWidth(1, self.gridCameraConf.GetSize()[0] - self.gridCameraConf.GetColSize(0))
+        self.gridCameraConf.AutoSizeColumns(False)
         self.gridCameraConf.Show()
         self.spinBinning.SetRange(1, self.camera.maxBin)
         self.spinBinning.SetValue(self.camera.binning)
+        self.Layout()
         self.prev_rowcol = [None, None]
         self.__updateCamList()
+    
     
     def __updateCamList(self):
         self.chCamName.Clear()
@@ -147,9 +155,15 @@ class DlgCameraSetup(wx.Dialog):
         key = self.gridCameraConf.GetRowLabelValue(row)
         rowdata = self.camProps[key]
         data = self.gridCameraConf.GetCellValue(row,col)
+        if data == self.camera.getProperty(key):
+            return
         try:
             rowdata[1](data) # test validity
             self.camera.setProperty(key, data)
+            self.gridCameraConf.SetColMinimalWidth(1, self.gridCameraConf.GetSize()[0] - self.gridCameraConf.GetColSize(0))
+            self.gridCameraConf.AutoSizeColumns(False)
+            self.Layout()
+            self.__updateCamList()
         except:
             self.gridCameraConf.SetCellValue(row,col,str(self.camera.getProperty(key)))
     

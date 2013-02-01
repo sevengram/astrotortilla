@@ -509,15 +509,18 @@ class mainFrame(wx.Frame):
         self.engine.setExposure(self.numCtrlExposure.GetValue())
 
     def __init__(self, parent):
-        try:
-            import win32api
-            exeName = win32api.GetModuleFileName(win32api.GetModuleHandle(None))
-            icon = wx.Icon(exeName, wx.BITMAP_TYPE_ICO)
-            self.SetIcon(icon)
-        except:
-            pass
+
         self._init_ctrls(parent)
         self.engine = TortillaEngine()
+        if not self.engine.version_tag.startswith("NoIcon"):
+            try:
+                import win32api
+                exeName = win32api.GetModuleFileName(win32api.GetModuleHandle(None))
+                icon = wx.Icon(exeName, wx.BITMAP_TYPE_ICO)
+                self.SetIcon(icon)
+            except:
+                pass
+
         self.SetTitle('AstroTortilla %s'%(self.engine.version))
 
         self.progress.Hide()
