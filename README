@@ -14,6 +14,7 @@ fit for any purpose.
 Version history
 ---------------
 
+v0.4.3	APT 2.1 fixed capture protocol with CCD cameras, workaround removed
 v0.4.2	APT 2.0.1 binning and ASCOM support, cosmetic tweaks, screen capture
 	fixes
 v0.4.1	UI responsiveness, log window position, scope driver quirks setup

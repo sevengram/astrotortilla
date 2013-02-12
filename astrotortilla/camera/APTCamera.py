@@ -165,15 +165,23 @@ class APTCamera(ICamera):
     @property
     def cameraState(self):
         "Current camera state, see ASCOM cameraState parameter"
-        if self.__waitingDON > time.time(): # Capturing started, not done yet
+        if self.__waitingDON > time.time()-1: # Capturing started, not done yet
             return CameraState.Exposing
-        return APTCamera.status[self.aptCmd("S")]
+        rsp = self.aptCmd("S")
+        if "DON" in rsp:
+            rsp = rsp.replace("DON", "")
+        status = CameraState.Busy
+        try:
+            status = APTCamera.status[rsp]
+        except:
+            pass
+        return status
 
     @property
     def imageReady(self):
         if self.__latestImage != None:
             return True
-        if self.__waitingDON > time.time():
+        if self.__waitingDON > time.time()-1:
             r,s,x = select([self.__socket], [],[],.02)
             if not r:
                 return False
