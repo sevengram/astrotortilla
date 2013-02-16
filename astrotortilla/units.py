@@ -10,7 +10,7 @@ class Coordinate(object):
     RAdegrees = 1
     RAhours = 2
     "Equatorial coordinate-pair RA and dec"
-    def __init__(self, RA, Dec, RAType = RAdegrees):
+    def __init__(self, RA, Dec, RAType = RAdegrees, epoch="J2000"):
         if type(RA) in (str,unicode) or type(RA) == tuple:
             if isFloat(RA):
                 self.__ra = float(RA) # float degrees in string format?
@@ -20,6 +20,9 @@ class Coordinate(object):
             self.__ra = float(RA)
         else:
             raise TypeError("Invalid type for RA")
+        if type(epoch) not in (str, unicode) and epoch.lower() not in ("jnow", "j2000"):
+            raise TypeError("Invalid epoch")
+        
         if RAType == Coordinate.RAhours:
             self.__ra = self.__ra / 24. * 360
         
@@ -37,6 +40,19 @@ class Coordinate(object):
             self.__ra += 360
         if self.__dec > 90: self.__dec = 90.0
         if self.__dec < -90: self.__dec = -90
+        self.__epoch = epoch
+
+    @property
+    def epoch(self):
+        return self.__epoch
+
+    @epoch.setter
+    def epoch(self, value):
+        if type(value) not in (str, unicode) and value.lower() not in ("jnow", "j2000"):
+            raise TypeError("Unknown epoch")
+        if value.lower() == self.__epoch.lower():
+            return
+        self.__epoch = value.upper()
 
     @property
     def RA(self):

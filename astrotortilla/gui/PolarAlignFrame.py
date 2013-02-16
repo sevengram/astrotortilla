@@ -7,6 +7,7 @@ from time import time, sleep
 from astrotortilla import CameraState
 from astrotortilla.units import Coordinate
 from astrotortilla.units import deg2str
+from win32com.client import Dispatch
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
@@ -170,6 +171,11 @@ class PolarAlignFrame(wx.Frame):
         self._hemisphere = self.HemisphereChoice.GetSelection()
         self._altitudeSide = self.AltitudeSideChoice.GetSelection()
         self.__solving = False
+        try:
+            self.__transform = Dispatch("ASCOM.Astrometry.Transform.Transform")
+        except:
+            logger.error("Failed to initialize ASCOM astrometric transformer, polar alignment may be inaccurate")
+            self.__transform = None
         
 
     def OnHemisphereChoiceChoice(self, event):
@@ -198,7 +204,7 @@ class PolarAlignFrame(wx.Frame):
         if not solution:
             return None
         movement = 0.5 # Amount of degrees to slew
-        firstSolve = solution.center # Center of the first platesolve
+        firstSolve = self.TransformToJNOW(solution.center) # Center of the first platesolve
         startPos = self._telescope.position
         self.SetStatusText(_("Slewing..."))
         targetPos = Coordinate(startPos.RA - movement, startPos.dec)
@@ -206,7 +212,7 @@ class PolarAlignFrame(wx.Frame):
         solution = self._parent.engine.solveCamera()
         if not solution:
             return
-        secondSolve = solution.center # Center of the second platesolve
+        secondSolve = self.TransformToJNOW(solution.center) # Center of the second platesolve
         decSeparation = firstSolve.dec - secondSolve.dec
         self.SetStatusText(_("Slewing..."))
         self._telescope.slewTo(startPos) # Slew back to starting position
@@ -216,7 +222,13 @@ class PolarAlignFrame(wx.Frame):
         # Convert pole error from arcminutes to degrees
         poleError = poleError/60.0
         return poleError
-            
+
+    def TransformToJNOW(self, position):
+        if not self.__transform or position.epoch.upper() == "JNOW":
+            return position
+        self.__transform.SetJ2000(position.RAhour, position.dec)
+        return Coordinate(self.__transform.RAApparent/24.*360, self.__transform.DECApparent, epoch="JNOW")
+
     def OnAltitudeMeasureButtonButton(self, event):
         "Determine altitude error direction and size"
         self.AltitudeMeasureButton.SetLabel(_("Abort solver!"))
@@ -292,3 +304,6 @@ class PolarAlignFrame(wx.Frame):
         if status:
             self.SetStatusText(status)
         wx.SafeYield(self)
+
+    def __del__(self):
+        del self.__transform

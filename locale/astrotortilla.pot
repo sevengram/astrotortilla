@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-02-01 21:08+FLE Standard Time\n"
+"POT-Creation-Date: 2013-02-16 18:13+FLE Standard Time\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,8 +67,8 @@ msgstr ""
 msgid "Default camera"
 msgstr ""
 
-#: astrotortilla\camera\ASCOMCamera.py:146 astrotortilla\gui\MainFrame.py:366
-#: astrotortilla\gui\MainFrame.py:668
+#: astrotortilla\camera\ASCOMCamera.py:146 astrotortilla\gui\MainFrame.py:372
+#: astrotortilla\gui\MainFrame.py:680
 msgid "Not connected"
 msgstr ""
 
@@ -122,7 +122,7 @@ msgid "Choose file to solve"
 msgstr ""
 
 #: astrotortilla\camera\FileOpenCamera.py:149
-#: astrotortilla\gui\MainFrame.py:988 astrotortilla\gui\MainFrame.py:1035
+#: astrotortilla\gui\MainFrame.py:1000 astrotortilla\gui\MainFrame.py:1047
 msgid "Image files"
 msgstr ""
 
@@ -208,77 +208,123 @@ msgstr ""
 msgid "Not selected"
 msgstr ""
 
-#: astrotortilla\engine.py:423
+#: astrotortilla\engine.py:426
 msgid "ERROR: No solver selected."
 msgstr ""
 
-#: astrotortilla\engine.py:427
+#: astrotortilla\engine.py:430
 msgid "Solving..."
 msgstr ""
 
-#: astrotortilla\engine.py:440
+#: astrotortilla\engine.py:443
 msgid "Solved in %.1fs"
 msgstr ""
 
-#: astrotortilla\engine.py:442
+#: astrotortilla\engine.py:445
 msgid "No solution in %.1fs"
 msgstr ""
 
-#: astrotortilla\engine.py:449 astrotortilla\engine.py:465
+#: astrotortilla\engine.py:452 astrotortilla\engine.py:468
 msgid "ERROR: No camera connected."
 msgstr ""
 
-#: astrotortilla\engine.py:455 astrotortilla\gui\MainFrame.py:926
+#: astrotortilla\engine.py:458 astrotortilla\gui\MainFrame.py:938
 msgid "Connecting to camera..."
 msgstr ""
 
-#: astrotortilla\engine.py:462
+#: astrotortilla\engine.py:465
 msgid "No window matches search pattern"
 msgstr ""
 
-#: astrotortilla\engine.py:468
+#: astrotortilla\engine.py:471
 msgid "Exposing: %.2f seconds"
 msgstr ""
 
-#: astrotortilla\engine.py:480
+#: astrotortilla\engine.py:483
 msgid "Exposing: %.1f seconds"
 msgstr ""
 
-#: astrotortilla\engine.py:482 astrotortilla\gui\MainFrame.py:959
+#: astrotortilla\engine.py:485 astrotortilla\gui\MainFrame.py:971
 msgid "Waiting for camera"
 msgstr ""
 
-#: astrotortilla\engine.py:491
+#: astrotortilla\engine.py:494
 msgid "Reading image from camera"
 msgstr ""
 
-#: astrotortilla\engine.py:494
+#: astrotortilla\engine.py:497
 msgid "Aborted."
 msgstr ""
 
-#: astrotortilla\engine.py:496
+#: astrotortilla\engine.py:499
 msgid "Camera did not produce an image to solve"
 msgstr ""
 
-#: astrotortilla\engine.py:498
+#: astrotortilla\engine.py:501
 msgid "Camera error: "
 msgstr ""
 
-#: astrotortilla\engine.py:514 astrotortilla\engine.py:525
-#: astrotortilla\engine.py:533
+#: astrotortilla\engine.py:517 astrotortilla\engine.py:528
+#: astrotortilla\engine.py:536
 msgid "ERROR: No telescope connected."
 msgstr ""
 
-#: astrotortilla\engine.py:536
+#: astrotortilla\engine.py:539
 msgid "Waiting for scope to stop"
 msgstr ""
 
-#: astrotortilla\engine.py:551
+#: astrotortilla\engine.py:554
 msgid "ERROR: Telescope connection lost"
 msgstr ""
 
-#: astrotortilla\engine.py:568
+#: astrotortilla\engine.py:571
 msgid "Re-centering..."
+msgstr ""
+
+#: astrotortilla\gui\BookmarkEditor.py:28 astrotortilla\gui\MainFrame.py:116
+msgid "Edit bookmarks"
+msgstr ""
+
+#: astrotortilla\gui\BookmarkEditor.py:38
+#: astrotortilla\gui\DlgTelescopeSetup.py:56
+msgid "OK"
+msgstr ""
+
+#: astrotortilla\gui\BookmarkEditor.py:55
+#: astrotortilla\gui\DlgTelescopeSetup.py:94
+msgid "Cancel"
+msgstr ""
+
+#: astrotortilla\gui\BookmarkEditor.py:71
+msgid "RA"
+msgstr ""
+
+#: astrotortilla\gui\BookmarkEditor.py:72 astrotortilla\gui\MainFrame.py:285
+msgid "Declination"
+msgstr ""
+
+#: astrotortilla\gui\BookmarkEditor.py:73
+msgid "Rotation"
+msgstr ""
+
+#: astrotortilla\gui\BookmarkEditor.py:74 astrotortilla\gui\MainFrame.py:1027
+msgid "Bookmark name"
+msgstr ""
+
+#: astrotortilla\gui\BookmarkEditor.py:120
+msgid "Invalid values on row(s):"
+msgstr ""
+
+#: astrotortilla\gui\BookmarkEditor.py:121
+msgid "Bookmark coordinate error"
+msgstr ""
+
+#: astrotortilla\gui\BookmarkEditor.py:166
+msgid "Delete bookmark"
+msgstr ""
+
+#: astrotortilla\gui\BookmarkEditor.py:168
+msgid "New bookmark"
 msgstr ""
 
 #: astrotortilla\gui\DlgCameraSetup.py:26
@@ -331,20 +377,12 @@ msgstr ""
 msgid "Telescope quirks setup"
 msgstr ""
 
-#: astrotortilla\gui\DlgTelescopeSetup.py:56
-msgid "OK"
-msgstr ""
-
 #: astrotortilla\gui\DlgTelescopeSetup.py:63
 msgid "Slew settle extra wait"
 msgstr ""
 
 #: astrotortilla\gui\DlgTelescopeSetup.py:79
 msgid "Telescope property caching"
-msgstr ""
-
-#: astrotortilla\gui\DlgTelescopeSetup.py:94
-msgid "Cancel"
 msgstr ""
 
 #: astrotortilla\gui\LogFrame.py:60
@@ -371,278 +409,270 @@ msgstr ""
 msgid "Copy selection or all to clip board"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:110
+#: astrotortilla\gui\MainFrame.py:112
 msgid "Add current solution"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:112
+#: astrotortilla\gui\MainFrame.py:114
 msgid "Add from solved image"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:122
+#: astrotortilla\gui\MainFrame.py:128
 msgid "File"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:123
+#: astrotortilla\gui\MainFrame.py:129
 msgid "Bookmarks"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:124
+#: astrotortilla\gui\MainFrame.py:130
 msgid "Tools"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:125
+#: astrotortilla\gui\MainFrame.py:131
 msgid "Help"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:130
+#: astrotortilla\gui\MainFrame.py:136
 msgid "Information about the application."
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:132
+#: astrotortilla\gui\MainFrame.py:138
 msgid "About"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:140
+#: astrotortilla\gui\MainFrame.py:146
 msgid "Load settings..."
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:142
+#: astrotortilla\gui\MainFrame.py:148
 msgid "Save settings..."
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:144
+#: astrotortilla\gui\MainFrame.py:150
 msgid "Exit the application"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:146
+#: astrotortilla\gui\MainFrame.py:152
 msgid "Exit"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:158 astrotortilla\gui\MainFrame.py:985
-#: astrotortilla\gui\MainFrame.py:1032
+#: astrotortilla\gui\MainFrame.py:164 astrotortilla\gui\MainFrame.py:997
+#: astrotortilla\gui\MainFrame.py:1044
 msgid "Goto Image"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:160
+#: astrotortilla\gui\MainFrame.py:166
 msgid "Polar alignment"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:162
+#: astrotortilla\gui\MainFrame.py:168
 msgid "Drift shot"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:164
+#: astrotortilla\gui\MainFrame.py:170
 msgid "Log viewer"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:231
+#: astrotortilla\gui\MainFrame.py:237
 msgid "Telescope"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:233
+#: astrotortilla\gui\MainFrame.py:239
 msgid ""
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:241
+#: astrotortilla\gui\MainFrame.py:247
 msgid "Camera"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:248
+#: astrotortilla\gui\MainFrame.py:254
 msgid "Actions"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:254 astrotortilla\gui\MainFrame.py:287
+#: astrotortilla\gui\MainFrame.py:260 astrotortilla\gui\MainFrame.py:293
 msgid "Setup"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:257
+#: astrotortilla\gui\MainFrame.py:263
 msgid "Setup camera"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:261 astrotortilla\gui\MainFrame.py:345
+#: astrotortilla\gui\MainFrame.py:267 astrotortilla\gui\MainFrame.py:351
 msgid "RA:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:266 astrotortilla\gui\MainFrame.py:354
+#: astrotortilla\gui\MainFrame.py:272 astrotortilla\gui\MainFrame.py:360
 msgid "Dec:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:274
+#: astrotortilla\gui\MainFrame.py:280
 msgid "Right ascension"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:279
-msgid "Declination"
-msgstr ""
-
-#: astrotortilla\gui\MainFrame.py:282 astrotortilla\gui\MainFrame.py:658
+#: astrotortilla\gui\MainFrame.py:288 astrotortilla\gui\MainFrame.py:670
 msgid "No camera"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:289
+#: astrotortilla\gui\MainFrame.py:295
 msgid "Telescope driver workarounds"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:294
+#: astrotortilla\gui\MainFrame.py:300
 msgid "Field size:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:303
+#: astrotortilla\gui\MainFrame.py:309
 msgid "Rotation:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:312 astrotortilla\gui\MainFrame.py:694
+#: astrotortilla\gui\MainFrame.py:318 astrotortilla\gui\MainFrame.py:706
 msgid "Normal"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:319
+#: astrotortilla\gui\MainFrame.py:325
 msgid "After solve:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:340
+#: astrotortilla\gui\MainFrame.py:346
 msgid "arcmin"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:362
+#: astrotortilla\gui\MainFrame.py:368
 msgid "Status:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:370
+#: astrotortilla\gui\MainFrame.py:376
 msgid "Slewing"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:378
+#: astrotortilla\gui\MainFrame.py:384
 msgid "Tracking"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:383
+#: astrotortilla\gui\MainFrame.py:389
 msgid "Exposure:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:398
+#: astrotortilla\gui\MainFrame.py:404
 msgid "Exposure time in seconds"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:408
+#: astrotortilla\gui\MainFrame.py:414
 msgid "Current:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:415
+#: astrotortilla\gui\MainFrame.py:421
 msgid "Target:"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:431
+#: astrotortilla\gui\MainFrame.py:437
 msgid "Sync scope"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:440
+#: astrotortilla\gui\MainFrame.py:446
 msgid "Repeat until within"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:449 astrotortilla\gui\MainFrame.py:802
-#: astrotortilla\gui\MainFrame.py:1000 astrotortilla\gui\MainFrame.py:1047
+#: astrotortilla\gui\MainFrame.py:455 astrotortilla\gui\MainFrame.py:814
+#: astrotortilla\gui\MainFrame.py:1012 astrotortilla\gui\MainFrame.py:1059
 msgid "Capture and Solve"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:458
+#: astrotortilla\gui\MainFrame.py:464
 msgid "Solver"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:477
+#: astrotortilla\gui\MainFrame.py:484
 msgid "Solver configuration"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:500
+#: astrotortilla\gui\MainFrame.py:510
 msgid "Re-slew to target"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:680
+#: astrotortilla\gui\MainFrame.py:692
 msgid "Previous solution"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:692
+#: astrotortilla\gui\MainFrame.py:704
 msgid "Flipped"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:699 astrotortilla\gui\MainFrame.py:869
+#: astrotortilla\gui\MainFrame.py:711 astrotortilla\gui\MainFrame.py:881
 msgid "Last error: %s"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:716
+#: astrotortilla\gui\MainFrame.py:728
 msgid "Camera error"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:769
+#: astrotortilla\gui\MainFrame.py:781
 msgid "Aborting..."
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:771 astrotortilla\gui\MainFrame.py:993
-#: astrotortilla\gui\MainFrame.py:1039
+#: astrotortilla\gui\MainFrame.py:783 astrotortilla\gui\MainFrame.py:1005
+#: astrotortilla\gui\MainFrame.py:1051
 msgid "Abort solver"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:788
+#: astrotortilla\gui\MainFrame.py:800
 msgid "ASCOM Telescope sync error"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:792
+#: astrotortilla\gui\MainFrame.py:804
 msgid "Telescope communication error"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:887
+#: astrotortilla\gui\MainFrame.py:899
 msgid "Invalid data"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:892
+#: astrotortilla\gui\MainFrame.py:904
 msgid "Load settings"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:895 astrotortilla\gui\MainFrame.py:908
+#: astrotortilla\gui\MainFrame.py:907 astrotortilla\gui\MainFrame.py:920
 msgid "Config files"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:905
+#: astrotortilla\gui\MainFrame.py:917
 msgid "Save settings"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:919
+#: astrotortilla\gui\MainFrame.py:931
 msgid "Error saving settings"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:935 astrotortilla\gui\MainFrame.py:952
+#: astrotortilla\gui\MainFrame.py:947 astrotortilla\gui\MainFrame.py:964
 msgid "Drifting: %.2f seconds"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:965
+#: astrotortilla\gui\MainFrame.py:977
 msgid "Drifting done."
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:999 astrotortilla\gui\MainFrame.py:1046
+#: astrotortilla\gui\MainFrame.py:1011 astrotortilla\gui\MainFrame.py:1058
 msgid "Solver error"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:1009
+#: astrotortilla\gui\MainFrame.py:1021
 msgid "No current solution"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:1011
+#: astrotortilla\gui\MainFrame.py:1023
 msgid "Creating bookmark from current solution"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:1015
-msgid "Bookmark name"
-msgstr ""
-
-#: astrotortilla\gui\MainFrame.py:1015
+#: astrotortilla\gui\MainFrame.py:1027
 msgid "Enter a name for the bookmark"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:1022
+#: astrotortilla\gui\MainFrame.py:1034
 msgid "Done"
 msgstr ""
 
-#: astrotortilla\gui\MainFrame.py:1028
+#: astrotortilla\gui\MainFrame.py:1040
 msgid "Creating bookmark from image"
 msgstr ""
 

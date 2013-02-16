@@ -16,7 +16,8 @@ from inspect import isclass, getmembers
 import logging
 logger = logging.getLogger("astrotortilla.main")
 
-modules ={u'DlgCameraSetup': [0, '', u'astrotortilla/gui/DlgCameraSetup.py'],
+modules ={u'BookmarkEditor': [0, '', u'astrotortilla/gui/BookmarkEditor.py'],
+ u'DlgCameraSetup': [0, '', u'astrotortilla/gui/DlgCameraSetup.py'],
  'DlgHelpAbout': [0, '', u'astrotortilla/gui/DlgHelpAbout.py'],
  u'DlgTelescopeSetup': [0, '', u'astrotortilla/gui/DlgTelescopeSetup.py'],
  u'LogFrame': [0, 'Log window', u'astrotortilla/gui/LogFrame.py'],

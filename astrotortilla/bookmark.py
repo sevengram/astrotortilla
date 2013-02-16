@@ -11,7 +11,7 @@ logFormatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(mes
 
 
 import gettext, sys
-from astrotortilla.units import Coordinate, deg2dms, deg2hms, dms2deg, hms2deg
+from astrotortilla.units import Coordinate, deg2dms, deg2hms, dms2deg, hms2deg, deg2str
 
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
@@ -61,3 +61,7 @@ class Bookmark(object):
                 name = base64.b64decode(name).decode(enc or "utf8")
         except: pass
         return Bookmark(name, position, angle)
+
+    @property
+    def position_label(self):
+        return "%s/%s/%s"%(deg2hms(self.position.RA), deg2dms(self.position.dec),deg2str(self.camera_angle))

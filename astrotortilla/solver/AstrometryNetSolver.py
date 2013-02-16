@@ -217,7 +217,7 @@ class AstrometryNetSolver(IPlateSolver):
             center = Coordinate(ra, dec)
             if self.__transform and self.getProperty("year_epoch").lower() == "jnow":
                 self.__transform.SetJ2000(center.RAhour, center.dec)
-                center  = Coordinate(self.__transform.RAApparent/24.*360, self.__transform.DECApparent)
+                center  = Coordinate(self.__transform.RAApparent/24.*360, self.__transform.DECApparent, epoch="JNOW")
                 
 
             # field of view in degrees

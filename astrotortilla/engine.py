@@ -384,6 +384,9 @@ class TortillaEngine(object):
             return
         self.__bookmarks.append(bookmark)
 
+    def replaceBookmarks(self, bookmarks):
+        self.__bookmarks = bookmarks
+
     @property
     def bookmarks(self):
         return self.__bookmarks
