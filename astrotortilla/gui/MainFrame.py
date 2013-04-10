@@ -4,7 +4,7 @@
 import logging
 logger = logging.getLogger("astrotortilla.Main")
 
-import wx
+import wx, win32gui
 from wx.lib.anchors import LayoutAnchors
 import wx.grid
 import wx.lib.masked.numctrl
@@ -552,7 +552,8 @@ class mainFrame(wx.Frame):
         disable(self.btnScopeSetup)
         self.updateBookmarkMenu()
         self._updateCamera()
-        x=y=w=h=-1
+        # Old compatibility mode
+        x=y=w=h=-32000
         try:
             x=self.engine.config.getint("Session", "GuiX")
             y=self.engine.config.getint("Session", "GuiY")
@@ -560,21 +561,29 @@ class mainFrame(wx.Frame):
             h=self.engine.config.getint("Session", "GuiH")
         except:
             pass
-        
-        if h != -1:
+        # -32000 for minimized state? check SetWindowPlacement/Get...
+        if x > -32000:
             self.SetPosition((x,y))
+        if h > 0:
             self.SetSize((w,h))
-    
+        # New window placement method
+        try:
+            placement = self.engine.config.get("Session", "MainPlacement")
+            import ast
+            win32gui.SetWindowPlacement(self.GetHandle(), ast.literal_eval(placement))
+        except:pass
+        if not self.IsShownOnScreen():
+            self.Center()
+
     def OnClose(self, event):
         "Save settings on exit"
-        try:
-            x,y = self.GetPosition()
-            w,h = self.GetSize()
-            self.engine.config.set("Session", "GuiX", str(x))
-            self.engine.config.set("Session", "GuiY", str(y))
-            self.engine.config.set("Session", "GuiW", str(w))
-            self.engine.config.set("Session", "GuiH", str(h))
-        except: pass
+        placement = win32gui.GetWindowPlacement(self.GetHandle())
+        self.engine.config.set("Session", "MainPlacement", str(placement))
+        # remove old options from config
+        for oldPosition in ("GuiX", "GuiY", "GuiH", "GuiW", "LogWindowX", "LogWindowY", "LogWindowH", "LogWindowW"):
+            try:
+                self.engine.config.remove_option("Session", oldPosition)
+            except: pass
         try:
             self.engine.saveConfig()
         except:

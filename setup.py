@@ -7,7 +7,7 @@ from glob import glob
 import os.path
 import platform, sys
 
-VERSION = "0.5.0.0"
+VERSION = "0.5.1.0"
 VERSIONTAG = ""
 
 data_files = []

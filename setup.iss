@@ -71,6 +71,7 @@ LblMirrorInternational=international server
 LblMirrorFinland=from server in Finland
 LblWideFov=Widest level (choose a size corresponding to your widest FOV)
 LblNarrowFov=Narrowest level (choose a size corresponding to ca. 20% of your narrowest FOV)
+LblUseTychoIndexes=Tycho2 indexes for FOVs over 3 degrees (339MB)
 finnish.IndexMirrorSelectionHelp=Valitse ladattavien indeksien ylä- ja alaraja laitteistosi näkökentän perusteella. Voit palata asennusohjelmaan myöhemmin halutessasi ladata lisää indeksejä. Tarkemmat ohjeet löytyvät AstroTortillan käyttöohjeesta.
 finnish.IndexOnlineSolver=Online-ratkoja
 finnish.IndexSelectTitle=Astrometristen indeksien valinta
@@ -80,6 +81,7 @@ finnish.LblMirrorInternational=Kansainväliseltä palvelimelta
 finnish.LblMirrorFinland=Suomen palvelimelta
 finnish.LblWideFov=Laajin taso (valitse laajinta kuva-alaasi vastaava koko)
 finnish.LblNarrowFov=Kapein taso (valitse n. 20%:a kapeimmasta kuva-alastasi vastaava koko)
+finnish.LblUseTychoIndexes=Tycho2 indeksit yli 3 asteen kuva-alalle (339MB)
 ErrorIndexOrder=Please ensure the narrowest level is not wider than widest level.
 finnish.ErrorIndexOrder=Tarkista, ettei kapein taso ole laajinta tasoa laajempi.
 UncompressTitle=Uncompressing index files
@@ -172,6 +174,7 @@ var
   CygDirPageId : Integer;
   IdxPage: TWizardPage;
   IdxPageId, IntlServerRadioBtn: Integer;
+  UseTychoCheckbox : TNewCheckBox;
   ServerSelection : TNewCheckListBox; // Index downloading server selector
   NarrowFovCombo,WideFovCombo : TNewComboBox; // Index limits
   cygNotice: String; // Uninstallation notice text
@@ -246,6 +249,12 @@ begin
   ShellExecAsOriginalUser('open', 'http://nova.astrometry.net/', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
 
+procedure ToggleDownloads(Sender:TObject);
+begin
+  NarrowFovCombo.Enabled := not UseTychoCheckbox.Checked;
+  WideFovCombo.Enabled := not UseTychoCheckbox.Checked;
+end;
+
 function PlaceBelow(const element:TControl; const pad:Integer):Integer;
 begin
   Result := element.Top + element.ClientHeight + ScaleY(pad);
@@ -258,6 +267,7 @@ var
   LblWideFov, LblNarrowFov : TLabel;
   IndexList : TStringList;
   IntlServerSelected : Boolean;
+  UseTycho : Boolean;
 begin
   // Setup index file selection form
   Page := CreateCustomPage(FollowsPage, CustomMessage('IndexSelectTitle'), CustomMessage('IndexSelectSubtitle'));
@@ -273,6 +283,7 @@ begin
   descMirror.AdjustHeight();
   ServerSelection := TNewCheckListBox.Create(Page);
   IntlServerSelected := GetPreviousData('ServerSelection', 'True') = 'True';
+  UseTycho := GetPreviousData('UseTychoIndex', 'False') = 'True';
 
   with ServerSelection do
   begin
@@ -289,34 +300,46 @@ begin
     AddRadioButton(CustomMessage('LblMirrorFinland'), '', 0, not IntlServerSelected, True, nil);
   end;
 
+  UseTychoCheckbox := TNewCheckBox.Create(Page);
+  with UseTychoCheckbox do
+  begin
+    Top := PlaceBelow(ServerSelection, 8);
+    Parent := Page.Surface;
+    Width := Page.SurfaceWidth;
+    ParentColor := True;
+    Caption := CustomMessage('LblUseTychoIndexes');
+    Checked := UseTycho;
+    OnClick := @ToggleDownloads;
+  end;
+
   IndexList := TStringList.Create();
   
-  IndexList.Add('index 4000, 11GB, 2 to 2.8 arcmin');
-  IndexList.Add('index 4001, 7GB, 2.8 to 4 arcmin');
-  IndexList.Add('index 4002, 3.8GB, 4 to 5.6 arcmin');
-  IndexList.Add('index 4003, 2GB, 5.6 to 8 arcmin');
-  IndexList.Add('index 4004, 960MB, 8 to 11 arcmin');
-  IndexList.Add('index 4005, 470MB, 11 to 16 arcmin');
-  IndexList.Add('index 4006, 230MB, 16 to 22 arcmin');
-  IndexList.Add('index 4007, 115MB, 22 to 30 arcmin');
-  IndexList.Add('index 4008, 62MB, 0.5 to 0.7 deg (30 to 42 arcmin)');
-  IndexList.Add('index 4009, 31MB, 0.7 to 1 deg (42 to 60 arcmin)');
-  IndexList.Add('index 4010, 15MB, 1 to 1.42 deg (60 to 85 arcmin)');
-  IndexList.Add('index 4011, 5.6MB, 1.42 to 2 deg (85 to 120 arcmin)');
-  IndexList.Add('index 4012, 2.8MB, 2 to 2.83 deg (120 to 170 arcmin)');
-  IndexList.Add('index 4013, 1.4MB, 2.83 to 4 deg (170 to 240 arcmin)');
-  IndexList.Add('index 4014, 735KB, 4 to 5.67 deg');
-  IndexList.Add('index 4015, 375KB, 5.67 to 8 deg');
-  IndexList.Add('index 4016, 185KB, 8 to 11.3 deg');
-  IndexList.Add('index 4017, 96KB, 11.3 to 16.7 deg');
-  IndexList.Add('index 4018, 63KB, 16.7 to 23.3 deg');
-  IndexList.Add('index 4019, 38KB, 23.3 to 33.3 deg');
+  IndexList.Add('index 4200, 13.2GB, 2-2.8 arcmin');
+  IndexList.Add('index 4201, 8.6GB, 2.8-4 arcmin');
+  IndexList.Add('index 4202, 4.7GB, 4-5.6 arcmin');
+  IndexList.Add('index 4203, 2.5GB, 5.6-8 arcmin');
+  IndexList.Add('index 4204, 1.2GB, 8-11 arcmin');
+  IndexList.Add('index 4205, 628MB, 11-16 arcmin');
+  IndexList.Add('index 4206, 313MB, 16-22 arcmin');
+  IndexList.Add('index 4207, 157MB, 22-30 arcmin');
+  IndexList.Add('index 4208, 78MB, 0.5-0.7 deg (30-42 arcmin)');
+  IndexList.Add('index 4209, 39MB, 0.7-1 deg (42-60 arcmin)');
+  IndexList.Add('index 4210, 19MB, 1-1.42 deg (60-85 arcmin)');
+  IndexList.Add('index 4211, 7.7MB, 1.42-2 deg (85-120 arcmin)');
+  IndexList.Add('index 4212, 4.0MB, 2-2.83 deg (120-170 arcmin)');
+  IndexList.Add('index 4213, 2.1MB, 2.83-4 deg (170-240 arcmin)');
+  IndexList.Add('index 4214, 1.1MB, 4-5.67 deg');
+  IndexList.Add('index 4215, 640KB, 5.67-8 deg');
+  IndexList.Add('index 4216, 332KB, 8-11.3 deg');
+  IndexList.Add('index 4217, 212KB, 11.3-16.7 deg');
+  IndexList.Add('index 4218, 164KB, 16.7-23.3 deg');
+  IndexList.Add('index 4219, 132KB, 23.3-33.3 deg');
 
   LblNarrowFov := TLabel.Create(Page);
   with LblNarrowFov do
   begin
     Parent := Page.Surface;
-    Top := PlaceBelow(ServerSelection, 8);
+    Top := PlaceBelow(UseTychoCheckbox, 8);
     Caption := CustomMessage('LblNarrowFov')
   end;
 
@@ -357,7 +380,7 @@ begin
   begin
     Parent := Page.Surface;
     Caption := CustomMessage('IndexOnlineSolver') + ': ';
-    Top := PlaceBelow(WideFovCombo, 32);
+    Top := PlaceBelow(WideFovCombo, 16);
   end;
 
   URLLinkText := TNewStaticText.Create(Page);
@@ -365,7 +388,7 @@ begin
   begin
     Parent := Page.Surface;
     Caption := 'http://nova.astrometry.net/';
-    Top := PlaceBelow(WideFovCombo, 32);
+    Top := PlaceBelow(WideFovCombo, 16);
     Left := URLLabel.Left + URLLabel.Width;
     Cursor := crHand;
     OnClick := @URLLabelOnClick;
@@ -478,8 +501,8 @@ end;
 procedure AddIndexToDownload(Index:Integer; UseIntlServer:Boolean);
 var
   indexCount, i : Integer;
-  uriBase, targetDir, targetFile : String;
-
+  uriBase, targetDir, targetFile, indexLongFormat, indexShortFormat: String;
+  
 begin
   case Index of
     5..7:
@@ -490,28 +513,45 @@ begin
     indexCount := 0;
   end;
   if UseIntlServer then
-    uriBase := 'http://broiler.astrometry.net/~dstn/4000/'
+    uriBase := 'http://broiler.astrometry.net/~dstn/'
   else
     uriBase := 'http://astrotortilla.comsix.fi/indices/';
+  if UseTychoCheckbox.Checked then
+    begin
+    uriBase := uriBase + '4100/';
+    indexShortFormat := 'index-41%.2d.fits';
+    indexLongFormat := 'index-41%.2d-%.2d.fits'
+    indexCount := 0;
+    end
+  else
+    begin
+    uriBase := uriBase + '4200/';
+        indexShortFormat := 'index-42%.2d.fits';
+    indexLongFormat := 'index-42%.2d-%.2d.fits'
+    end;
   targetDir := AddBackslash(CygwinRootDir('C:\cygwin\')) + 'usr\share\astrometry\data\';
   if indexCount = 0 then
     begin
-    targetFile := Format('index-40%.2d.fits', [Index]);
-    if not (FileExists(targetDir + targetFile) or FileExists(targetDir + targetFile + '.bz2')) then
+    targetFile := Format(indexShortFormat, [Index]);
+    //if not (FileExists(targetDir + targetFile) or FileExists(targetDir + targetFile + '.bz2')) then
+    if not (FileExists(targetDir + targetFile) or FileExists(targetDir + targetFile)) then
       begin
       Log(targetFile);
-      ITD_AddFile(uriBase + targetFile + '.bz2', targetDir + targetFile + '.bz2');
+      //ITD_AddFile(uriBase + targetFile + '.bz2', targetDir + targetFile + '.bz2');
+      ITD_AddFile(uriBase + targetFile, targetDir + targetFile);
       end;
     end
   else
     begin
       for i := 0 to indexCount do
         begin
-        targetFile := Format('index-40%.2d-%.2d.fits', [Index, i]);
-        if not (FileExists(targetDir + targetFile) or FileExists(targetDir + targetFile + '.bz2')) then
+        targetFile := Format('index-42%.2d-%.2d.fits', [Index, i]);
+        //if not (FileExists(targetDir + targetFile) or FileExists(targetDir + targetFile + '.bz2')) then
+        if not (FileExists(targetDir + targetFile) or FileExists(targetDir + targetFile)) then
           begin
           Log(targetFile);
-          ITD_AddFile(uriBase + targetFile + '.bz2', targetDir + targetFile + '.bz2');
+          //ITD_AddFile(uriBase + targetFile + '.bz2', targetDir + targetFile + '.bz2');
+          ITD_AddFile(uriBase + targetFile, targetDir + targetFile);
           end;
         end;
     end;
@@ -525,23 +565,37 @@ var
 begin
   if CurPageID = IdxPageId then
     begin
-    if NarrowFovCombo.ItemIndex > WideFovCombo.ItemIndex then
-      begin
-      Result := False;
-      MsgBox(CustomMessage('ErrorIndexOrder'), mbError, MB_OK);
-      end
-    else
+    if UseTychoCheckbox.Checked then
       begin
       Result := True;
       indexDir := AddBackslash(CygwinRootDir('C:\cygwin\')) + 'usr\share\astrometry\data\';
-      Log('Adding download strings');
-      Log(Format('WideFov %d, NarrowFov %d', [WideFovCombo.ItemIndex, NarrowFovCombo.ItemIndex]));
+      Log('Adding Tycho download strings');
       ForceDirectories(indexDir);
-      for curIndex := WideFovCombo.ItemIndex downto NarrowFovCombo.ItemIndex do
+      for curIndex := 7 to 19 do
         begin
         AddIndexToDownload(curIndex, ServerSelection.State[IntlServerRadioBtn]);
         end;
-      end;
+      end
+    else
+      begin
+      if NarrowFovCombo.ItemIndex > WideFovCombo.ItemIndex then
+        begin
+        Result := False;
+        MsgBox(CustomMessage('ErrorIndexOrder'), mbError, MB_OK);
+        end
+      else
+        begin
+        Result := True;
+        indexDir := AddBackslash(CygwinRootDir('C:\cygwin\')) + 'usr\share\astrometry\data\';
+        Log('Adding download strings');
+        Log(Format('WideFov %d, NarrowFov %d', [WideFovCombo.ItemIndex, NarrowFovCombo.ItemIndex]));
+        ForceDirectories(indexDir);
+        for curIndex := WideFovCombo.ItemIndex downto NarrowFovCombo.ItemIndex do
+          begin
+          AddIndexToDownload(curIndex, ServerSelection.State[IntlServerRadioBtn]);
+          end;
+        end;
+      end; // Tycho2 vs 4200
     end
   else
     Result := True;
@@ -617,7 +671,7 @@ end;
 
 procedure RegisterPreviousData(PreviousDataKey: Integer);
 var
-  serverChoice : String;
+  serverChoice, tychoChoice : String;
 begin
   if ServerSelection.State[IntlServerRadioBtn] then
     begin
@@ -627,10 +681,19 @@ begin
     begin
     serverChoice := 'False';
     end;
+  if UseTychoCheckbox.Checked then
+    begin
+    tychoChoice := 'True';
+    end
+  else
+    begin
+    tychoChoice := 'False';
+    end;
 
   SetPreviousData(PreviousDataKey, 'CygwinRoot', CygDirPage.Values[0]);
   SetPreviousData(PreviousDataKey, 'CygwinCache', CygDirPage.Values[1]);  
   SetPreviousData(PreviousDataKey, 'ServerSelection', serverChoice);
   SetPreviousData(PreviousDataKey, 'NarrowFovIndex', IntToStr(NarrowFovCombo.ItemIndex));
   SetPreviousData(PreviousDataKey, 'WideFovIndex', IntToStr(WideFovCombo.ItemIndex));
+  SetPreviousData(PreviousDataKey, 'UseTycho', tychoChoice);
 end;

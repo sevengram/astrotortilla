@@ -133,6 +133,7 @@ class APTCamera(ICamera):
             import traceback
             logger.error(traceback.format_exc())
             logger.error("APT connection lost during command")
+            self.__socket = None
         finally:
             if timeout > 0:
                 self.__socket.settimeout(timeout)
@@ -165,10 +166,11 @@ class APTCamera(ICamera):
     @property
     def cameraState(self):
         "Current camera state, see ASCOM cameraState parameter"
-        if self.__waitingDON > time.time()-1: # Capturing started, not done yet
+        if self.__waitingDON > time.time(): # Capturing started, not done yet
             return CameraState.Exposing
         rsp = self.aptCmd("S")
         if "DON" in rsp:
+            self.__waitingDON = 0
             rsp = rsp.replace("DON", "")
         status = CameraState.Busy
         try:
@@ -181,13 +183,13 @@ class APTCamera(ICamera):
     def imageReady(self):
         if self.__latestImage != None:
             return True
-        if self.__waitingDON > time.time()-1:
+        if self.__waitingDON > time.time():
             r,s,x = select([self.__socket], [],[],.02)
             if not r:
                 return False
             try:
-                don=self.__socket.recv(3)
-                if don == "DON":
+                don=self.__socket.recv(self.__buffersize)
+                if "DON" in don:
                     self.__waitingDON = 0
                     self.__getImage()
                     logger.debug("Image ready")
@@ -227,7 +229,7 @@ class APTCamera(ICamera):
             reply = self.aptCmd("C%1i%03i" % (self.__bin, exposureTime))
             if "ROK" not in reply:
                 raise Exception("APT: Unexpected response: %s"%reply)
-            self.__waitingDON = time.time() + exposureTime
+            self.__waitingDON = time.time() + exposureTime + 15 # 15s time-out for reading the image from camera after exposure
             self.__exposing = True
         except Exception:
             raise 

@@ -113,7 +113,8 @@ class LogWindow(wx.Frame):
         self.handler.setLevel(logging.INFO)
         self.handler.setFormatter(logFormatter)
         self._parent.engine.logger.addHandler(self.handler)
-        x=y=w=h=-1
+        # Compatibility with old configs
+        x=y=w=h=-32000
         try:
             x=self._parent.engine.config.getint("Session", "LogWindowX")
             y=self._parent.engine.config.getint("Session", "LogWindowY")
@@ -121,9 +122,18 @@ class LogWindow(wx.Frame):
             h=self._parent.engine.config.getint("Session", "LogWindowH")
         except:
             pass
-        if h != -1:
+        if x > -32000:
             self.SetPosition((x,y))
+        if h > 0:
             self.SetSize((w,h))
+        # New window placement method
+        try:
+            placement = self.engine.config.get("Session", "LogPlacement")
+            import ast
+            win32gui.SetWindowPlacement(self.GetHandle(), ast.literal_eval(placement))
+        except:pass
+        if not self.IsShownOnScreen():
+            self.Center()
         
     def OnCloseButton(self, event):
         self.Close()
@@ -136,17 +146,11 @@ class LogWindow(wx.Frame):
         logger.info("Log level changed to '%s'"%self.choiceLogLevel.GetStringSelection())
 
     def OnLogWindowClose(self, event):
-        try:
-            x,y = self.GetPosition()
-            w,h = self.GetSize()
-            self._parent.engine.config.set("Session", "LogWindowX", str(x))
-            self._parent.engine.config.set("Session", "LogWindowY", str(y))
-            self._parent.engine.config.set("Session", "LogWindowW", str(w))
-            self._parent.engine.config.set("Session", "LogWindowH", str(h))
-        except: pass
+        placement = win32gui.GetWindowPlacement(self.GetHandle())
+        self._parent.engine.config.set("Session", "LogPlacement", str(placement))
         global logFrame
         logFrame = None
-        self._parent.engine.logger.removeHandler(self.handler)        
+        self._parent.engine.logger.removeHandler(self.handler)
         event.Skip()
 
     def OnLogWindowSize(self, event):
