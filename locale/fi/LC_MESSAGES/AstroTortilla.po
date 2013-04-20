@@ -3,13 +3,14 @@ msgstr ""
 "Project-Id-Version: AstroTortilla 0.2.8\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: Antti Kuntsi <kuntsi@iki.fi>\n"
 "Language-Team:  <astrotortilla-devel@sourceforge.net>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.5.5\n"
 
 #: astrotortilla\CameraState.py:15
 msgid "Busy"
@@ -55,7 +56,7 @@ msgstr "oletus 21701"
 msgid "Hostname"
 msgstr "Koneen osoite"
 
-#: astrotortilla\camera\APTCamera.py:55
+#: astrotortilla\camera\APTCamera.py:55 astrotortilla\camera\ByEosCamera.py:37
 msgid "Hostname or IP address"
 msgstr "Nimi tai IP-osoite"
 
@@ -64,9 +65,41 @@ msgid "Default camera"
 msgstr "Oletuskamera"
 
 #: astrotortilla\camera\ASCOMCamera.py:146 astrotortilla\gui\MainFrame.py:372
-#: astrotortilla\gui\MainFrame.py:680
+#: astrotortilla\gui\MainFrame.py:689
 msgid "Not connected"
 msgstr "Ei yhdistetty"
+
+#: astrotortilla\camera\ByEosCamera.py:37
+msgid "BackyardEOS address"
+msgstr "BackyardEOS:n palvelimen osoite"
+
+#: astrotortilla\camera\ByEosCamera.py:38
+msgid "BackyardEOS server port"
+msgstr "BackyardEOS:in palvelinportti"
+
+#: astrotortilla\camera\ByEosCamera.py:38
+msgid "Port number"
+msgstr "Portti"
+
+#: astrotortilla\camera\ByEosCamera.py:39
+msgid "ISO value"
+msgstr "ISO-arvo"
+
+#: astrotortilla\camera\ByEosCamera.py:39
+msgid "ISO value for AstroTortilla images"
+msgstr "AstroTortillan k‰ytt‰m‰ ISO-arvo"
+
+#: astrotortilla\camera\ByEosCamera.py:40
+msgid "Communication timeout in seconds"
+msgstr "Yhteyden aikakatkaisu"
+
+#: astrotortilla\camera\ByEosCamera.py:40
+msgid "Messaging timeout"
+msgstr "Viestinn‰n aikakatkaisu"
+
+#: astrotortilla\camera\ByEosCamera.py:156
+msgid "Could not connect to BackyardEOS"
+msgstr "Ei yhteytt‰ BackyardEOS:iin"
 
 #: astrotortilla\camera\CaptureCamera.py:37
 msgid "Left margin"
@@ -118,7 +151,7 @@ msgid "Choose file to solve"
 msgstr "Valitse tiedosto ratkottavaksi"
 
 #: astrotortilla\camera\FileOpenCamera.py:149
-#: astrotortilla\gui\MainFrame.py:1000 astrotortilla\gui\MainFrame.py:1047
+#: astrotortilla\gui\MainFrame.py:1009 astrotortilla\gui\MainFrame.py:1056
 msgid "Image files"
 msgstr "Kuvatiedostot"
 
@@ -224,7 +257,7 @@ msgstr "Ei ratkennut, %.1fs"
 msgid "ERROR: No camera connected."
 msgstr "VIRHE: Kameraa ei ole yhdistetty."
 
-#: astrotortilla\engine.py:458 astrotortilla\gui\MainFrame.py:938
+#: astrotortilla\engine.py:458 astrotortilla\gui\MainFrame.py:947
 msgid "Connecting to camera..."
 msgstr "Yhdistet‰‰n kameraan..."
 
@@ -240,7 +273,7 @@ msgstr "Valotetaan: %.2f sekuntia"
 msgid "Exposing: %.1f seconds"
 msgstr "Valotetaan: %.1f sekuntia"
 
-#: astrotortilla\engine.py:485 astrotortilla\gui\MainFrame.py:971
+#: astrotortilla\engine.py:485 astrotortilla\gui\MainFrame.py:980
 msgid "Waiting for camera"
 msgstr "Odotetaan kameraa"
 
@@ -303,7 +336,7 @@ msgstr "Deklinaatio"
 msgid "Rotation"
 msgstr "Kierto"
 
-#: astrotortilla\gui\BookmarkEditor.py:74 astrotortilla\gui\MainFrame.py:1027
+#: astrotortilla\gui\BookmarkEditor.py:74 astrotortilla\gui\MainFrame.py:1036
 msgid "Bookmark name"
 msgstr "Kirjanmerkin nimi"
 
@@ -464,8 +497,8 @@ msgstr "Poistu sovelluksesta"
 msgid "Exit"
 msgstr "Poistu"
 
-#: astrotortilla\gui\MainFrame.py:164 astrotortilla\gui\MainFrame.py:997
-#: astrotortilla\gui\MainFrame.py:1044
+#: astrotortilla\gui\MainFrame.py:164 astrotortilla\gui\MainFrame.py:1006
+#: astrotortilla\gui\MainFrame.py:1053
 msgid "Goto Image"
 msgstr "Avaa kuva ja siirry"
 
@@ -513,7 +546,7 @@ msgstr "Dekl:"
 msgid "Right ascension"
 msgstr "Rektaskensio"
 
-#: astrotortilla\gui\MainFrame.py:288 astrotortilla\gui\MainFrame.py:670
+#: astrotortilla\gui\MainFrame.py:288 astrotortilla\gui\MainFrame.py:679
 msgid "No camera"
 msgstr "Ei kameraa"
 
@@ -529,7 +562,7 @@ msgstr "Kent‰n koko:"
 msgid "Rotation:"
 msgstr "Kierto:"
 
-#: astrotortilla\gui\MainFrame.py:318 astrotortilla\gui\MainFrame.py:706
+#: astrotortilla\gui\MainFrame.py:318 astrotortilla\gui\MainFrame.py:715
 msgid "Normal"
 msgstr "Normaali"
 
@@ -577,8 +610,8 @@ msgstr "Synkronoi jalusta"
 msgid "Repeat until within"
 msgstr "Toista kunnes alle"
 
-#: astrotortilla\gui\MainFrame.py:455 astrotortilla\gui\MainFrame.py:814
-#: astrotortilla\gui\MainFrame.py:1012 astrotortilla\gui\MainFrame.py:1059
+#: astrotortilla\gui\MainFrame.py:455 astrotortilla\gui\MainFrame.py:823
+#: astrotortilla\gui\MainFrame.py:1021 astrotortilla\gui\MainFrame.py:1068
 msgid "Capture and Solve"
 msgstr "Valota ja ratko"
 
@@ -594,202 +627,202 @@ msgstr "Ratkojan asetukset"
 msgid "Re-slew to target"
 msgstr "Keskit‰ kohde"
 
-#: astrotortilla\gui\MainFrame.py:692
+#: astrotortilla\gui\MainFrame.py:701
 msgid "Previous solution"
 msgstr "Edellinen ratkaisu"
 
-#: astrotortilla\gui\MainFrame.py:704
+#: astrotortilla\gui\MainFrame.py:713
 msgid "Flipped"
 msgstr "Peilikuva"
 
-#: astrotortilla\gui\MainFrame.py:711 astrotortilla\gui\MainFrame.py:881
+#: astrotortilla\gui\MainFrame.py:720 astrotortilla\gui\MainFrame.py:890
 msgid "Last error: %s"
 msgstr "Viimeisin virhe: %s"
 
-#: astrotortilla\gui\MainFrame.py:728
+#: astrotortilla\gui\MainFrame.py:737
 msgid "Camera error"
 msgstr "Kameravirhe"
 
-#: astrotortilla\gui\MainFrame.py:781
+#: astrotortilla\gui\MainFrame.py:790
 msgid "Aborting..."
 msgstr "Keskeytet‰‰n..."
 
-#: astrotortilla\gui\MainFrame.py:783 astrotortilla\gui\MainFrame.py:1005
-#: astrotortilla\gui\MainFrame.py:1051
+#: astrotortilla\gui\MainFrame.py:792 astrotortilla\gui\MainFrame.py:1014
+#: astrotortilla\gui\MainFrame.py:1060
 msgid "Abort solver"
 msgstr "Keskeyt‰ ratkoja"
 
-#: astrotortilla\gui\MainFrame.py:800
+#: astrotortilla\gui\MainFrame.py:809
 msgid "ASCOM Telescope sync error"
 msgstr "ASCOM synkronointi virhe"
 
-#: astrotortilla\gui\MainFrame.py:804
+#: astrotortilla\gui\MainFrame.py:813
 msgid "Telescope communication error"
 msgstr "Jalustakommunikaatiovirhe"
 
-#: astrotortilla\gui\MainFrame.py:899
+#: astrotortilla\gui\MainFrame.py:908
 msgid "Invalid data"
 msgstr "Virheellinen tietue"
 
-#: astrotortilla\gui\MainFrame.py:904
+#: astrotortilla\gui\MainFrame.py:913
 msgid "Load settings"
 msgstr "Lataa asetukset"
 
-#: astrotortilla\gui\MainFrame.py:907 astrotortilla\gui\MainFrame.py:920
+#: astrotortilla\gui\MainFrame.py:916 astrotortilla\gui\MainFrame.py:929
 msgid "Config files"
 msgstr "Asetustiedostot"
 
-#: astrotortilla\gui\MainFrame.py:917
+#: astrotortilla\gui\MainFrame.py:926
 msgid "Save settings"
 msgstr "Tallenna asetukset"
 
-#: astrotortilla\gui\MainFrame.py:931
+#: astrotortilla\gui\MainFrame.py:940
 msgid "Error saving settings"
 msgstr "Virhe tallettaessa asetuksia"
 
-#: astrotortilla\gui\MainFrame.py:947 astrotortilla\gui\MainFrame.py:964
+#: astrotortilla\gui\MainFrame.py:956 astrotortilla\gui\MainFrame.py:973
 msgid "Drifting: %.2f seconds"
 msgstr "Valutaan: %.2f sekuntia"
 
-#: astrotortilla\gui\MainFrame.py:977
+#: astrotortilla\gui\MainFrame.py:986
 msgid "Drifting done."
 msgstr "Valunta tehty."
 
-#: astrotortilla\gui\MainFrame.py:1011 astrotortilla\gui\MainFrame.py:1058
+#: astrotortilla\gui\MainFrame.py:1020 astrotortilla\gui\MainFrame.py:1067
 msgid "Solver error"
 msgstr "Ratkojavirhe"
 
-#: astrotortilla\gui\MainFrame.py:1021
+#: astrotortilla\gui\MainFrame.py:1030
 msgid "No current solution"
 msgstr "Ei valmista ratkaisua."
 
-#: astrotortilla\gui\MainFrame.py:1023
+#: astrotortilla\gui\MainFrame.py:1032
 msgid "Creating bookmark from current solution"
 msgstr "Luodaan kirjanmerkki‰ t‰m‰nhetkisest‰ ratkaisusta"
 
-#: astrotortilla\gui\MainFrame.py:1027
+#: astrotortilla\gui\MainFrame.py:1036
 msgid "Enter a name for the bookmark"
 msgstr "Annan kirjanmerkin nimi"
 
-#: astrotortilla\gui\MainFrame.py:1034
+#: astrotortilla\gui\MainFrame.py:1043
 msgid "Done"
 msgstr "Valmis"
 
-#: astrotortilla\gui\MainFrame.py:1040
+#: astrotortilla\gui\MainFrame.py:1049
 msgid "Creating bookmark from image"
 msgstr "Luodaan kirjanmerkki‰ kuvasta"
 
-#: astrotortilla\gui\PolarAlignFrame.py:55
+#: astrotortilla\gui\PolarAlignFrame.py:56
 msgid "Polar Alignment"
 msgstr "Napasuuntaus"
 
-#: astrotortilla\gui\PolarAlignFrame.py:66
+#: astrotortilla\gui\PolarAlignFrame.py:67
 msgid "Observer Hemisphere:"
 msgstr "Havaitsijan pallonpuolisko:"
 
-#: astrotortilla\gui\PolarAlignFrame.py:71
+#: astrotortilla\gui\PolarAlignFrame.py:72
 msgid "North"
 msgstr "Pohjoinen"
 
-#: astrotortilla\gui\PolarAlignFrame.py:71
+#: astrotortilla\gui\PolarAlignFrame.py:72
 msgid "South"
 msgstr "Etel‰"
 
-#: astrotortilla\gui\PolarAlignFrame.py:80
+#: astrotortilla\gui\PolarAlignFrame.py:81
 msgid "Mount altitude"
 msgstr "Jalustan altitudi"
 
-#: astrotortilla\gui\PolarAlignFrame.py:85
+#: astrotortilla\gui\PolarAlignFrame.py:86
 msgid "Mount azimuth"
 msgstr "Jalustan atsimuutti"
 
-#: astrotortilla\gui\PolarAlignFrame.py:89
+#: astrotortilla\gui\PolarAlignFrame.py:90
 msgid "East"
 msgstr "It‰"
 
-#: astrotortilla\gui\PolarAlignFrame.py:89
+#: astrotortilla\gui\PolarAlignFrame.py:90
 msgid "West"
 msgstr "L‰nsi"
 
-#: astrotortilla\gui\PolarAlignFrame.py:99
+#: astrotortilla\gui\PolarAlignFrame.py:100
 msgid "Measurement side:"
 msgstr "Mittauksen puoli"
 
-#: astrotortilla\gui\PolarAlignFrame.py:104
-#: astrotortilla\gui\PolarAlignFrame.py:226
+#: astrotortilla\gui\PolarAlignFrame.py:105
+#: astrotortilla\gui\PolarAlignFrame.py:238
 msgid "Measure altitude error"
 msgstr "Mittaa altitudivirhe"
 
-#: astrotortilla\gui\PolarAlignFrame.py:117
-#: astrotortilla\gui\PolarAlignFrame.py:269
+#: astrotortilla\gui\PolarAlignFrame.py:118
+#: astrotortilla\gui\PolarAlignFrame.py:281
 msgid "Measure azimuth error"
 msgstr "Mittaa atsimuuttivirhe"
 
-#: astrotortilla\gui\PolarAlignFrame.py:125
+#: astrotortilla\gui\PolarAlignFrame.py:126
 msgid "Point the telescope to the meridian before measuring!"
 msgstr "Osoitan kaukoputki meridiaanin suuntaan ennen mittausta."
 
-#: astrotortilla\gui\PolarAlignFrame.py:131
+#: astrotortilla\gui\PolarAlignFrame.py:132
 msgid "Point the telescope to the east or west before measuring!"
 msgstr "Osoita kaukoputki it‰‰n tai l‰nteen ennen mittausta."
 
-#: astrotortilla\gui\PolarAlignFrame.py:136
+#: astrotortilla\gui\PolarAlignFrame.py:137
 msgid "Measured altitude error:"
 msgstr "Mitattu altitudivirhe"
 
-#: astrotortilla\gui\PolarAlignFrame.py:143
-#: astrotortilla\gui\PolarAlignFrame.py:157
+#: astrotortilla\gui\PolarAlignFrame.py:144
+#: astrotortilla\gui\PolarAlignFrame.py:158
 msgid "N/A"
 msgstr "N/A"
 
-#: astrotortilla\gui\PolarAlignFrame.py:150
+#: astrotortilla\gui\PolarAlignFrame.py:151
 msgid "Measured azimuth error:"
 msgstr "Mitattu atsimuuttivirhe"
 
-#: astrotortilla\gui\PolarAlignFrame.py:190
+#: astrotortilla\gui\PolarAlignFrame.py:196
 msgid "Telescope error!"
 msgstr "Jalustavirhe!"
 
-#: astrotortilla\gui\PolarAlignFrame.py:203
-#: astrotortilla\gui\PolarAlignFrame.py:211
+#: astrotortilla\gui\PolarAlignFrame.py:209
+#: astrotortilla\gui\PolarAlignFrame.py:217
 msgid "Slewing..."
 msgstr "Siirryt‰‰n..."
 
-#: astrotortilla\gui\PolarAlignFrame.py:213
+#: astrotortilla\gui\PolarAlignFrame.py:219
 msgid "Done!"
 msgstr "Valmis!"
 
-#: astrotortilla\gui\PolarAlignFrame.py:222
-#: astrotortilla\gui\PolarAlignFrame.py:265
+#: astrotortilla\gui\PolarAlignFrame.py:234
+#: astrotortilla\gui\PolarAlignFrame.py:277
 msgid "Abort solver!"
 msgstr "Keskeyt‰ ratkoja!"
 
-#: astrotortilla\gui\PolarAlignFrame.py:230
-#: astrotortilla\gui\PolarAlignFrame.py:273
+#: astrotortilla\gui\PolarAlignFrame.py:242
+#: astrotortilla\gui\PolarAlignFrame.py:285
 msgid "An error occurred!"
 msgstr "Tapahtui virhe!"
 
-#: astrotortilla\gui\PolarAlignFrame.py:238
-#: astrotortilla\gui\PolarAlignFrame.py:246
-#: astrotortilla\gui\PolarAlignFrame.py:254
+#: astrotortilla\gui\PolarAlignFrame.py:250
 #: astrotortilla\gui\PolarAlignFrame.py:258
+#: astrotortilla\gui\PolarAlignFrame.py:266
+#: astrotortilla\gui\PolarAlignFrame.py:270
 msgid "too low"
 msgstr "alle"
 
-#: astrotortilla\gui\PolarAlignFrame.py:240
-#: astrotortilla\gui\PolarAlignFrame.py:244
 #: astrotortilla\gui\PolarAlignFrame.py:252
-#: astrotortilla\gui\PolarAlignFrame.py:260
+#: astrotortilla\gui\PolarAlignFrame.py:256
+#: astrotortilla\gui\PolarAlignFrame.py:264
+#: astrotortilla\gui\PolarAlignFrame.py:272
 msgid "too high"
 msgstr "yli"
 
-#: astrotortilla\gui\PolarAlignFrame.py:279
-#: astrotortilla\gui\PolarAlignFrame.py:287
+#: astrotortilla\gui\PolarAlignFrame.py:291
+#: astrotortilla\gui\PolarAlignFrame.py:299
 msgid "too east"
 msgstr "id‰ss‰"
 
-#: astrotortilla\gui\PolarAlignFrame.py:281
-#: astrotortilla\gui\PolarAlignFrame.py:285
+#: astrotortilla\gui\PolarAlignFrame.py:293
+#: astrotortilla\gui\PolarAlignFrame.py:297
 msgid "too west"
 msgstr "l‰nness‰"
 

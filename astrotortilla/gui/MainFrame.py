@@ -220,6 +220,9 @@ class mainFrame(wx.Frame):
         self.SetMinSize(wx.Size(410, 384))
         self.SetAutoLayout(True)
         self.SetClientSize(wx.Size(394, 346))
+        self.Bind(wx.EVT_MOVE, self.OnMainFrameMove)
+        self.Bind(wx.EVT_SIZE, self.OnMainFrameSize)
+        self.Bind(wx.EVT_ACTIVATE, self.OnMainFrameActivate)
 
         self.statusBar1 = wx.StatusBar(id=wxID_MAINFRAMESTATUSBAR1,
               name='statusBar1', parent=self, style=0)
@@ -479,7 +482,7 @@ class mainFrame(wx.Frame):
 
         self.configGrid = wx.grid.Grid(id=wxID_MAINFRAMECONFIGGRID,
               name='configGrid', parent=self, pos=wx.Point(16, 208),
-              size=wx.Size(220, 104), style=0)
+              size=wx.Size(220, 110), style=0)
         self.configGrid.SetAutoLayout(True)
         self.configGrid.SetToolTipString(_('Solver configuration'))
         self.configGrid.SetColLabelSize(0)
@@ -489,7 +492,7 @@ class mainFrame(wx.Frame):
               True, True, True))
         self.configGrid.SetHelpText(u'')
         self.configGrid.SetLabel(u'configGrid')
-        self.configGrid.SetMinSize(wx.Size(220, 84))
+        self.configGrid.SetMinSize(wx.Size(220, 94))
         self.configGrid.Bind(wx.EVT_MOTION, self.OnConfigGridMotion)
         self.configGrid.Bind(wx.grid.EVT_GRID_CELL_CHANGE,
               self.OnConfigGridGridCellChange)
@@ -519,7 +522,7 @@ class mainFrame(wx.Frame):
         self.engine.setExposure(self.numCtrlExposure.GetValue())
 
     def __init__(self, parent):
-
+        self.__logFrame = None
         self._init_ctrls(parent)
         self.engine = TortillaEngine()
         if not self.engine.version_tag.startswith("NoIcon"):
@@ -572,8 +575,7 @@ class mainFrame(wx.Frame):
             import ast
             win32gui.SetWindowPlacement(self.GetHandle(), ast.literal_eval(placement))
         except:pass
-        if not self.IsShownOnScreen():
-            self.Center()
+
 
     def OnClose(self, event):
         "Save settings on exit"
@@ -1022,8 +1024,11 @@ class mainFrame(wx.Frame):
             self._updateCamera()
 
     def OnMenuToolsLogwindowMenu(self, event):
-        logFrame = LogFrame.create(self)
-        logFrame.Show()
+        if not self.__logFrame or not self.__logFrame.IsShown():
+            self.__logFrame = LogFrame.create(self)
+        self.__logFrame.Show()
+        self.__logFrame.Iconize(False)
+        self.__logFrame.Raise()
 
     def OnMenuBookmarksAddsolutionbmMenu(self, event):
         if not self.engine.solution:
@@ -1102,7 +1107,19 @@ class mainFrame(wx.Frame):
         finally:
             editor.Destroy()
         self.updateBookmarkMenu()
-    
+
+    def OnMainFrameMove(self, event):
+        event.Skip()
+
+    def OnMainFrameSize(self, event):
+        event.Skip()
+
+    def OnMainFrameActivate(self, event):
+        event.Skip()
+
+    def LogWindowClosed(self):
+        self.__logFrame = None
+
 
 if __name__ == '__main__':
     app = wx.PySimpleApp()

@@ -4,6 +4,7 @@ import wx
 from wx.lib.anchors import LayoutAnchors
 import wx.grid
 import logging
+import win32gui
 logger = logging.getLogger("astrotortilla.LogFrame")
 
 
@@ -55,6 +56,8 @@ class LogWindow(wx.Frame):
         self.SetToolTipString('LogWindow')
         self.Bind(wx.EVT_CLOSE, self.OnLogWindowClose)
         self.Bind(wx.EVT_SIZE, self.OnLogWindowSize)
+        self.Bind(wx.EVT_ACTIVATE, self.OnLogWindowActivate)
+        self.Bind(wx.EVT_MOVE, self.OnLogWindowMove)
 
         self.staticTextLogLevel = wx.StaticText(id=wxID_LOGWINDOWSTATICTEXTLOGLEVEL,
               label=_('Log level'), name='staticTextLogLevel', parent=self,
@@ -128,13 +131,17 @@ class LogWindow(wx.Frame):
             self.SetSize((w,h))
         # New window placement method
         try:
-            placement = self.engine.config.get("Session", "LogPlacement")
+            placement = self._parent.engine.config.get("Session", "LogPlacement")
             import ast
             win32gui.SetWindowPlacement(self.GetHandle(), ast.literal_eval(placement))
         except:pass
-        if not self.IsShownOnScreen():
+
+    def Show(self, visible=True):
+        wx.Frame.Show(self, visible)
+        if visible and not self.IsShownOnScreen():
             self.Center()
         
+
     def OnCloseButton(self, event):
         self.Close()
 
@@ -151,6 +158,7 @@ class LogWindow(wx.Frame):
         global logFrame
         logFrame = None
         self._parent.engine.logger.removeHandler(self.handler)
+        self._parent.LogWindowClosed()
         event.Skip()
 
     def OnLogWindowSize(self, event):
@@ -191,3 +199,10 @@ class LogWindow(wx.Frame):
             wx.TheClipboard.SetData(clipBoard)
             wx.TheClipboard.Close()
         event.Skip()
+
+    def OnLogWindowActivate(self, event):
+        event.Skip()
+
+    def OnLogWindowMove(self, event):
+        event.Skip()
+        

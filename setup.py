@@ -7,8 +7,10 @@ from glob import glob
 import os.path
 import platform, sys
 
-VERSION = "0.5.1.0"
+VERSION = "0.5.2.0"
 VERSIONTAG = ""
+#VERSIONTAG = "BYEOS-WIP"
+#VERSIONTAG = "NoIcon"
 
 data_files = []
 

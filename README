@@ -13,6 +13,7 @@ fit for any purpose.
 
 Version history
 ---------------
+v0.5.2	Window handling fixes, documentation updates
 v0.5.1	APT compatibility issues, window position corrections
 v0.5	Bookmark editing window added (edit, delete, new), polar alignment
 	wizard epoch corrections
