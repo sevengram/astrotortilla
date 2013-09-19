@@ -30,7 +30,7 @@ OutputBaseFilename={#AstroTortilla}-{#TortillaVersion}-{#Platform}
 AlwaysShowComponentsList=yes
 WizardImageFile=tortilla-164x314.bmp
 WizardSmallImageFile=tortilla-small.bmp
-;SetupIconFile=astrotortilla-16c.ico
+SetupIconFile=astrotortilla.ico
 
 [Messages]
 BeveledLabel={#AstroTortilla} {#TortillaVersion}
@@ -150,13 +150,13 @@ Name: "{group}\User guide (English)"; Filename: "{app}\docs\AstroTortilla_user_g
 Name: "{group}\Pikaopas (Finnish)"; Filename: "{app}\docs\AstroTortilla_pikaopas.pdf"; Tasks: startmenu
 Name: "{group}\Käyttöohje (Finnish)"; Filename: "{app}\docs\AstroTortilla_kayttoohje.pdf"; Tasks: startmenu
 Name: "{group}\{cm:UninstallProgram,AstroTortilla}"; Filename: "{uninstallexe}"; Tasks: startmenu
-Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi  -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Tasks: cygstartmenu
+Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://astrotortilla.kuntsi.com/tortilla.gpg -s http://astrotortilla.kuntsi.com  -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Tasks: cygstartmenu
 Name: "{commondesktop}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{tmp}\{#VCRedist}"; WorkingDir: {tmp}; Flags: skipifdoesntexist; Check: VCRedistNeedsInstall; StatusMsg: "Checking for and installing ""Microsoft Visual C++ Redistributable Package"" if needed, This can take several minutes..."
-Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://astrotortilla.comsix.fi/tortilla.gpg -s http://astrotortilla.comsix.fi -O -q -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Description: "{cm:Install2,Cygwin,astrometry.net}"; AfterInstall: RebaseCygwinDLLs
+Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://astrotortilla.kuntsi.com/tortilla.gpg -s http://astrotortilla.kuntsi.com -O -q -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Description: "{cm:Install2,Cygwin,astrometry.net}"; AfterInstall: RebaseCygwinDLLs
 Filename: "{app}\AstroTortilla.exe"; Description: "{cm:LaunchProgram,AstroTortilla}"; Flags: nowait postinstall skipifsilent
 
 [INI]
@@ -297,7 +297,7 @@ begin
     ShowLines := False;
     AddGroup(CustomMessage('LblSelectMirror'), '', 0, nil);
     IntlServerRadioBtn := AddRadioButton(CustomMessage('LblMirrorInternational'), '', 0, IntlServerSelected, True, nil);
-    AddRadioButton(CustomMessage('LblMirrorFinland'), '', 0, not IntlServerSelected, True, nil);
+;    AddRadioButton(CustomMessage('LblMirrorFinland'), '', 0, not IntlServerSelected, True, nil);
   end;
 
   UseTychoCheckbox := TNewCheckBox.Create(Page);
@@ -512,10 +512,10 @@ begin
   else
     indexCount := 0;
   end;
-  if UseIntlServer then
-    uriBase := 'http://broiler.astrometry.net/~dstn/'
-  else
-    uriBase := 'http://astrotortilla.comsix.fi/indices/';
+//  if UseIntlServer then
+    uriBase := 'http://broiler.astrometry.net/~dstn/';
+//  else
+//    uriBase := 'http://astrotortilla.comsix.fi/indices/';
   if UseTychoCheckbox.Checked then
     begin
     uriBase := uriBase + '4100/';

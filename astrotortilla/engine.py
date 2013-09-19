@@ -101,18 +101,6 @@ class TortillaEngine(object):
         self.__statusCB = []
         self.loadConfig(CFGFILE)
 
-        logFile = self.config.get("AstroTortilla", "log_file").strip()
-        if logFile:
-            if not os.path.isabs(logFile):
-                logFile = os.path.join(appdirs.user_log_dir, logFile)
-                try:
-                    os.makedirs(os.path.dirname(logFile))
-                except: pass
-            logHandler = logging.FileHandler(logFile)
-            logHandler.setLevel(logLevels[self.config.get("AstroTortilla", "log_level")])
-            logHandler.setFormatter(logFormatter)
-            logger.addHandler(logHandler)
-            logger.info("Log started")
         self.solution = None
         self.lastCorrection = None
 
@@ -154,6 +142,30 @@ class TortillaEngine(object):
                 self.__configure(self.__solver, "Solver-%s"%self.__solverName)
             except:
                 pass # No config file necessarily exists on first start
+
+        # Create log-file if not defined yet
+        logFile = self.config.get("AstroTortilla", "log_file").strip()
+        if logFile:
+            if not os.path.isabs(logFile):
+                logFile = os.path.join(appdirs.user_log_dir, logFile)
+            try:
+                os.makedirs(os.path.dirname(logFile))
+            except: pass
+            exists = False
+            for file_handler in filter(lambda h: isinstance(h, logging.FileHandler), tuple(logger.handlers)):
+                if os.path.normpath(file_handler.baseFilename).lower() == os.path.normpath(logFile).lower():
+                    exists = True
+                    continue
+                logger.removeHandler(file_handler)
+
+            if not exists:
+                logger.info("Starting logfile %s"%logFile)
+                logHandler = logging.FileHandler(logFile)
+                logHandler.setLevel(logLevels[self.config.get("AstroTortilla", "log_level")])
+                logHandler.setFormatter(logFormatter)
+                logger.addHandler(logHandler)
+                logger.info("Log started")
+
         default_path=None
         try:
             default_path = self.config.get("AstroTortilla", "settings_path")
@@ -176,6 +188,26 @@ class TortillaEngine(object):
                     pass
             self.__bookmarks = bmlist
         self.__workDirectory = self.config.get("AstroTortilla", "work_directory") if self.config.has_option("AstroTortilla", "work_directory") else None
+        if self.__workDirectory:
+            try:
+                logger.debug("work_directory set as %s"%self.__workDirectory)
+                if not os.path.exists(self.__workDirectory):
+                    os.makedirs(self.__workDirectory)
+                if not os.path.isdir(self.__workDirectory):
+                    logger.error("work_directory not set to a directory, using system temporary directory")
+                    self.__workDirectory = None
+                logger.debug("Testing if work_directory is writable")
+                import tempfile
+                tfn = tempfile.mktemp(dir=self.__workDirectory)
+                logger.debug("Creating test-file %s"%tfn)
+                tf = file(tfn, "w")
+                tf.close()
+                del tf
+                os.remove(tfn)
+                logger.debug("work_directory setting OK")
+            except:
+                logger.error("work_directory not accessible, using system temporary directory")
+                self.__workDirectory = None
         if self.config.has_option("Session", "solver"):
             self.selectSolver(self.config.get("Session", "solver"))
         if self.config.has_option("Session", "camera"):
@@ -212,7 +244,7 @@ class TortillaEngine(object):
             try:
                 if self.__workDirectory is not None:
                     self.__camera.workingDirectory = self.__workDirectory
-            except Exception(e):
+            except Exception as e:
                 import traceback
                 logger.error("Setting working to '%s' directory failed: %s"%(self.__workDirectory, traceback.format_exc()))
             self.__cameraName = camName
@@ -436,7 +468,7 @@ class TortillaEngine(object):
             else:
                 self.solution = self.__solver.solve(imgFile, callback=self.setStatus)
             self.__status.pop()
-        except Exception, detail: # Silent errors
+        except Exception as detail: # Silent errors
             import traceback
             logger.error(traceback.format_exc())
         if self.solution:
@@ -487,20 +519,30 @@ class TortillaEngine(object):
                     self.setStatus(None)
                 if self.__abortAction: break;
             self.setProgress(-1)
+            cameraError = False
             if self.__camera.cameraState == CameraState.Error:
                 logger.debug("Camera in error state")
-                self.__abortAction = True
+                cameraError = True
             if self.__camera.imageReady and not self.__abortAction:
                 self.setStatus(_("Reading image from camera"))
                 img = self.__camera.getImage()
+            elif cameraError:
+                detail=_("Unknown error")
+                try:
+                    detail = self.__camera.errorMessage
+                except:
+                    pass
+                self.setStatus(_("Camera error: ")+detail)
+                self.__camera.reset()
             elif self.__abortAction:
                 self.setStatus(_("Aborted."))
             else:
                 self.setStatus(_("Camera did not produce an image to solve"))
-        except Exception, detail:
-            self.setStatus(_("Camera error: ")+str(detail))
+        except Exception as detail:
+            self.setStatus(_("Camera error: ")+str(detail.message))
             self.setProgress(-1)
             import traceback
+            logger.error(detail.message)
             logger.error(traceback.format_exc())
         self.setStatus("")
         solution = None

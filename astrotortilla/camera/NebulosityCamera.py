@@ -348,19 +348,19 @@ class NebulosityCamera(ICamera):
         f.close()
         fname = fname.replace("~", "{~}")
         if self.getProperty("nebulosity") == "2":
-            if app.Nebulosityv2.GetShowState() not in (win32con.SW_MAXIMIZE, win32con.SW_NORMAL, win32con.SW_RESTORE, win32con.SW_SHOW):
-                app.Nebulosityv2.Restore()
-            app.Nebulosityv2.SetFocus()
-            app.Nebulosityv2.Wait("exists enabled visible ready")
-            app.Nebulosityv2.SetFocus()
-            app.Nebulosityv2.TypeKeys("^r")
+            if app.Nebulosityv2wxWindow.GetShowState() not in (win32con.SW_MAXIMIZE, win32con.SW_NORMAL, win32con.SW_RESTORE, win32con.SW_SHOW):
+                app.Nebulosityv2wxWindow.Restore()
+            app.Nebulosityv2wxWindow.SetFocus()
+            app.Nebulosityv2wxWindow.Wait("exists enabled visible ready")
+            app.Nebulosityv2wxWindow.SetFocus()
+            app.Nebulosityv2wxWindow.TypeKeys("^r")
         else:
-            if app.Nebulosityv3.GetShowState() not in (win32con.SW_MAXIMIZE, win32con.SW_NORMAL, win32con.SW_RESTORE, win32con.SW_SHOW):
-                app.Nebulosityv3.Restore()
-            app.Nebulosityv3.SetFocus()
-            app.Nebulosityv3.Wait("exists enabled visible ready")
-            app.Nebulosityv3.SetFocus()
-            app.Nebulosityv3.TypeKeys("^r")
+            if app.Nebulosityv3wxWindow.GetShowState() not in (win32con.SW_MAXIMIZE, win32con.SW_NORMAL, win32con.SW_RESTORE, win32con.SW_SHOW):
+                app.Nebulosityv3wxWindow.Restore()
+            app.Nebulosityv3wxWindow.SetFocus()
+            app.Nebulosityv3wxWindow.Wait("exists enabled visible ready")
+            app.Nebulosityv3wxWindow.SetFocus()
+            app.Nebulosityv3wxWindow.TypeKeys("^r")
         try:
             WaitUntil(10.5, 0.5, app.LoadScript.Exists, True)
         except:

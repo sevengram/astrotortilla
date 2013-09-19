@@ -3,15 +3,15 @@ rem build with py2exe
 rem
 setlocal
 
-if exist "\python27\python.exe" (
-	set PYTHON="\python27\python.exe"
-	set PYTHONPATH="\python27"
+if exist "c:\python27\python.exe" (
+	set PYTHON="c:\python27\python.exe"
+	set PYTHONPATH="c:\python27"
 )
 
-if exist "\program files\Inno Setup 5\iscc.exe" (
-	set INNOSETUP="\program files\Inno Setup 5\iscc.exe"
+if exist "c:\program files\Inno Setup 5\iscc.exe" (
+	set INNOSETUP="c:\program files\Inno Setup 5\iscc.exe"
 )
-if exist "\Program Files (x86)\Inno Setup 5\iscc.exe" (
+if exist "c:\Program Files (x86)\Inno Setup 5\iscc.exe" (
 	set INNOSETUP="c:\Program Files (x86)\Inno Setup 5\iscc.exe"
 )
 
