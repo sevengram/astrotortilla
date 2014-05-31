@@ -38,25 +38,36 @@ class Configurable(object):
                 len(propList.values()[0]) == 5:
             self.__propertyList = propList
 
+    def __normalizedName(self, handle):
+        """
+        """
+        lowHandle = handle.lower()
+        propNames = [prop for prop in self.__propertyList if prop.lower() == lowHandle]
+        if any(propNames):
+            return propNames[0]
+        else:
+            return None
 
     def setProperty(self, handle, value):
         """Set property value
         @param handle string, name of property
         @param value preferably string, stored if validation function passes
         """
-        if handle in self.__propertyList:
+        propName = self.__normalizedName(handle)
+        if propName:
             try:
-                self.__propertyList[handle][1](value)
+                self.__propertyList[propName][1](value)
             except:
                 raise ValueError("Value does not pass validation function")
-            self.__properties[handle] = value
+            self.__properties[propName] = value
         else:
             raise KeyError("Unknown property: %s"%handle)
 
     def getProperty(self, handle):
         "@return value of property named `handle`"
-        if handle in self.__propertyList:
-            return self.__properties.get(handle, self.__propertyList[handle][-1])
+        propName = self.__normalizedName(handle)
+        if propName:
+            return self.__properties.get(propName, self.__propertyList[propName][-1])
         else:
             raise KeyError("Unknown property: %s"%handle)
     

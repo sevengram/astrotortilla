@@ -1,4 +1,4 @@
-"AstroMate units"
+"AstroTortilla units"
 # vim: set fileencoding=UTF-8 encoding=UTF-8:
 # -*- coding: UTF-8 -*-
 

@@ -13,6 +13,7 @@ fit for any purpose.
 
 Version history
 ---------------
+v0.7	Error corrections for re-centering and config values
 v0.6	Backyard EOS v3 support, Nebulosity 3.1 support, working_dir fixes
 v0.5.2	Window handling fixes
 v0.5.1	APT compatibility issues, window position corrections

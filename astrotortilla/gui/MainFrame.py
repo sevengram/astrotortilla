@@ -344,6 +344,7 @@ class mainFrame(wx.Frame):
         self.numCtrlAccuracy.SetValue(1.0)
         self.numCtrlAccuracy.SetConstraints(LayoutAnchors(self.numCtrlAccuracy,
               False, True, True, False))
+        self.numCtrlAccuracy.Bind(wx.EVT_TEXT, self.__accuracyChanged)
 
         self.lblArcmin = wx.StaticText(id=wxID_MAINFRAMELBLARCMIN,
               label=_('arcmin'), name='lblArcmin', parent=self,
@@ -521,6 +522,9 @@ class mainFrame(wx.Frame):
     def __exposureChanged(self, event_args):
         self.engine.setExposure(self.numCtrlExposure.GetValue())
 
+    def __accuracyChanged(self, event_args):
+        self.engine.setAccuracy(self.numCtrlAccuracy.GetValue())
+
     def __init__(self, parent):
         self.__logFrame = None
         self._init_ctrls(parent)
@@ -548,7 +552,8 @@ class mainFrame(wx.Frame):
 
         # Bind self.OnClose to window closing event
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        self.numCtrlExposure.SetValue(self.engine.getExposure()) # set default exposure value
+        self.numCtrlExposure.SetValue(self.engine.getExposure() or 5.0) # set default exposure value
+        self.numCtrlAccuracy.SetValue(self.engine.getAccuracy() or 1.0) # set default accuracy value
         self.bookmarkMenuStart = self.menuBookmarks.GetMenuItemCount()
         self.bookmarkMenuItems = []
         self.bookmarkMap = {}

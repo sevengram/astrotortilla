@@ -144,7 +144,11 @@ class TortillaEngine(object):
                 pass # No config file necessarily exists on first start
 
         # Create log-file if not defined yet
-        logFile = self.config.get("AstroTortilla", "log_file").strip()
+        logFile = None
+        try:
+            logFile = self.config.get("AstroTortilla", "log_file").strip()
+        except Exception as ex:
+            logger.warning("The log_file parameter value in config file is invalid.")
         if logFile:
             if not os.path.isabs(logFile):
                 logFile = os.path.join(appdirs.user_log_dir, logFile)
@@ -311,6 +315,12 @@ class TortillaEngine(object):
     def getTelescope(self):
         return self.__telescope
 
+    def setAccuracy(self, value):
+        self.config.set("Session", "iterlimitarcmin", str(float(value)))
+
+    def getAccuracy(self):
+        return self.config.getfloat("Session", "iterlimitarcmin")
+
     def setExposure(self, value):
         self.config.set("Session", "exposure", str(float(value)))
 
@@ -374,8 +384,8 @@ class TortillaEngine(object):
             for k,v in self.config.items(name):
                 try:
                     obj.setProperty(k,v)
-                except:
-                    pass
+                except Exception as ex:
+                    logger.info("Failed to set '%s' to '%s' for '%s'"%(k, v, name))
                     
     def __saveObjConfig(self, obj, name):
         "Save `obj` properties as section `name` in config structure"

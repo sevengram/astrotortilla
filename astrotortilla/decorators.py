@@ -1,4 +1,4 @@
-"AstroMate internal decorator functions"
+"AstroTortilla internal decorator functions"
 
 def test():
 	return

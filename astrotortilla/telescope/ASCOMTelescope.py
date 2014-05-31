@@ -24,6 +24,7 @@ class ASCOMTelescope(ITelescope):
     def __init__(self):
         super(ASCOMTelescope, self).__init__()
         if TRACE: logger.debug(">init")
+        self.propertyList = PROPERTYLIST
         self.__chooser = None
         try:
             self.__chooser = Dispatch("DriverHelper.Chooser")
@@ -37,7 +38,7 @@ class ASCOMTelescope(ITelescope):
         if not self.__chooser:
             raise Exception("Failed to initialize ASCOM device chooser")
         self.__chooser.DeviceType = "Telescope"
-        self.propertyList = PROPERTYLIST
+        
         self.__scopeName = None
         self.__scope = None
         self.__position = None
@@ -226,7 +227,10 @@ class ASCOMTelescope(ITelescope):
             separation = self.position - coord
             if separation.arcminutes < float(self.getProperty("syncAccuracy")):
                 break
-            time.sleep(float(self.getProperty("syncAccuracy"))/10.0)
+            time.sleep(float(self.getProperty("syncMaxWait"))/10.0)
+            now = time.time()
+        if separation.arcminutes > float(self.getProperty("syncAccuracy")):
+            logger.warning("Sync delta detected: %.2f arcmin"%separation.arcminutes)
         if TRACE: logger.debug("<position set")
 
     @property

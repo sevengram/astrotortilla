@@ -7,7 +7,7 @@ from glob import glob
 import os.path
 import platform, sys
 
-VERSION = "0.6.0.0"
+VERSION = "0.7.0.0"
 VERSIONTAG = ""
 #VERSIONTAG = "NoIcon"
 
