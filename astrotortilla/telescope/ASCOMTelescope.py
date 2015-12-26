@@ -1,18 +1,13 @@
-# -*- coding: UTF-8 -*-
-
 """
 ASCOMTelescope
 Interface for ASCOM telescope
 """
 
+import logging
 import time
 from ..ITelescope import ITelescope
 from ..units import Coordinate, deg2str
 from win32com.client import Dispatch
-
-TRACE = 0  # 1 to enable function tracing
-
-import logging
 
 logger = logging.getLogger("astrotortilla.ASCOMTelescope")
 
@@ -28,7 +23,6 @@ PROPERTYLIST = {
 class ASCOMTelescope(ITelescope):
     def __init__(self):
         super(ASCOMTelescope, self).__init__()
-        if TRACE: logger.debug(">init")
         self.propertyList = PROPERTYLIST
         self.__chooser = None
         try:
@@ -62,7 +56,6 @@ class ASCOMTelescope(ITelescope):
         self.__trackingTime = 0
         self.__scopeIFVersion = 0
         self.__errorCounter = 0
-        if TRACE: logger.debug("<init")
 
     def __invalidateCache(self):
         self.__positionTime = 0
@@ -102,7 +95,6 @@ class ASCOMTelescope(ITelescope):
     @property
     def connected(self):
         """Is the telescope connected"""
-        if TRACE: logger.debug("<>connected")
         rval = False
         if not self.__scope:
             return rval
@@ -117,12 +109,9 @@ class ASCOMTelescope(ITelescope):
 
     def _connect(self):
         """Connect the scope"""
-        if TRACE:
-            logger.debug(">connect")
         if self.__scope:
             if not self.__scope.Connected:
                 self.__scope.Connected = True
-            if TRACE: logger.debug("<connect")
             self.__invalidateCache()
             return
         if not self.__scopeName:
@@ -138,35 +127,23 @@ class ASCOMTelescope(ITelescope):
             self.__scopeIFVersion = self.__scope.InterfaceVersion
         except:
             pass
-        if TRACE:
-            logger.debug("<connect")
         self.__invalidateCache()
 
     @connected.setter
     def connected(self, value):
         """Connect or disconnect telescope"""
-        if TRACE:
-            logger.debug(">connect set")
         if value == self.connected:
-            if TRACE:
-                logger.debug("<connect set")
             return
         if value:
             self._connect()
         if self.__scope:
             self.__scope.Connected = value
-        if TRACE:
-            logger.debug("<connect set")
         self.__invalidateCache()
 
     @property
     def position(self):
         """Current assumed position or None if not known"""
-        if TRACE:
-            logger.debug(">position")
         if not self.connected:
-            if TRACE:
-                logger.debug("<position")
             return None
         now = time.time()
         if now - self.__positionTime > self._maxAge:
@@ -181,8 +158,6 @@ class ASCOMTelescope(ITelescope):
             except:
                 logger.error("ASCOM Error: Getting RA/DEC failed")
                 self._operation_ok = False
-        if TRACE:
-            logger.debug("<position")
         return self.__position
 
     @property
@@ -191,8 +166,6 @@ class ASCOMTelescope(ITelescope):
         if not self.connected:
             return None
         # convert RA from hours to degrees
-        if TRACE:
-            logger.debug(">target")
         now = time.time()
         if now - self.__targetTime > self._maxAge:
             logger.debug("request target")
@@ -203,15 +176,11 @@ class ASCOMTelescope(ITelescope):
                 self.__target = Coordinate(RA, dec)
             except:
                 self.__target = None
-        if TRACE:
-            logger.debug("<target")
         return self.__target
 
     @target.setter
     def target(self, coord):
         """Set target coordinates"""
-        if TRACE:
-            logger.debug(">target set")
         try:
             RA = coord.RA * 24. / 360
             dec = coord.dec
@@ -220,20 +189,14 @@ class ASCOMTelescope(ITelescope):
         except:
             logger.warning("target set failed")
         self.__invalidateCache()
-        if TRACE:
-            logger.debug("<target set")
 
     @position.setter
     def position(self, coord):
         """Synchronize current position to parameter coord"""
         if not isinstance(coord, Coordinate):
             raise TypeError("Parameter not a Coordinate")
-        if TRACE:
-            logger.debug(">position set")
         if not self.connected:
             logger.debug("not connected")
-            if TRACE:
-                logger.debug("<position set")
             return
         # convert degrees to hours
         logger.info("Syncing to %s" % (str(coord)))
@@ -252,17 +215,11 @@ class ASCOMTelescope(ITelescope):
             now = time.time()
         if separation.arcminutes > float(self.getProperty("syncAccuracy")):
             logger.warning("Sync delta detected: %.2f arcmin" % separation.arcminutes)
-        if TRACE:
-            logger.debug("<position set")
 
     @property
     def slewing(self):
         """Is the telescope currently slewing"""
-        if TRACE:
-            logger.debug(">slewing")
         if not self.connected:
-            if TRACE:
-                logger.debug("<slewing")
             return False
         now = time.time()
         if now - self.__slewingTime > self._maxAge:
@@ -283,18 +240,12 @@ class ASCOMTelescope(ITelescope):
             except:
                 logger.error("ASCOM error reading slewing status")
                 self._operation_ok = False
-        if TRACE:
-            logger.debug("<slewing")
         return self.__slewing
 
     @property
     def tracking(self):
         """Is the telescope tracking"""
-        if TRACE:
-            logger.debug(">tracking")
         if not self.connected:
-            if TRACE:
-                logger.debug("<tracking")
             return False
 
         now = time.time()
@@ -307,25 +258,19 @@ class ASCOMTelescope(ITelescope):
             except:
                 self._operation_ok = False
                 logger.error("ASCOM error reading tracking status")
-        if TRACE:
-            logger.debug("<tracking")
         return self.__tracking
 
     @tracking.setter
     def tracking(self, value):
-        "Set the telescope tracking to 'value'"
+        """Set the telescope tracking to value"""
         if not self.connected:
             return
-        if TRACE:
-            logger.debug(">tracking set")
         self.__scope.Tracking = value
         self.__invalidateCache()
-        if TRACE:
-            logger.debug("<tracking set")
 
     @property
     def canSetRARate(self):
-        "Can the RA rate be set?"
+        """Can the RA rate be set?"""
         if not self.connected:
             return False
         else:
@@ -359,11 +304,7 @@ class ASCOMTelescope(ITelescope):
     @property
     def parked(self):
         """Is telescope parked"""
-        if TRACE:
-            logger.debug(">parked")
         if not self.connected:
-            if TRACE:
-                logger.debug("<parked")
             return True
         if self.__scopeIFVersion < 2:
             return False  # v1 ASCOM cannot park/unpark
@@ -375,7 +316,6 @@ class ASCOMTelescope(ITelescope):
                 self.__parkedTime = now
         except:  # Getting parked status fails, assume V1 driver
             self.__scopeIFVersion = 1
-        if TRACE: logger.debug("<parked")
         return self.__parked
 
     @parked.setter
@@ -383,14 +323,11 @@ class ASCOMTelescope(ITelescope):
         """Park and Unpark scope"""
         if not self.connected:
             return
-        if TRACE:
-            logger.debug(">park")
         if state:
             self.__scope.Park()
         else:
             self.__scope.Unpark()
         self.__invalidateCache()
-        if TRACE: logger.debug("<park")
 
     def slewTo(self, coord):
         """Slew telescope to coord"""
@@ -405,7 +342,7 @@ class ASCOMTelescope(ITelescope):
         self.__invalidateCache()
 
     def slewToAsync(self, coord):
-        "Slew telescope to coord, return as soon as possible"
+        """Slew telescope to coord, return as soon as possible"""
         if not isinstance(coord, Coordinate):
             raise TypeError("Parameter not a Coordinate")
         if not self.connected:

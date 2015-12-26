@@ -1,9 +1,6 @@
-# -*- coding: UTF-8 -*-
 import logging
 
 logger = logging.getLogger("astrotortilla.Configurable")
-
-TRACE = 0  # 1 to enable detailed tracing
 
 
 class Configurable(object):
@@ -38,8 +35,7 @@ class Configurable(object):
         """Set the property list dict to propList.
         Should only be set in c'tor of a class inheriting Configurable.
         """
-        if type(propList) == dict and \
-                        len(propList.values()[0]) == 5:
+        if type(propList) == dict and len(propList.values()[0]) == 5:
             self.__propertyList = propList
 
     def __normalizedName(self, handle):

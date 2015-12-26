@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # Copyright (c) 2005-2010 ActiveState Software Inc.
 
-"""Utilities for determining application-specific dirs.
-
+"""
+Utilities for determining application-specific dirs.
 See <http://github.com/ActiveState/appdirs> for details and usage.
 """
 # Dev Notes:
@@ -14,23 +14,17 @@ See <http://github.com/ActiveState/appdirs> for details and usage.
 __version_info__ = (1, 2, 0)
 __version__ = '.'.join(map(str, __version_info__))
 
-
 import sys
 import os
 
-PY3 = sys.version_info[0] == 3
-
-if PY3:
-    unicode = str
 
 class AppDirsError(Exception):
     pass
 
 
-
 def user_data_dir(appname, appauthor=None, version=None, roaming=False):
-    r"""Return full path to the user-specific data dir for this application.
-
+    """
+    Return full path to the user-specific data dir for this application.
         "appname" is the name of application.
         "appauthor" (only required and used on Windows) is the name of the
             appauthor or distributing body for this application. Typically
@@ -47,12 +41,12 @@ def user_data_dir(appname, appauthor=None, version=None, roaming=False):
             for a discussion of issues.
 
     Typical user data directories are:
-        Mac OS X:               ~/Library/Application Support/<AppName>
-        Unix:                   ~/.config/<appname>    # or in $XDG_CONFIG_HOME if defined
-        Win XP (not roaming):   C:\Documents and Settings\<username>\Application Data\<AppAuthor>\<AppName>
-        Win XP (roaming):       C:\Documents and Settings\<username>\Local Settings\Application Data\<AppAuthor>\<AppName>
-        Win 7  (not roaming):   C:\Users\<username>\AppData\Local\<AppAuthor>\<AppName>
-        Win 7  (roaming):       C:\Users\<username>\AppData\Roaming\<AppAuthor>\<AppName>
+        Mac OS X:             ~/Library/Application Support/<AppName>
+        Unix:                 ~/.config/<appname>    # or in $XDG_CONFIG_HOME if defined
+        Win XP (not roaming): C:\Documents and Settings\<username>\Application Data\<AppAuthor>\<AppName>
+        Win XP (roaming):     C:\Documents and Settings\<username>\Local Settings\Application Data\<AppAuthor>\<AppName>
+        Win 7  (not roaming): C:\Users\<username>\AppData\Local\<AppAuthor>\<AppName>
+        Win 7  (roaming):     C:\Users\<username>\AppData\Roaming\<AppAuthor>\<AppName>
 
     For Unix, we follow the XDG spec and support $XDG_CONFIG_HOME. We don't
     use $XDG_DATA_HOME as that data dir is mostly used at the time of
@@ -113,7 +107,7 @@ def site_data_dir(appname, appauthor=None, version=None):
     else:
         # XDG default for $XDG_CONFIG_DIRS[0]. Perhaps should actually
         # *use* that envvar, if defined.
-        path = "/etc/xdg/"+appname.lower()
+        path = "/etc/xdg/" + appname.lower()
     if version:
         path = os.path.join(path, version)
     return path
@@ -168,6 +162,7 @@ def user_cache_dir(appname, appauthor=None, version=None, opinion=True):
         path = os.path.join(path, version)
     return path
 
+
 def user_log_dir(appname, appauthor=None, version=None, opinion=True):
     r"""Return full path to the user-specific log dir for this application.
 
@@ -202,11 +197,13 @@ def user_log_dir(appname, appauthor=None, version=None, opinion=True):
             os.path.expanduser('~/Library/Logs'),
             appname)
     elif sys.platform == "win32":
-        path = user_data_dir(appname, appauthor, version); version=False
+        path = user_data_dir(appname, appauthor, version)
+        version = False
         if opinion:
             path = os.path.join(path, "Logs")
     else:
-        path = user_cache_dir(appname, appauthor, version); version=False
+        path = user_cache_dir(appname, appauthor, version)
+        version = False
         if opinion:
             path = os.path.join(path, "log")
     if version:
@@ -216,32 +213,35 @@ def user_log_dir(appname, appauthor=None, version=None, opinion=True):
 
 class AppDirs(object):
     """Convenience wrapper for getting application dirs."""
+
     def __init__(self, appname, appauthor, version=None, roaming=False):
         self.appname = appname
         self.appauthor = appauthor
         self.version = version
         self.roaming = roaming
+
     @property
     def user_data_dir(self):
         return user_data_dir(self.appname, self.appauthor,
-            version=self.version, roaming=self.roaming)
+                             version=self.version, roaming=self.roaming)
+
     @property
     def site_data_dir(self):
         return site_data_dir(self.appname, self.appauthor,
-            version=self.version)
+                             version=self.version)
+
     @property
     def user_cache_dir(self):
         return user_cache_dir(self.appname, self.appauthor,
-            version=self.version)
+                              version=self.version)
+
     @property
     def user_log_dir(self):
         return user_log_dir(self.appname, self.appauthor,
-            version=self.version)
+                            version=self.version)
 
 
-
-
-#---- internal support stuff
+# ---- internal support stuff
 
 def _get_win_folder_from_registry(csidl_name):
     """This is a fallback technique at best. I'm not sure if using the
@@ -257,35 +257,37 @@ def _get_win_folder_from_registry(csidl_name):
     }[csidl_name]
 
     key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER,
-        r"Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders")
-    dir, type = _winreg.QueryValueEx(key, shell_folder_name)
-    return dir
+                          r"Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders")
+    path, ptype = _winreg.QueryValueEx(key, shell_folder_name)
+    return path
+
 
 def _get_win_folder_with_pywin32(csidl_name):
     from win32com.shell import shellcon, shell
-    dir = shell.SHGetFolderPath(0, getattr(shellcon, csidl_name), 0, 0)
+    path = shell.SHGetFolderPath(0, getattr(shellcon, csidl_name), 0, 0)
     # Try to make this a unicode path because SHGetFolderPath does
     # not return unicode strings when there is unicode data in the
     # path.
     try:
-        dir = unicode(dir)
+        path = unicode(path)
 
         # Downgrade to short path name if have highbit chars. See
         # <http://bugs.activestate.com/show_bug.cgi?id=85099>.
         has_high_char = False
-        for c in dir:
+        for c in path:
             if ord(c) > 255:
                 has_high_char = True
                 break
         if has_high_char:
             try:
                 import win32api
-                dir = win32api.GetShortPathName(dir)
+                path = win32api.GetShortPathName(path)
             except ImportError:
                 pass
     except UnicodeError:
         pass
-    return dir
+    return path
+
 
 def _get_win_folder_with_ctypes(csidl_name):
     import ctypes
@@ -313,34 +315,16 @@ def _get_win_folder_with_ctypes(csidl_name):
 
     return buf.value
 
+
 if sys.platform == "win32":
     try:
         import win32com.shell
+
         _get_win_folder = _get_win_folder_with_pywin32
     except ImportError:
         try:
             import ctypes
+
             _get_win_folder = _get_win_folder_with_ctypes
         except ImportError:
             _get_win_folder = _get_win_folder_from_registry
-
-
-
-#---- self test code
-
-if __name__ == "__main__":
-    appname = "MyApp"
-    appauthor = "MyCompany"
-
-    props = ("user_data_dir", "site_data_dir", "user_cache_dir",
-        "user_log_dir")
-
-    print("-- app dirs (without optional 'version')")
-    dirs = AppDirs(appname, appauthor, version="1.0")
-    for prop in props:
-        print("%s: %s" % (prop, getattr(dirs, prop)))
-
-    print("\n-- app dirs (with optional 'version')")
-    dirs = AppDirs(appname, appauthor)
-    for prop in props:
-        print("%s: %s" % (prop, getattr(dirs, prop)))

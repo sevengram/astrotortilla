@@ -1,37 +1,32 @@
-# -*- coding: UTF-8 -*-
-
 """
 AstroTortilla main engine classes
 """
 
-from libs.appdirs.appdirs import AppDirs
-
-appdirs = AppDirs("AstroTortilla", "astrotortilla.sf.net")
 import logging
-
-logger = logging.getLogger("astrotortilla")
-logger.setLevel(logging.DEBUG)
-logFormatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
 import gettext
 import sys
 import codecs
+import ConfigParser
+import os
+import os.path
+import time
+from inspect import isclass, getmembers
+
+from libs.appdirs.appdirs import AppDirs
+from win32api import LoadResource
 import camera
 import solver
 import telescope
 from IPlateSolver import IPlateSolver
 from ICamera import ICamera
 from ITelescope import ITelescope
-from inspect import isclass, getmembers
-import ConfigParser
-import os
-import os.path
-from time import time, sleep
-
 from astrotortilla import CameraState
 from astrotortilla.bookmark import Bookmark
 
-from win32api import LoadResource
+appdirs = AppDirs("AstroTortilla", "astrotortilla.sf.net")
+logger = logging.getLogger("astrotortilla")
+logger.setLevel(logging.DEBUG)
+logFormatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
@@ -84,15 +79,15 @@ class TortillaEngine(object):
 
         self.__telescopes = self._list_subclasses(ITelescope, telescope)
         self.__telescope = None
-        self.__telescopeName = _(u'Not selected')
+        self.__telescopeName = _('Not selected')
 
         self.__solvers = self._list_subclasses(IPlateSolver, solver)
         self.__solver = None
-        self.__solverName = _(u'Not selected')
+        self.__solverName = _('Not selected')
 
         self.__cameras = self._list_subclasses(ICamera, camera)
         self.__camera = None
-        self.__cameraName = _(u'Not selected')
+        self.__cameraName = _('Not selected')
 
         self.__bookmarks = []
 
@@ -121,7 +116,7 @@ class TortillaEngine(object):
     def version(self):
         version = ""
         try:
-            version = LoadResource(0, u'VERSION', 1).rstrip("0.")
+            version = LoadResource(0, 'VERSION', 1).rstrip("0.")
             tag = self.version_tag
             if tag.strip():
                 version += " " + tag
@@ -135,7 +130,7 @@ class TortillaEngine(object):
     def version_tag(self):
         tag = ""
         try:
-            tag = LoadResource(0, u'VERSIONTAG', 2)
+            tag = LoadResource(0, 'VERSIONTAG', 2)
         except:
             pass
         return tag
@@ -488,7 +483,7 @@ class TortillaEngine(object):
         self.solution = None
         self.__status.append(Status.Solving)
         self.setStatus(_("Solving..."))
-        startTime = time()
+        startTime = time.time()
         # solve based on current location if telescope is tracking, otherwise pure blind solve
         try:
             if not blind and self.__telescope and self.__telescope.tracking:
@@ -501,9 +496,9 @@ class TortillaEngine(object):
             import traceback
             logger.error(traceback.format_exc())
         if self.solution:
-            self.setStatus(_("Solved in %.1fs") % (time() - startTime))
+            self.setStatus(_("Solved in %.1fs") % (time.time() - startTime))
         else:
-            self.setStatus(_("No solution in %.1fs") % (time() - startTime))
+            self.setStatus(_("No solution in %.1fs") % (time.time() - startTime))
         return self.solution
 
     def solveCamera(self, exposure=None):
@@ -530,11 +525,11 @@ class TortillaEngine(object):
                 return None
             self.setStatus(_("Exposing: %.2f seconds") % exposure)
             self.__camera.capture(exposure)
-            tEnd = time() + exposure
+            tEnd = time.time() + exposure
             tLast = exposure
             while not self.__camera.imageReady and self.__camera.cameraState not in (CameraState.Error,):
-                sleep(0.02)
-                tLeft = tEnd - time()
+                time.sleep(0.02)
+                tLeft = tEnd - time.time()
                 if tLeft >= 0:
                     self.setProgress((1. - tLeft / exposure) * 100)
                 if int(tLeft * 2) != tLast:
@@ -544,7 +539,7 @@ class TortillaEngine(object):
                     else:
                         self.setStatus(_("Waiting for camera"))
                 else:
-                    self.setStatus(None)
+                    self.setStatus("")
                 if self.__abortAction:
                     break
             self.setProgress(-1)
@@ -610,7 +605,7 @@ class TortillaEngine(object):
         self.setStatus(_("Waiting for scope to stop"))
         startPosition = self.__telescope.position
         while self.__telescope.slewing:
-            sleep(0.2)
+            time.sleep(0.2)
             try:
                 targetPos = self.__telescope.target
                 startDistance = startPosition - targetPos
@@ -646,7 +641,7 @@ class TortillaEngine(object):
                 raise Exception("ASCOM Telescope sync error")
             self.__telescope.slewToAsync(targetPos)
             while self.__telescope.slewing:
-                sleep(0.1)
+                time.sleep(0.1)
                 distance = self.__telescope.position - targetPos
                 self.setProgress((1. - distance.arcminutes / pointError.arcminutes) * 100)
             self.setProgress(-1)

@@ -1,17 +1,16 @@
-# -*- coding: UTF-8 -*-
 """
 AstroTortilla bookmark class
 """
 
 import logging
 import base64
+import gettext
+
+from astrotortilla.units import Coordinate, deg2dms, deg2hms, deg2str
 
 logger = logging.getLogger("astrotortilla.Bookmark")
 logger.setLevel(logging.DEBUG)
 logFormatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-import gettext
-from astrotortilla.units import Coordinate, deg2dms, deg2hms, deg2str
 
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
@@ -31,7 +30,7 @@ class Bookmark(object):
                     name = name.decode(trying.pop())
                 except:
                     pass
-        self.__name = unicode(name).strip() or u"%s/%s" % (deg2hms(position.RA), deg2dms(position.dec))
+        self.__name = unicode(name).strip() or "%s/%s" % (deg2hms(position.RA), deg2dms(position.dec))
         self.__position = position
         self.__angle = angle
 
@@ -50,7 +49,7 @@ class Bookmark(object):
     def to_string(self):
         """Short string representation"""
         name = "(b64|utf8)" + base64.b64encode(self.__name.encode("utf8"))
-        return u"%s,%s,%.1f,%s" % (deg2hms(self.__position.RA), deg2dms(self.__position.dec, ":"), self.__angle, name)
+        return "%s,%s,%.1f,%s" % (deg2hms(self.__position.RA), deg2dms(self.__position.dec, ":"), self.__angle, name)
 
     @classmethod
     def from_string(cls, bookmark):

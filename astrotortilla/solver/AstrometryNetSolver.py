@@ -1,5 +1,3 @@
-# -*- coding: UTF-8 -*-
-
 import logging
 import subprocess
 import os
@@ -42,14 +40,14 @@ PROPERTYLIST = {
 
 
 def ThreadedReader(pipe, outputList, terminator):
-    "Reader function to get output from subprocess asynchronously to main-thread"
+    """Reader function to get output from subprocess asynchronously to main-thread"""
     while not terminator.is_set():
         line = pipe.readline()
         outputList.insert(0, line)
 
 
 class AstrometryNetSolver(IPlateSolver):
-    "PlateSolver using astrometry.net solver"
+    """PlateSolver using astrometry.net solver"""
 
     def __init__(self, workDirectory=None):
         super(AstrometryNetSolver, self).__init__()
@@ -69,7 +67,8 @@ class AstrometryNetSolver(IPlateSolver):
         if not os.path.exists(self.__wd):
             os.makedirs(self.__wd)
         if not os.path.isdir(self.__wd):
-            raise "Work directory exists and is not a directory"
+            logger.error("Work directory exists and is not a directory")
+            raise IOError()
         try:
             self.__transform = Dispatch("ASCOM.Astrometry.Transform.Transform")
         except:
@@ -89,7 +88,7 @@ class AstrometryNetSolver(IPlateSolver):
         return _("Local astrometry.net")
 
     def __execute(self, command):
-        "Execute a command in cygwin shell"
+        """Execute a command in cygwin shell"""
         logger.debug("Executing: %s" % command)
         if self.__callback:
             stderrPipe = subprocess.STDOUT
@@ -98,9 +97,8 @@ class AstrometryNetSolver(IPlateSolver):
         cygShell = self.getProperty("shell")
 
         si = subprocess.STARTUPINFO()
-        if 1:
-            si.dwFlags |= win32process.STARTF_USESHOWWINDOW
-            si.wShowWindow = win32con.SW_HIDE
+        si.dwFlags |= win32process.STARTF_USESHOWWINDOW
+        si.wShowWindow = win32con.SW_HIDE
         self.__shell = subprocess.Popen(cygShell % command, shell=False, bufsize=1,
                                         stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                         stderr=stderrPipe, startupinfo=si)
@@ -113,7 +111,7 @@ class AstrometryNetSolver(IPlateSolver):
             reader = threading.Thread(target=ThreadedReader, args=(self.__shell.stdout, stdoutList, terminator))
             reader.start()
             try:
-                while self.__shell.poll() == None:
+                while self.__shell.poll() is None:
                     if stdoutList:
                         self.__callback(stdoutList.pop())
                     else:
@@ -134,34 +132,34 @@ class AstrometryNetSolver(IPlateSolver):
 
     @property
     def hasSolution(self):
-        "@return True if a solution was found"
+        """@return True if a solution was found"""
         return self.__found
 
     @property
     def solution(self):
-        "@return current solution object or None"
+        """@return current solution object or None"""
         return self.__solution
 
     @property
     def timeout(self):
-        "@return int, current time-out value"
+        """@return int, current time-out value"""
         return self.__timeout
 
     @timeout.setter
     def timeout(self, value):
-        "@param value int, time-out for finding the solution"
+        """@param value int, time-out for finding the solution"""
         self.__timeout = int(value)
 
     def solve(self, imagePath, target=None, targetRadius=None, minFov=None, maxFov=None, callback=None):
-        """Do plate solving for image, return True on success
+        """
+        Do plate solving for image, return True on success
         @param imagePath string, path to image to be solved
         @param target Coordinate(), optional guess at image center
         @param targetRadius float, target coordinate guess accuracy
-        @param minFOV float, optional minimum field width in degrees
-        @param maxFOV float, optional maximum field width in degrees
+        @param minFov float, optional minimum field width in degrees
+        @param maxFov float, optional maximum field width in degrees
         @param callback function, optional function called periodically
         @return Solution() or None
-
         The callback function must be callable with a string argument and with explicit None.
         """
         self.__callback = callback
@@ -185,8 +183,6 @@ class AstrometryNetSolver(IPlateSolver):
         options.append("-H %s" % (maxFov or self.getProperty("scale_max")))
         options.append("-u %s" % (self.getProperty("scale_units")))
         try:
-
-            int(self.getProperty("downscale"))
             if int(self.getProperty("downscale")) > 1:
                 options.append("-z %d" % int(self.getProperty("downscale")))
         except:
@@ -195,21 +191,21 @@ class AstrometryNetSolver(IPlateSolver):
         r = self.__execute('solve-field %s -D \\"`cygpath -a \\"%s\\"`\\" \\"`cygpath -a \\"%s\\"`\\"' % (
             " ".join(options), workDir, imagePath))
 
-        if self.__shell != None:
+        if self.__shell is not None:
             pid = self.__shell.pid
             self.__shell.wait()
             rc = self.__shell.returncode
             logger.debug("Pid %d exit code %d" % (pid, rc))
             self.__shell = None
 
-        if r and len(r) > 1 and r[1]: map(logger.info, r[1])
-        wcsInfo = []
+        if r and len(r) > 1 and r[1]:
+            map(logger.info, r[1])
 
         # solution resolution exists and a solution was found?
-        if os.path.exists(resultRoot + ".solved") and \
-                        open(resultRoot + ".solved", "rb").read() == b'\x01':
+        if os.path.exists(resultRoot + ".solved") and open(resultRoot + ".solved", "rb").read() == b'\x01':
             # inform a waiting user
-            if self.__callback: self.__callback(_("Parsing results..."))
+            if self.__callback:
+                self.__callback(_("Parsing results..."))
             self.__callback = None  # clear callback, we want to capture output from the next
 
             output, errors = self.__execute('wcsinfo \\"`cygpath -a \\"%s\\"`/%s.wcs\\"' % (workDir, imageBase))
@@ -222,16 +218,13 @@ class AstrometryNetSolver(IPlateSolver):
             # build a WCS info dict, make all numbers to floats
             self.__wcsInfo = dict(
                 [(e[0], self.__parseValue(e[1])) for e in
-                 [x.split(None, 1) for x in output.decode().split("\n") if x.strip()]
-                 ]
-            )
+                 [x.split(None, 1) for x in output.decode().split("\n") if x.strip()]])
             # construct solution center Coordinate
             ra, dec = self.__wcsInfo["ra_center"], self.__wcsInfo["dec_center"]
             center = Coordinate(ra, dec)
             if self.__transform and self.getProperty("year_epoch").lower() == "jnow":
                 self.__transform.SetJ2000(center.RAhour, center.dec)
                 center = Coordinate(self.__transform.RAApparent / 24. * 360, self.__transform.DECApparent, epoch="JNOW")
-
 
             # field of view in degrees
             hFOV = float(self.__wcsInfo["fieldw"])
@@ -287,7 +280,8 @@ class AstrometryNetSolver(IPlateSolver):
         return self.__solution
 
     def __parseValue(self, value):
-        """Try to parse a value to float
+        """
+        Try to parse a value to float
         @param value anything
         @return float(value) or value
         """
@@ -298,11 +292,11 @@ class AstrometryNetSolver(IPlateSolver):
         return v
 
     def reset(self):
-        "Reset solver state."
+        """Reset solver state."""
         self.__found = False
         self.__solution = None
         self.__abort = False
 
     def abort(self):
-        "Abort current solver"
+        """Abort current solver"""
         self.__abort = True

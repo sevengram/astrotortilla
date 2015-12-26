@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 """
 IPlateSolver - Plate Solver interface
 """
@@ -33,7 +32,7 @@ class Solution(object):
 
     def __repr__(self):
         return "Solution(%s, %f, %d, %f, %f)" % (
-        self.__center, self.__rotation, self.__parity, self.__hFOV, self.__vFOV)
+            self.__center, self.__rotation, self.__parity, self.__hFOV, self.__vFOV)
 
     @classmethod
     def getName(cls):

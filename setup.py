@@ -1,5 +1,8 @@
 #!/usr/bin/python
-"""Setup AstroTortilla for py2exe and distutils"""
+
+"""
+Setup AstroTortilla for py2exe and distutils
+"""
 
 import py2exe
 import os.path
@@ -18,9 +21,9 @@ if os.path.exists(gdidll):
 data_files.append((r"locale/fi/LC_MESSAGES", glob(r"locale/fi/LC_MESSAGES/*.mo")))
 data_files.append(("docs", glob("docs/*.pdf")))
 
-other_resources = [(u"VERSION", 1, VERSION)]
+other_resources = [("VERSION", 1, VERSION)]
 if VERSIONTAG:
-    other_resources.append((u"VERSIONTAG", 2, VERSIONTAG))
+    other_resources.append(("VERSIONTAG", 2, VERSIONTAG))
 
 setup(
     name="AstroTortilla",

@@ -4,12 +4,12 @@ rem
 setlocal
 
 if exist "D:\Program Files\python27\python.exe" (
-	set PYTHON="D:\Program Files\python27\python.exe"
-	set PYTHONPATH="D:\Program Files\python27"
+    set PYTHON="D:\Program Files\python27\python.exe"
+    set PYTHONPATH="D:\Program Files\python27"
 )
 
 if exist "D:\Program Files\Inno Setup 5\iscc.exe" (
-	set INNOSETUP="D:\program files\Inno Setup 5\iscc.exe"
+    set INNOSETUP="D:\program files\Inno Setup 5\iscc.exe"
 )
 
 if x%PYTHON% == x (

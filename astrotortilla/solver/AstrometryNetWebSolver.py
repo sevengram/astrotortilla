@@ -1,5 +1,3 @@
-# -*- coding: UTF-8 -*-
-
 import urllib2
 import os
 import string
@@ -16,8 +14,6 @@ from ..units import Coordinate
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
-DEBUG = 0  # 1 to enable some debug prints
-
 PROPERTYLIST = {
     "username": (_("Username"), str, _("Web solver username"), "", ""),
     "email": (_("E-mail"), str, _("E-mail address"), "", ""),
@@ -26,14 +22,7 @@ PROPERTYLIST = {
 }
 
 
-# This feature is under development, inherit from IPlateSolver only when
-# developing the feature
-baseclass = object
-if DEBUG:
-    baseclass = IPlateSolver
-
-
-class AstrometryNetWebSolver(baseclass):
+class AstrometryNetWebSolver(IPlateSolver):
     def __init__(self, workDirectory=None):
         super(AstrometryNetWebSolver, self).__init__()
         self.propertyList = PROPERTYLIST
@@ -141,14 +130,16 @@ class AstrometryNetWebSolver(baseclass):
             content = response.read()
 
         if "Failed" in content.replace('\n', ''):
-            if callback: callback("Solving failed!")
+            if callback:
+                callback("Solving failed!")
             self.__found = False
             del self.__solution
             self.__solution = None
             return False
 
         else:
-            if callback: callback("Solve successful!")
+            if callback:
+                callback("Solve successful!")
 
         for line in content.split('\n'):
             if "(RA, Dec) center:" in line:

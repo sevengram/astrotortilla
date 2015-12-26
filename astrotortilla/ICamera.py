@@ -1,5 +1,3 @@
-# -*- coding: UTF-8 -*-
-
 """
 ICamera - simple camera interface
 """
@@ -102,9 +100,9 @@ class ICamera(Configurable):
         return 1
 
     @binning.setter
-    def binning(self, bin):
+    def binning(self, _bin):
         """Set binning value if 1 <= bin <= maxBin"""
-        if not (1 <= bin <= self.maxBin):
+        if not (1 <= _bin <= self.maxBin):
             raise ValueError("bin value range is 1 <= value <= maxBin")
 
     @property

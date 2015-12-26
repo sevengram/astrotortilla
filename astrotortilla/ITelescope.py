@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 """
 ITelescope
 Interface for simple telescope tasks

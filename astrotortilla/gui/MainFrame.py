@@ -115,11 +115,11 @@ class mainFrame(wx.Frame):
         # generated method, don't edit
 
         parent.Append(help='', id=wxID_MAINFRAMEMENUBOOKMARKSADDSOLUTIONBM,
-                      kind=wx.ITEM_NORMAL, text=_(u'Add current solution'))
+                      kind=wx.ITEM_NORMAL, text=_('Add current solution'))
         parent.Append(help='', id=wxID_MAINFRAMEMENUBOOKMARKSADDIMAGEBM,
-                      kind=wx.ITEM_NORMAL, text=_(u'Add from solved image'))
+                      kind=wx.ITEM_NORMAL, text=_('Add from solved image'))
         parent.Append(help='', id=wxID_MAINFRAMEMENUBOOKMARKSEDITBOOKMARKS,
-                      kind=wx.ITEM_NORMAL, text=_(u'Edit bookmarks'))
+                      kind=wx.ITEM_NORMAL, text=_('Edit bookmarks'))
         parent.AppendSeparator()
         self.Bind(wx.EVT_MENU, self.OnMenuBookmarksAddsolutionbmMenu,
                   id=wxID_MAINFRAMEMENUBOOKMARKSADDSOLUTIONBM)
@@ -296,9 +296,9 @@ class mainFrame(wx.Frame):
         self.txtCam.SetToolTipString('')
 
         self.btnScopeSetup = wx.Button(id=wxID_MAINFRAMEBTNSCOPESETUP,
-                                       label=_(u'Setup'), name=u'btnScopeSetup', parent=self,
+                                       label=_('Setup'), name='btnScopeSetup', parent=self,
                                        pos=wx.Point(16, 48), size=wx.Size(96, 23), style=0)
-        self.btnScopeSetup.SetToolTipString(_(u'Telescope driver workarounds'))
+        self.btnScopeSetup.SetToolTipString(_('Telescope driver workarounds'))
         self.btnScopeSetup.Bind(wx.EVT_BUTTON, self.OnBtnScopeSetupButton,
                                 id=wxID_MAINFRAMEBTNSCOPESETUP)
 
@@ -472,7 +472,7 @@ class mainFrame(wx.Frame):
                         id=wxID_MAINFRAMEBTNGO)
 
         self.staticBoxSolver = wx.StaticBox(id=wxID_MAINFRAMESTATICBOXSOLVER,
-                                            label=_('Solver'), name=u'staticBoxSolver', parent=self,
+                                            label=_('Solver'), name='staticBoxSolver', parent=self,
                                             pos=wx.Point(8, 168), size=wx.Size(240, 154), style=0)
         self.staticBoxSolver.SetToolTipString('')
         self.staticBoxSolver.SetAutoLayout(True)
@@ -498,8 +498,8 @@ class mainFrame(wx.Frame):
         self.configGrid.SetDefaultColSize(100)
         self.configGrid.SetConstraints(LayoutAnchors(self.configGrid, True,
                                                      True, True, True))
-        self.configGrid.SetHelpText(u'')
-        self.configGrid.SetLabel(u'configGrid')
+        self.configGrid.SetHelpText('')
+        self.configGrid.SetLabel('configGrid')
         self.configGrid.SetMinSize(wx.Size(220, 94))
         self.configGrid.Bind(wx.EVT_MOTION, self.OnConfigGridMotion)
         self.configGrid.Bind(wx.grid.EVT_GRID_CELL_CHANGE,
@@ -545,7 +545,7 @@ class mainFrame(wx.Frame):
             except:
                 pass
 
-        self.SetTitle('AstroTortilla %s' % (self.engine.version))
+        self.SetTitle('AstroTortilla %s' % self.engine.version)
 
         self.progress.Hide()
         self.configGrid.CreateGrid(1, 2)
@@ -566,7 +566,7 @@ class mainFrame(wx.Frame):
         self.bookmarkMap = {}
         disable(self.btnScopeSetup)
         self.updateBookmarkMenu()
-        self._updateCamera()
+        self.updateCamera()
         # Old compatibility mode
         x = y = w = h = -32000
         try:
@@ -590,7 +590,7 @@ class mainFrame(wx.Frame):
             pass
 
     def OnClose(self, event):
-        "Save settings on exit"
+        """Save settings on exit"""
         placement = win32gui.GetWindowPlacement(self.GetHandle())
         self.engine.config.set("Session", "MainPlacement", str(placement))
         # remove old options from config
@@ -624,10 +624,10 @@ class mainFrame(wx.Frame):
     def OnChoiceSolverChoice(self, event):
         self.engine.selectSolver(event.GetClientData())
         if self.engine.getSolver():
-            self._updateSolverGrid()
+            self.updateSolverGrid()
 
-    def _updateSolverGrid(self):
-        "Update solver configuration grid"
+    def updateSolverGrid(self):
+        """Update solver configuration grid"""
         if not self.engine.getSolver():
             return
         solverProps = self.engine.getSolver().propertyList
@@ -691,14 +691,14 @@ class mainFrame(wx.Frame):
             self.engine.deselectCamera()
         if n == 0:
             self.txtCam.SetLabel(_("No camera"))
-            self._updateCamera()
+            self.updateCamera()
             return
         self.engine.selectCamera(event.GetClientData())
-        self._updateCamera()
+        self.updateCamera()
         logger.debug("Camera set to %s" % self.choiceCam.GetStringSelection())
 
-    def _updateCamera(self):
-        "Update camera status display"
+    def updateCamera(self):
+        """Update camera status display"""
         if not self.engine.getCamera():
             self.txtCamStatus.SetLabel(_("Not connected"))
             self.btnGO.Disable()
@@ -727,11 +727,11 @@ class mainFrame(wx.Frame):
                 self.lblMirror.SetLabel(_("Flipped"))
             else:
                 self.lblMirror.SetLabel(_("Normal"))
-            self.txtRotation.SetLabel("%.2f" % (self.engine.solution.rotation))
+            self.txtRotation.SetLabel("%.2f" % self.engine.solution.rotation)
             if self.engine.lastCorrection:
                 separation = self.engine.lastCorrection
                 separationString = deg2str(separation.degrees)
-                self.txtCam.SetLabel(_("Last error: %s") % (separationString))
+                self.txtCam.SetLabel(_("Last error: %s") % separationString)
 
     def OnConfigGridMouseEvents(self, event):
         event.Skip()
@@ -760,7 +760,7 @@ class mainFrame(wx.Frame):
             dlg.Destroy()
 
     def OnBtnScopeSetupButton(self, event):
-        if self.engine.getTelescope() == None:
+        if self.engine.getTelescope() is None:
             return
         dlg = DlgTelescopeSetup.DlgTelescopeSetup(self)
         try:
@@ -828,7 +828,7 @@ class mainFrame(wx.Frame):
             self.showTracebackDialog(traceback.format_exc(), _("Telescope communication error"))
 
         finally:
-            self._updateCamera()
+            self.updateCamera()
             # update solver configuration grid from solver properties
             for row in range(self.configGrid.GetNumberRows()):
                 key = self.configGrid.GetRowLabelValue(row)
@@ -838,7 +838,7 @@ class mainFrame(wx.Frame):
             self.btnGO.SetLabel(_("Capture and Solve"))
 
     def __statusUpdater(self, status=None):
-        "Update status bar and process UI events safely"
+        """Update status bar and process UI events safely"""
         if status:
             if DEBUG: print status
             self.SetStatusText(status)
@@ -931,7 +931,7 @@ class mainFrame(wx.Frame):
 
         if fileName:
             self.engine.loadConfig(fileName)
-            self._updateSolverGrid()
+            self.updateSolverGrid()
 
     def OnMenuFileSaveSettingsMenu(self, event):
         fileName = wx.FileSelector(
@@ -1030,7 +1030,7 @@ class mainFrame(wx.Frame):
                 logger.error("Solver error occurred: %s" % traceback.format_exc())
                 self.showTracebackDialog(traceback.format_exc(), _("Solver error"))
             self.btnGO.SetLabel(_("Capture and Solve"))
-            self._updateCamera()
+            self.updateCamera()
 
     def OnMenuToolsLogwindowMenu(self, event):
         if not self.__logFrame or not self.__logFrame.IsShown():
@@ -1079,7 +1079,7 @@ class mainFrame(wx.Frame):
                 target = self.engine.solveImage(fileName)
             except:
                 import traceback
-                logger.error("Solver error occurred: %" % traceback.format_exc())
+                logger.error("Solver error occurred: %s" % traceback.format_exc())
                 self.showTracebackDialog(traceback.format_exc(), _("Solver error"))
             self.btnGO.SetLabel(_("Capture and Solve"))
             if target:
@@ -1136,5 +1136,4 @@ if __name__ == '__main__':
     app = wx.PySimpleApp()
     frame = create(None)
     frame.Show()
-
     app.MainLoop()

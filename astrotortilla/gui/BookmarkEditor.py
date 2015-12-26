@@ -25,24 +25,24 @@ def create(parent):
 class BookmarkEditor(wx.Dialog):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
-        wx.Dialog.__init__(self, id=wxID_BOOKMARKEDITOR, name=u'BookmarkEditor',
+        wx.Dialog.__init__(self, id=wxID_BOOKMARKEDITOR, name='BookmarkEditor',
                            parent=prnt, pos=wx.Point(577, 332), size=wx.Size(316, 158),
-                           style=wx.DEFAULT_FRAME_STYLE, title=_(u'Edit bookmarks'))
+                           style=wx.DEFAULT_FRAME_STYLE, title=_('Edit bookmarks'))
         self.SetClientSize(wx.Size(300, 120))
         self.SetAutoLayout(True)
         self.SetThemeEnabled(False)
-        self.SetToolTipString(u'')
+        self.SetToolTipString('')
         self.SetMinSize(wx.Size(300, 120))
         self.Show(False)
         self.Bind(wx.EVT_SIZE, self.OnBookmarkEditorWindowSize)
         self.Bind(wx.EVT_CLOSE, self.OnBookmarkEditorClose)
 
-        self.btnOK = wx.Button(id=wxID_BOOKMARKEDITORBTNOK, label=_(u'OK'),
-                               name=u'btnOK', parent=self, pos=wx.Point(223, 93),
+        self.btnOK = wx.Button(id=wxID_BOOKMARKEDITORBTNOK, label=_('OK'),
+                               name='btnOK', parent=self, pos=wx.Point(223, 93),
                                size=wx.Size(75, 23), style=0)
         self.btnOK.SetConstraints(LayoutAnchors(self.btnOK, False, False, True,
                                                 True))
-        self.btnOK.SetToolTipString(u'Close')
+        self.btnOK.SetToolTipString('Close')
         self.btnOK.Bind(wx.EVT_BUTTON, self.OnBtnOKButton,
                         id=wxID_BOOKMARKEDITORBTNOK)
 
@@ -54,7 +54,7 @@ class BookmarkEditor(wx.Dialog):
                                                 True))
 
         self.btnCancel = wx.Button(id=wxID_BOOKMARKEDITORBTNCANCEL,
-                                   label=_(u'Cancel'), name=u'btnCancel', parent=self,
+                                   label=_('Cancel'), name='btnCancel', parent=self,
                                    pos=wx.Point(135, 93), size=wx.Size(75, 23), style=0)
         self.btnCancel.SetConstraints(LayoutAnchors(self.btnCancel, False,
                                                     False, True, True))
@@ -65,7 +65,6 @@ class BookmarkEditor(wx.Dialog):
         self._init_ctrls(parent)
         self.parent = parent
         self.__currentBM = -1
-        i = 0
         self.grid1.CreateGrid(0, 4)
         self.grid1.SetAutoLayout(True)
         self.grid1.EnableDragGridSize()
@@ -81,7 +80,7 @@ class BookmarkEditor(wx.Dialog):
             self.grid1.SetRowLabelValue(row, "%d" % (row + 1))
             self.grid1.SetCellValue(row, 0, deg2hms(bookmark.position.RA))
             self.grid1.SetCellValue(row, 1, deg2dms(bookmark.position.dec))
-            self.grid1.SetCellValue(row, 2, "%.2f" % (bookmark.camera_angle))
+            self.grid1.SetCellValue(row, 2, "%.2f" % bookmark.camera_angle)
             self.grid1.SetCellValue(row, 3, bookmark.name)
         self.grid1.AutoSizeColumns(True)
         self.grid1.AutoSizeRows(True)
@@ -133,12 +132,7 @@ class BookmarkEditor(wx.Dialog):
 
     def OnBookmarkEditorWindowSize(self, event):
         cwidth, cheight = self.GetClientSizeTuple()
-        if cwidth < 300:
-            self.SetClientSize(wx.Size(300, cheight))
-            cwidth = 300
-        if cheight < 120:
-            self.SetClientSize(wx.Size(cwidth, 120))
-            cheight = 120
+        self.SetClientSize(wx.Size(max(cwidth, 300), max(cheight, 120)))
         event.Skip()
 
     def OnBtnCancelButton(self, event):

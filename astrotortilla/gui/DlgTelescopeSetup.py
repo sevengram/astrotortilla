@@ -54,46 +54,46 @@ class DlgTelescopeSetup(wx.Dialog):
                            style=wx.DEFAULT_DIALOG_STYLE, title=_('Telescope quirks setup'))
         self.SetClientSize(wx.Size(244, 73))
 
-        self.btnOK = wx.Button(id=wxID_DLGTELESCOPESETUPBTNOK, label=_(u'OK'),
-                               name=u'btnOK', parent=self, pos=wx.Point(155, 42),
+        self.btnOK = wx.Button(id=wxID_DLGTELESCOPESETUPBTNOK, label=_('OK'),
+                               name='btnOK', parent=self, pos=wx.Point(155, 42),
                                size=wx.Size(75, 23), style=0)
         self.btnOK.Bind(wx.EVT_BUTTON, self.OnBtnOKButton,
                         id=wxID_DLGTELESCOPESETUPBTNOK)
 
         self.lblSlewSettleTime = wx.StaticText(id=wxID_DLGTELESCOPESETUPLBLSLEWSETTLETIME,
-                                               label=_(u'Slew settle extra wait'), name=u'lblSlewSettleTime',
+                                               label=_('Slew settle extra wait'), name='lblSlewSettleTime',
                                                parent=self, pos=wx.Point(0, 0), size=wx.Size(155, 13), style=0)
 
         self.intSlewSettle = wx.lib.intctrl.IntCtrl(allow_long=False,
                                                     allow_none=False, default_color=wx.BLACK,
                                                     id=wxID_DLGTELESCOPESETUPINTSLEWSETTLE, limited=True, max=99,
-                                                    min=0, name=u'intSlewSettle', oob_color=wx.RED, parent=self,
+                                                    min=0, name='intSlewSettle', oob_color=wx.RED, parent=self,
                                                     pos=wx.Point(155, 0), size=wx.Size(30, 21), style=0, value=0)
         self.intSlewSettle.SetMaxLength(2)
         self.intSlewSettle.SetInsertionPoint(0)
 
         self.slew_settle_unit = wx.StaticText(id=wxID_DLGTELESCOPESETUPSLEW_SETTLE_UNIT,
-                                              label=u's', name=u'slew_settle_unit', parent=self,
+                                              label='s', name='slew_settle_unit', parent=self,
                                               pos=wx.Point(185, 0), size=wx.Size(6, 13), style=0)
 
         self.lblScopePollPeriod = wx.StaticText(id=wxID_DLGTELESCOPESETUPLBLSCOPEPOLLPERIOD,
-                                                label=_(u'Telescope property caching'),
-                                                name=u'lblScopePollPeriod', parent=self, pos=wx.Point(0, 21),
+                                                label=_('Telescope property caching'),
+                                                name='lblScopePollPeriod', parent=self, pos=wx.Point(0, 21),
                                                 size=wx.Size(155, 21), style=0)
 
         self.intPropertyAge = wx.lib.intctrl.IntCtrl(allow_long=False,
                                                      allow_none=False, default_color=wx.BLACK,
                                                      id=wxID_DLGTELESCOPESETUPINTPROPERTYAGE, limited=False, max=10,
-                                                     min=0, name=u'intPropertyAge', oob_color=wx.RED, parent=self,
+                                                     min=0, name='intPropertyAge', oob_color=wx.RED, parent=self,
                                                      pos=wx.Point(155, 21), size=wx.Size(30, 21), style=0, value=0)
 
         self.staticText2 = wx.StaticText(id=wxID_DLGTELESCOPESETUPSTATICTEXT2,
-                                         label=u's', name='staticText2', parent=self, pos=wx.Point(185,
+                                         label='s', name='staticText2', parent=self, pos=wx.Point(185,
                                                                                                    21),
                                          size=wx.Size(55, 13), style=0)
 
         self.btnCancel = wx.Button(id=wxID_DLGTELESCOPESETUPBTNCANCEL,
-                                   label=_(u'Cancel'), name=u'btnCancel', parent=self,
+                                   label=_('Cancel'), name='btnCancel', parent=self,
                                    pos=wx.Point(0, 42), size=wx.Size(75, 23), style=0)
         self.btnCancel.Bind(wx.EVT_BUTTON, self.OnBtnCancelButton,
                             id=wxID_DLGTELESCOPESETUPBTNCANCEL)

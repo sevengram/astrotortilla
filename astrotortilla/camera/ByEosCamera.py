@@ -22,6 +22,7 @@ def str2bool(string):
     s = str(string).lower() + " "
     return s[0] in ("y", "t", "1")
 
+
 PROPERTYLIST = {
     "hostname": (_("BackyardEOS address"), str, _("Hostname or IP address"), "", "127.0.0.1"),
     "port": (_("Port number"), int, _("BackyardEOS server port"), "", "1499"),
@@ -91,7 +92,7 @@ class ByEosCamera(ICamera):
 
     @property
     def imageTypes(self):
-        "List of image types supported by the camera"
+        """List of image types supported by the camera"""
         return ["jpg"]
 
     @property
@@ -104,39 +105,39 @@ class ByEosCamera(ICamera):
 
     @property
     def canAutoConnect(self):
-        "@return True, ByEosCamera can connect automatically for capturing."
+        """@return True, ByEosCamera can connect automatically for capturing."""
         return True
 
     @property
     def disconnectAfterCapture(self):
-        "@return True if BackyardEOS connection is closed after capture."
+        """@return True if BackyardEOS connection is closed after capture."""
         return True
 
     @disconnectAfterCapture.setter
     def disconnectAfterCapture(self, value):
-        "If value == True, connection to BackyardEOS is closed after capture."
+        """If value == True, connection to BackyardEOS is closed after capture."""
         return
 
     @property
     def binning(self):
-        "Current binning setting"
+        """Current binning setting"""
         return self.__bin
 
     @binning.setter
-    def binning(self, bin):
-        "Set bin value, 1<= `bin` <= `maxBin`"
-        if not (1 <= bin <= self.maxBin):
+    def binning(self, _bin):
+        """Set bin value, 1 <= bin <= maxBin"""
+        if not (1 <= _bin <= self.maxBin):
             raise ValueError("bin value must be 1 <= value <= maxBin")
-        self.__bin = int(bin)
+        self.__bin = int(_bin)
 
     @property
     def maxBin(self):
-        "Maximum supported binning level"
+        """Maximum supported binning level"""
         return 4
 
     @property
     def cameraState(self):
-        "Current camera state, see ASCOM cameraState parameter"
+        """Current camera state, see ASCOM cameraState parameter"""
         status = CameraState.Error
         rsp = ""
         try:
@@ -162,23 +163,22 @@ class ByEosCamera(ICamera):
 
     @property
     def cameraXSize(self):
-        "Image width, 0 if not known"
+        """Image width, 0 if not known"""
         return 0
 
     @property
     def cameraYSize(self):
-        "Image width, 0 if not known"
+        """Image width, 0 if not known"""
         return 0
 
     @property
     def imageReady(self):
-        "@return True if a captured image is available"
-        # maybe not the best way?
+        """@return True if a captured image is available"""
         rsp = self.__command("getispictureready")
         return rsp.lower().strip() == "true"
 
     def capture(self, duration):
-        "Starts image exposure, no returned value"
+        """Starts image exposure, no returned value"""
         # clear temp directory first
         if self.cameraState != CameraState.Idle:
             raise Exception(self.errorMessage)
@@ -192,7 +192,7 @@ class ByEosCamera(ICamera):
         self.__latestImage = None
 
         try:
-            response = self.__command(
+            self.__command(
                 "takepicture duration:%f iso:%s bin:%d" % (duration, self.getProperty("ISO"), self.__bin))
         except:
             import traceback
@@ -201,7 +201,7 @@ class ByEosCamera(ICamera):
         self.__state = CameraState.Idle
 
     def getImage(self):
-        "@return None or path to image"
+        """@return None or path to image"""
         if self.__latestImage:
             return self.__latestImage
 

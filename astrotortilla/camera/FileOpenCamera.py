@@ -6,6 +6,7 @@ import logging
 import os
 import wx
 import gettext
+
 from ..ICamera import ICamera
 from .. import CameraState
 
@@ -18,11 +19,13 @@ PROPERTYLIST = {
     "directory": (_("Directory"), str, "", "", "")
 }
 
+
 class FileOpenCamera(ICamera):
     """
     FileOpenCamera()
     Create FileOpenCamera 
     """
+
     def __init__(self):
         super(FileOpenCamera, self).__init__()
         self.__openedFile = None
@@ -40,7 +43,7 @@ class FileOpenCamera(ICamera):
 
     @property
     def imageTypes(self):
-        "List of image types supported by the camera"
+        """List of image types supported by the camera"""
         return ["fits", "fit", "jpg", "tiff", "tif", "pnm"]
 
     @property
@@ -53,7 +56,7 @@ class FileOpenCamera(ICamera):
 
     @property
     def camera(self):
-        "Current camera if multiple options"
+        """Current camera if multiple options"""
         return None
 
     @property
@@ -61,12 +64,12 @@ class FileOpenCamera(ICamera):
         return True
 
     def setup(self):
-        "No settings available at the moment"
+        """No settings available at the moment"""
         return
 
     @property
     def connected(self):
-        "Nothing to connect to"
+        """Nothing to connect to"""
         return True
 
     @connected.setter
@@ -75,24 +78,24 @@ class FileOpenCamera(ICamera):
 
     @property
     def binning(self):
-        "Current binning setting"
+        """Current binning setting"""
         return self.__bin
 
     @binning.setter
-    def binning(self, bin):
-        "Set bin value, 1<= `bin` <= `maxBin`"
-        if not (1 <= bin <= self.maxBin):
+    def binning(self, _bin):
+        """Set bin value, 1 <= bin <= maxBin"""
+        if not (1 <= _bin <= self.maxBin):
             raise ValueError("bin value must be 1 <= value < maxBin")
-        self.__bin = int(bin)
+        self.__bin = int(_bin)
 
     @property
     def maxBin(self):
-        "Maximum supported binning level"
+        """Maximum supported binning level"""
         return 1
 
     @property
     def cameraState(self):
-        "Current camera state, see ASCOM cameraState parameter"
+        """Current camera state, see ASCOM cameraState parameter"""
         if self.__selected:
             if self.__openedFile:
                 return CameraState.Idle
@@ -107,28 +110,27 @@ class FileOpenCamera(ICamera):
 
     @property
     def cameraXSize(self):
-        "Image width, 0 if not known"
+        """Image width, 0 if not known"""
         return 0
 
     @property
     def cameraYSize(self):
-        "Image width, 0 if not known"
+        """Image width, 0 if not known"""
         return 0
 
     @property
     def imageReady(self):
-        "Returns True if a captured image is available"
+        """Returns True if a captured image is available"""
         return self.__selected
 
     def capture(self, duration):
-        "Open file open dialog"
+        """Open file open dialog"""
         self.__selected = False
         fileName = wx.FileSelector(
             message=_("Choose file to solve"),
             default_path=os.path.dirname(self.__openedFile or self.getProperty("directory")),
             flags=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
-            wildcard=_(
-                "Image files") + " (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm"
+            wildcard=_("Image files") + " (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm"
         )
         self.__selected = True
         if not fileName:
@@ -139,5 +141,5 @@ class FileOpenCamera(ICamera):
         return
 
     def getImage(self):
-        "Returns None or path to image"
+        """Returns None or path to image"""
         return self.__openedFile

@@ -49,7 +49,7 @@ finnish.FullInstallation=Asenna {#AstroTortilla}, Cygwin, astrometry.net ja inde
 NoCygwin=Install {#AstroTortilla} only
 finnish.NoCygwin=Asenna vain {#AstroTortilla}
 NoIndexes=Install {#AstroTortilla}, Cygwin and astrometry.net without indexes
-finnish.NoIndexes=Asenna {#AstroTortilla}, Cygwin ja astrometry.net ilman indeksejä
+finnish.NoIndexes=Asenna {#AstroTortilla}, Cygwin ja astrometry.net ilman indeksejï¿½
 AstrometricIndexes=Astrometric index files
 finnish.AstrometricIndexes=Astrometriset tietokannat
 And=%1 and %2
@@ -72,12 +72,12 @@ LblMirrorFinland=from server in Finland
 LblWideFov=Widest level (choose a size corresponding to your widest FOV)
 LblNarrowFov=Narrowest level (choose a size corresponding to ca. 20% of your narrowest FOV)
 LblUseTychoIndexes=Tycho2 indexes for FOVs over 3 degrees (339MB)
-finnish.IndexMirrorSelectionHelp=Valitse ladattavien indeksien ylä- ja alaraja laitteistosi näkökentän perusteella. Voit palata asennusohjelmaan myöhemmin halutessasi ladata lisää indeksejä. Tarkemmat ohjeet löytyvät AstroTortillan käyttöohjeesta.
+finnish.IndexMirrorSelectionHelp=Valitse ladattavien indeksien ylï¿½- ja alaraja laitteistosi nï¿½kï¿½kentï¿½n perusteella. Voit palata asennusohjelmaan myï¿½hemmin halutessasi ladata lisï¿½ï¿½ indeksejï¿½. Tarkemmat ohjeet lï¿½ytyvï¿½t AstroTortillan kï¿½yttï¿½ohjeesta.
 finnish.IndexOnlineSolver=Online-ratkoja
 finnish.IndexSelectTitle=Astrometristen indeksien valinta
 finnish.IndexSelectSubtitle=Valitse ladattavat astrometriset indeksit.
 finnish.LblSelectMirror=Lataa indeksit
-finnish.LblMirrorInternational=Kansainväliseltä palvelimelta
+finnish.LblMirrorInternational=Kansainvï¿½liseltï¿½ palvelimelta
 finnish.LblMirrorFinland=Suomen palvelimelta
 finnish.LblWideFov=Laajin taso (valitse laajinta kuva-alaasi vastaava koko)
 finnish.LblNarrowFov=Kapein taso (valitse n. 20%:a kapeimmasta kuva-alastasi vastaava koko)
@@ -86,15 +86,15 @@ ErrorIndexOrder=Please ensure the narrowest level is not wider than widest level
 finnish.ErrorIndexOrder=Tarkista, ettei kapein taso ole laajinta tasoa laajempi.
 UncompressTitle=Uncompressing index files
 UncompressDescription=Setup is now uncompressing the downloaded astrometric index files...
-finnish.UncompressTitle=Puretaan indeksejä
-finnish.UncompressDescription=Puretaan ladattuja astrometrisiä indeksitiedostoja...
+finnish.UncompressTitle=Puretaan indeksejï¿½
+finnish.UncompressDescription=Puretaan ladattuja astrometrisiï¿½ indeksitiedostoja...
 IndexesOnly=Install additional astrometric index files
 CygwinAndIndexes=Update Cygwin, astrometry.net and install index files
-finnish.IndexesOnly=Lisää uusia astrometrisiä indeksejä
-finnish.CygwinAndIndexes=Päivitä Cygwin, astrometry.net ja asenna indeksejä
+finnish.IndexesOnly=Lisï¿½ï¿½ uusia astrometrisiï¿½ indeksejï¿½
+finnish.CygwinAndIndexes=Pï¿½ivitï¿½ Cygwin, astrometry.net ja asenna indeksejï¿½
 RebaseTitle=Cygwin maintenance
 RebaseDescription=Please wait, while setup is rebasing Cygwin DLLs...
-finnish.RebaseTitle=Cygwin ylläpito
+finnish.RebaseTitle=Cygwin yllï¿½pito
 finnish.RebaseDescription=Odota, kun asennusohjelma tarkistaa Cygwin DLL tiedostot...
 Custom=Custom installation
 finnish.Custom=Mukautettu asennus
@@ -102,12 +102,12 @@ StartMenu=Start menu
 CreateStartMenu=Create Start menu entries
 CreateCygwinStartMenu=Create Cygwin setup menu entry
 finnish.StartMenu=Aloitusvalikko
-finnish.CreateStartMenu=Lisää aloitusvalikkoon
-finnish.CreateCygwinStartMenu=Lisää Cygwin-setup aloitusvalikkoon
+finnish.CreateStartMenu=Lisï¿½ï¿½ aloitusvalikkoon
+finnish.CreateCygwinStartMenu=Lisï¿½ï¿½ Cygwin-setup aloitusvalikkoon
 CygwinUninstallNotice=The Cygwin installation (and index files) in %1 was not removed as it may be shared by other programs. You can delete the %1 folder manually if you have no use for Cygwin.
-finnish.CygwinUninstallNotice=Cygwin-asennusta (ja indeksitiedostoja) %1 hakemistossa ei poistettu, koska se voi olla muiden ohjelmien käytössä. Voit tuhota %1 -hakemiston mikäli et tarvitse Cygwiniä mihinkään.
+finnish.CygwinUninstallNotice=Cygwin-asennusta (ja indeksitiedostoja) %1 hakemistossa ei poistettu, koska se voi olla muiden ohjelmien kï¿½ytï¿½ssï¿½. Voit tuhota %1 -hakemiston mikï¿½li et tarvitse Cygwiniï¿½ mihinkï¿½ï¿½n.
 CygwinUninstallNoticeNoDir=The Cygwin installation (and index files) was not removed as it may be shared by other programs. You can simply delete the Cygwin folder manually if you have no use for Cygwin.
-finnish.CygwinUninstallNoticeNoDir=Cygwin-asennusta (ja indeksitiedostoja) ei poistettu, koska se voi olla muiden ohjelmien käytössä. Voit tuhota Cygwin -hakemiston mikäli et tarvitse Cygwiniä mihinkään.
+finnish.CygwinUninstallNoticeNoDir=Cygwin-asennusta (ja indeksitiedostoja) ei poistettu, koska se voi olla muiden ohjelmien kï¿½ytï¿½ssï¿½. Voit tuhota Cygwin -hakemiston mikï¿½li et tarvitse Cygwiniï¿½ mihinkï¿½ï¿½n.
 
 [Types]
 Name: "full"; Description: "{cm:FullInstallation}"
@@ -148,7 +148,7 @@ Name: "{group}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: start
 Name: "{group}\Getting started (English)"; Filename: "{app}\docs\Getting_Started_with_AstroTortilla.pdf"; Tasks: startmenu
 Name: "{group}\User guide (English)"; Filename: "{app}\docs\AstroTortilla_user_guide.pdf"; Tasks: startmenu
 Name: "{group}\Pikaopas (Finnish)"; Filename: "{app}\docs\AstroTortilla_pikaopas.pdf"; Tasks: startmenu
-Name: "{group}\Käyttöohje (Finnish)"; Filename: "{app}\docs\AstroTortilla_kayttoohje.pdf"; Tasks: startmenu
+Name: "{group}\Kï¿½yttï¿½ohje (Finnish)"; Filename: "{app}\docs\AstroTortilla_kayttoohje.pdf"; Tasks: startmenu
 Name: "{group}\{cm:UninstallProgram,AstroTortilla}"; Filename: "{uninstallexe}"; Tasks: startmenu
 Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\cygwin.exe"; Parameters: "-P astrometry.net -K http://astrotortilla.kuntsi.com/tortilla.gpg -s http://astrotortilla.kuntsi.com  -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Tasks: cygstartmenu
 Name: "{commondesktop}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: desktopicon
@@ -507,10 +507,10 @@ begin
   case Index of
     5:
     indexCount := 11;
-	6:
-	indexCount := 11;
-	7:
-	indexCount := 11;
+    6:
+    indexCount := 11;
+    7:
+    indexCount := 11;
     0:
     indexCount := 47;
     1:
@@ -521,7 +521,7 @@ begin
     indexCount := 47;
     4:
     indexCount := 47;
-	else
+    else
     indexCount := 0;
   end;
 //  if UseIntlServer then

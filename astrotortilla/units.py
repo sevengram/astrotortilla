@@ -99,8 +99,7 @@ class Separation(object):
         Separation(Coordinate c1, Coordinate c2)
         Separation(float separation, float bearing)
         """
-        if not ((type(coord1) == type(coord2) == float) or
-                    (isinstance(coord1, Coordinate) and isinstance(coord2, Coordinate))):
+        if not ((type(coord1) == type(coord2) == float) or (isinstance(coord1, Coordinate) and isinstance(coord2, Coordinate))):
             raise TypeError("Invalid parameters")
 
         if type(coord1) == float:
@@ -180,7 +179,6 @@ def hms2deg(hms):
 
 def dms2deg(dms):
     """Convert from HH:MM:SS.SS or tuple of floats to arc seconds"""
-    _dms = [0, 0, 0]
     sign = 1
     if type(dms) in (str, unicode):
         if dms[0] == "-":
@@ -202,7 +200,7 @@ def dms2deg(dms):
             if rest:
                 s = float(s) + float("0." + rest)
             _dms = map(float, (d, m, s))
-        elif "\xf8" in dms:  # degree -char in Windows
+        elif u"\xf8" in dms:  # degree -char in Windows
             d, rest = dms.split("\xf8", 1)
             m, rest = rest.split("'", 1)
             s, rest = rest.split("\"", 1)
@@ -267,8 +265,7 @@ def isFloat(value):
         float(value)
         return True
     except:
-        pass
-    return False
+        return False
 
 
 def alignment(angle1, angle2):

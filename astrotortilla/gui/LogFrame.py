@@ -1,11 +1,9 @@
+import wx
 import wx.grid
 import logging
 import gettext
-
-import wx
-from wx.lib.anchors import LayoutAnchors
-
 import win32gui
+from wx.lib.anchors import LayoutAnchors
 
 logger = logging.getLogger("astrotortilla.LogFrame")
 
@@ -29,7 +27,7 @@ def create(parent):
 
 
 class LogWindowHandler(logging.Handler):
-    def __init__(self, logGrid, **kwargs):
+    def __init__(self, logGrid):
         logging.Handler.__init__(self)
         self.grid = logGrid
         self.grid.ClearGrid()
@@ -86,17 +84,17 @@ class LogWindow(wx.Frame):
         self.logGrid.SetConstraints(LayoutAnchors(self.logGrid, True, True,
                                                   True, True))
 
-        self.btnClear = wx.Button(id=wxID_LOGWINDOWBTNCLEAR, label=_(u'Clear'),
-                                  name=u'btnClear', parent=self, pos=wx.Point(304, 0),
+        self.btnClear = wx.Button(id=wxID_LOGWINDOWBTNCLEAR, label=_('Clear'),
+                                  name='btnClear', parent=self, pos=wx.Point(304, 0),
                                   size=wx.Size(88, 23), style=0)
-        self.btnClear.SetToolTipString(_(u'Clear the log'))
+        self.btnClear.SetToolTipString(_('Clear the log'))
         self.btnClear.Bind(wx.EVT_BUTTON, self.OnBtnClearButton,
                            id=wxID_LOGWINDOWBTNCLEAR)
 
-        self.btnCopy = wx.Button(id=wxID_LOGWINDOWBTNCOPY, label=_(u'Copy'),
-                                 name=u'btnCopy', parent=self, pos=wx.Point(192, 0),
+        self.btnCopy = wx.Button(id=wxID_LOGWINDOWBTNCOPY, label=_('Copy'),
+                                 name='btnCopy', parent=self, pos=wx.Point(192, 0),
                                  size=wx.Size(80, 23), style=0)
-        self.btnCopy.SetToolTipString(_(u'Copy selection or all to clip board'))
+        self.btnCopy.SetToolTipString(_('Copy selection or all to clip board'))
         self.btnCopy.Bind(wx.EVT_BUTTON, self.OnBtnCopyButton,
                           id=wxID_LOGWINDOWBTNCOPY)
 
@@ -182,8 +180,6 @@ class LogWindow(wx.Frame):
         event.Skip()
 
     def OnBtnCopyButton(self, event):
-        selected = None
-
         top_left = self.logGrid.GetSelectionBlockTopLeft()
         if top_left:
             bottom_right = self.logGrid.GetSelectionBlockBottomRight()

@@ -6,12 +6,12 @@ import astrotortilla.gui.MainFrame as MainFrame
 
 logger = logging.getLogger("astrotortilla.main")
 
-modules = {u'BookmarkEditor': [0, '', u'astrotortilla/gui/BookmarkEditor.py'],
-           u'DlgCameraSetup': [0, '', u'astrotortilla/gui/DlgCameraSetup.py'],
-           u'DlgHelpAbout': [0, '', u'astrotortilla/gui/DlgHelpAbout.py'],
-           u'DlgTelescopeSetup': [0, '', u'astrotortilla/gui/DlgTelescopeSetup.py'],
-           u'LogFrame': [0, u'Log window', u'astrotortilla/gui/LogFrame.py'],
-           u'MainFrame': [1, u'Main frame of Application', u'astrotortilla/gui/MainFrame.py']}
+modules = {'BookmarkEditor': [0, '', 'astrotortilla/gui/BookmarkEditor.py'],
+           'DlgCameraSetup': [0, '', 'astrotortilla/gui/DlgCameraSetup.py'],
+           'DlgHelpAbout': [0, '', 'astrotortilla/gui/DlgHelpAbout.py'],
+           'DlgTelescopeSetup': [0, '', 'astrotortilla/gui/DlgTelescopeSetup.py'],
+           'LogFrame': [0, 'Log window', 'astrotortilla/gui/LogFrame.py'],
+           'MainFrame': [1, 'Main frame of Application', 'astrotortilla/gui/MainFrame.py']}
 
 
 class BoaApp(wx.App):
@@ -23,7 +23,7 @@ class BoaApp(wx.App):
             self.main.engine.selectSolver(self.main.engine.listSolvers()[0][0])
             self.main.choiceSolver.SetSelection(0)
             self.main.choiceSolver.Disable()
-            self.main._updateSolverGrid()
+            self.main.updateSolverGrid()
         else:
             self.main.configGrid.Show(False)
         self.main.choiceCam.Clear()
@@ -40,16 +40,16 @@ class BoaApp(wx.App):
         self.main.chkSync.SetValue(False)
         self.main.chkSlewTarget.SetValue(False)
         self.main.chkRepeat.SetValue(False)
-        self.main._updateCamera()
+        self.main.updateCamera()
         self.main.Show()
         self.SetTopWindow(self.main)
         # update GUI on engine status
         if self.main.engine.getCamera():
             self.main.choiceCam.SetStringSelection(self.main.engine.getCameraName())
-            self.main._updateCamera()
+            self.main.updateCamera()
         if self.main.engine.getSolver():
             self.main.choiceSolver.SetStringSelection(self.main.engine.getSolverName())
-            self.main._updateSolverGrid()
+            self.main.updateSolverGrid()
         return True
 
     def __populateChoiceList(self, choiceList, choices):
