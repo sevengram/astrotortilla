@@ -3,16 +3,13 @@ rem build with py2exe
 rem
 setlocal
 
-if exist "c:\python27\python.exe" (
-	set PYTHON="c:\python27\python.exe"
-	set PYTHONPATH="c:\python27"
+if exist "D:\Program Files\python27\python.exe" (
+	set PYTHON="D:\Program Files\python27\python.exe"
+	set PYTHONPATH="D:\Program Files\python27"
 )
 
-if exist "c:\program files\Inno Setup 5\iscc.exe" (
-	set INNOSETUP="c:\program files\Inno Setup 5\iscc.exe"
-)
-if exist "c:\Program Files (x86)\Inno Setup 5\iscc.exe" (
-	set INNOSETUP="c:\Program Files (x86)\Inno Setup 5\iscc.exe"
+if exist "D:\Program Files\Inno Setup 5\iscc.exe" (
+	set INNOSETUP="D:\program files\Inno Setup 5\iscc.exe"
 )
 
 if x%PYTHON% == x (
@@ -39,7 +36,7 @@ rmdir /q /s build dist
 %PYTHON% setup.py -q py2exe
 echo *** building setup executable ***
 %INNOSETUP% /q setup.iss
-FOR /F "delims=" %%I IN ('DIR output /B /O:-D') DO echo "*** output\%%I ***"  & GOTO :END
+FOR /F "delims=" %%I IN ('DIR output /B /O:-D') DO echo *** output\%%I ***  & GOTO :END
 
 :END
 endlocal

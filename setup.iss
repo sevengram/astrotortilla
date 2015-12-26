@@ -137,8 +137,8 @@ Source: "LICENSE"; DestDir: "{app}"; Components: AstroTortilla
 Source: "AstrometryNetPackages.txt"; DestDir: "{app}"; Components: AstroTortilla
 Source: "README.txt"; DestDir: "{app}"; Flags: isreadme; Components: AstroTortilla
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: {#VCRedist}; DestDir: {tmp}; Flags: ignoreversion deleteafterinstall
-Source: "setup.exe"; DestDir: "{app}"; Components: cygwin
+Source: "setup\{#VCRedist}"; DestDir: "{tmp}"; Flags: ignoreversion deleteafterinstall
+Source: "setup\cygwin.exe"; DestDir: "{app}"; Components: cygwin
 
 [Registry]
 Root: HKCU; Subkey: "Software\AstroTortilla"; ValueType: string; ValueName: "CygwinRoot"; ValueData: "{code:CygwinRootDir|C:\cygwin\}"; Flags: uninsdeletekey
@@ -150,13 +150,13 @@ Name: "{group}\User guide (English)"; Filename: "{app}\docs\AstroTortilla_user_g
 Name: "{group}\Pikaopas (Finnish)"; Filename: "{app}\docs\AstroTortilla_pikaopas.pdf"; Tasks: startmenu
 Name: "{group}\Käyttöohje (Finnish)"; Filename: "{app}\docs\AstroTortilla_kayttoohje.pdf"; Tasks: startmenu
 Name: "{group}\{cm:UninstallProgram,AstroTortilla}"; Filename: "{uninstallexe}"; Tasks: startmenu
-Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\setup.exe"; Parameters: "-P astrometry.net -K http://astrotortilla.kuntsi.com/tortilla.gpg -s http://astrotortilla.kuntsi.com  -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Tasks: cygstartmenu
+Name: "{group}\{cm:Installer,Cygwin}"; Filename: "{app}\cygwin.exe"; Parameters: "-P astrometry.net -K http://astrotortilla.kuntsi.com/tortilla.gpg -s http://astrotortilla.kuntsi.com  -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Tasks: cygstartmenu
 Name: "{commondesktop}\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\AstroTortilla"; Filename: "{app}\AstroTortilla.exe"; Tasks: quicklaunchicon
 
 [Run]
-Filename: "{tmp}\{#VCRedist}"; WorkingDir: {tmp}; Flags: skipifdoesntexist; Check: VCRedistNeedsInstall; StatusMsg: "Checking for and installing ""Microsoft Visual C++ Redistributable Package"" if needed, This can take several minutes..."
-Filename: "{app}\setup.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://astrotortilla.kuntsi.com/tortilla.gpg -s http://astrotortilla.kuntsi.com -O -q -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Description: "{cm:Install2,Cygwin,astrometry.net}"; AfterInstall: RebaseCygwinDLLs
+Filename: "{tmp}\{#VCRedist}"; WorkingDir: "{tmp}"; Flags: skipifdoesntexist; Check: VCRedistNeedsInstall; StatusMsg: "Checking for and installing ""Microsoft Visual C++ Redistributable Package"" if needed, This can take several minutes..."
+Filename: "{app}\cygwin.exe"; Components: cygwin;Parameters: "-P astrometry.net -K http://astrotortilla.kuntsi.com/tortilla.gpg -s http://astrotortilla.kuntsi.com -O -q -R {code:CygwinRootDir|C:\cygwin\} -l {code:CygwinCacheDir|C:\temp\cygcache\}"; Description: "{cm:Install2,Cygwin,astrometry.net}"; AfterInstall: RebaseCygwinDLLs
 Filename: "{app}\AstroTortilla.exe"; Description: "{cm:LaunchProgram,AstroTortilla}"; Flags: nowait postinstall skipifsilent
 
 [INI]
@@ -505,11 +505,23 @@ var
   
 begin
   case Index of
-    5..7:
+    5:
     indexCount := 11;
-    0..4:
+	6:
+	indexCount := 11;
+	7:
+	indexCount := 11;
+    0:
     indexCount := 47;
-  else
+    1:
+    indexCount := 47;
+    2:
+    indexCount := 47;
+    3:
+    indexCount := 47;
+    4:
+    indexCount := 47;
+	else
     indexCount := 0;
   end;
 //  if UseIntlServer then

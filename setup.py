@@ -1,12 +1,13 @@
 #!/usr/bin/python
 """Setup AstroTortilla for py2exe and distutils"""
 
+import py2exe
 import os.path
 import sys
 from distutils.core import setup
 from glob import glob
 
-VERSION = "0.7.0.0"
+VERSION = "0.8.0.0"
 VERSIONTAG = ""
 
 data_files = []
@@ -64,10 +65,4 @@ setup(
     data_files=data_files,
 )
 
-# Make a copy of readme as readme.txt for installer
 file("README.txt", "w").write(file("README").read())
-if not os.path.exists("setup.exe"):
-    import urllib
-
-    print "Fetching Cygwin setup.exe"
-    urllib.urlretrieve("http://cygwin.com/setup.exe", "setup.exe")
