@@ -1,54 +1,44 @@
-# vim:st=4 sts=4 sw=4 et si
-"""ByEosCamera
-- simple camera interface to BackyardEOS
+"""
+ByEosCamera - simple camera interface to BackyardEOS
 """
 
 import logging
-logger = logging.getLogger("astrotortilla.ByEosCamera")
+import shutil
+import os
+import socket
+import time
+import gettext
 
 from ..ICamera import ICamera
 from .. import CameraState
-import tempfile, shutil
-import os.path, os, string
-import win32ui, win32api, win32con
-try:
-    import winxpgui as win32gui
-except:
-    import win32gui
-import socket, glob, time
-from pywinauto import Application
-from pywinauto.timings import WaitUntil
-import threading
-import gettext
+
+logger = logging.getLogger("astrotortilla.ByEosCamera")
+
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
 
 def str2bool(string):
-    s = str(string).lower()+" "
+    s = str(string).lower() + " "
     return s[0] in ("y", "t", "1")
 
-
-# Property dict structure:
-# key: (readable name, validation function, name tooltip, value tooltip, default value)
-# The values can be set as strings by the using application.
-
 PROPERTYLIST = {
-        "hostname":(_("BackyardEOS address"), str, _("Hostname or IP address"), "", "127.0.0.1"),
-        "port":(_("Port number"), int, _("BackyardEOS server port"), "", "1499"),
-        "ISO":(_("ISO value"), int, _("ISO value for AstroTortilla images"), "", "800"),
-        "timeout":(_("Messaging timeout"), int, _("Communication timeout in seconds"), "", "10"),
-        }
+    "hostname": (_("BackyardEOS address"), str, _("Hostname or IP address"), "", "127.0.0.1"),
+    "port": (_("Port number"), int, _("BackyardEOS server port"), "", "1499"),
+    "ISO": (_("ISO value"), int, _("ISO value for AstroTortilla images"), "", "800"),
+    "timeout": (_("Messaging timeout"), int, _("Communication timeout in seconds"), "", "10"),
+}
 
-STATUS={
-    '' : CameraState.Error,
-    'idle' : CameraState.Idle,
-    'error' : CameraState.Error,
-    'busy' : CameraState.Exposing
-    }
+STATUS = {
+    '': CameraState.Error,
+    'idle': CameraState.Idle,
+    'error': CameraState.Error,
+    'busy': CameraState.Exposing
+}
+
 
 class ByEosCamera(ICamera):
-#class ByEosCamera: # Use above line when supported
+    # class ByEosCamera: # Use above line when supported
     def __init__(self):
         super(ByEosCamera, self).__init__()
         self.__bin = 1
@@ -61,7 +51,8 @@ class ByEosCamera(ICamera):
     def __connect(self):
         s = None
         try:
-            s = socket.create_connection((self.getProperty("hostname"), int(self.getProperty("port"))), timeout=self.__timeout)
+            s = socket.create_connection((self.getProperty("hostname"), int(self.getProperty("port"))),
+                                         timeout=self.__timeout)
         except:
             self.__lastError = "Failed to connect to BackyardEOS"
             logger.error("Failed to connect to BackyardEOS")
@@ -84,8 +75,8 @@ class ByEosCamera(ICamera):
             else:
                 response = None
         except socket.timeout:
-            pass # TODO: handle timeouts properly
-        except Exception:
+            pass  # TODO: handle timeouts properly
+        except:
             import traceback
             logger.error(traceback.format_exc())
             logger.error("BackyardEOS connection lost during command")
@@ -93,7 +84,7 @@ class ByEosCamera(ICamera):
 
     def __del__(self):
         super(ByEosCamera, self).__del__()
-    
+
     @classmethod
     def getName(cls):
         return "BackyardEOS"
@@ -154,21 +145,20 @@ class ByEosCamera(ICamera):
         except Exception:
             import traceback
             logger.error(traceback.format_exc())
-            logger.error("BackyardEOS response: '%s'"%rsp)
+            logger.error("BackyardEOS response: '%s'" % rsp)
         return status
 
     @property
     def errorMessage(self):
         rsp = _("Could not connect to BackyardEOS")
         try:
-            rsp= self.__command("getlasterror").strip()
+            rsp = self.__command("getlasterror").strip()
             if not rsp:
                 rsp = self.__lastError
         except:
             pass
         self.__lastError = rsp
         return self.__lastError
-
 
     @property
     def cameraXSize(self):
@@ -186,35 +176,35 @@ class ByEosCamera(ICamera):
         # maybe not the best way?
         rsp = self.__command("getispictureready")
         return rsp.lower().strip() == "true"
-    
+
     def capture(self, duration):
         "Starts image exposure, no returned value"
         # clear temp directory first
         if self.cameraState != CameraState.Idle:
             raise Exception(self.errorMessage)
-        
+
         self.__state = CameraState.Exposing
         if self.__latestImage:
             try:
                 os.remove(self.__latestImage)
             except Exception as detail:
-                raise IOError("Failed to clear cache: %s"%detail)
+                raise IOError("Failed to clear cache: %s" % detail)
         self.__latestImage = None
-        
+
         try:
-            response = self.__command("takepicture duration:%f iso:%s bin:%d" %(duration, self.getProperty("ISO"), self.__bin))
+            response = self.__command(
+                "takepicture duration:%f iso:%s bin:%d" % (duration, self.getProperty("ISO"), self.__bin))
         except:
             import traceback
             logger.error(traceback.format_exc())
             self.__state = CameraState.Error
         self.__state = CameraState.Idle
 
-
     def getImage(self):
         "@return None or path to image"
         if self.__latestImage:
             return self.__latestImage
-        
+
         if self.imageReady:
             self.__state = CameraState.Idle
             reply = self.__command("getpicturepath")
@@ -228,7 +218,6 @@ class ByEosCamera(ICamera):
     def reset(self):
         status = self.cameraState
         if status == CameraState.Error:
-            logger.error("Resetting error: %s"% self.errorMessage)
+            logger.error("Resetting error: %s" % self.errorMessage)
         elif status == CameraState.Exposing:
             self.__command("abort")
-

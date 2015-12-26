@@ -1,7 +1,10 @@
-"""CameraState
+# -*- coding: UTF-8 -*-
+"""
+CameraState
 Constants for camera state
 """
 import gettext
+
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 Idle = 0
