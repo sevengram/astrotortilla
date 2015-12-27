@@ -11,3 +11,7 @@ build/
 setup.exe
 README.txt
 current_build.iss
+
+*~
+*.tmp
+*.swap

@@ -65,7 +65,7 @@ setup(
                 "optimize": 2,
             }
     },
-    data_files=data_files, requires=['pyfits', 'PIL', 'py2exe']
+    data_files=data_files, requires=[]
 )
 
 file("README.txt", "w").write(file("README").read())

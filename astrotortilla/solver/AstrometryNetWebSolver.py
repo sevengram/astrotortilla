@@ -1,8 +1,6 @@
 import logging
 import time
 import gettext
-import pyfits
-from PIL import Image
 
 from win32com.client import Dispatch
 from ..IPlateSolver import IPlateSolver, Solution
@@ -16,14 +14,6 @@ PROPERTYLIST = {
     "apikey": (_("API Key"), str, _("API Key"), "", ""),
     "year_epoch": (_("JNow or J2000"), str, _("JNOW or J2000"), "", "J2000")
 }
-
-
-def image_size(filepath):
-    if filepath.endswith('fit') or filepath.endswith('fits'):
-        v, h = pyfits.open(filepath)[0].data.shape
-    else:
-        h, v = Image.open(filepath).size
-    return h, v
 
 
 class AstrometryNetWebSolver(IPlateSolver):
@@ -102,14 +92,11 @@ class AstrometryNetWebSolver(IPlateSolver):
         if not result or self.__abort:
             return None
 
-        h, v = image_size(imagePath)
-        hFOV = float(h) * result['pixscale'] / 3600.
-        vFOV = float(v) * result['pixscale'] / 3600.
         center = Coordinate(result['ra'], result['dec'])
         if self.__transform and self.getProperty("year_epoch").lower() == "jnow":
             self.__transform.SetJ2000(center.RAhour, center.dec)
             center = Coordinate(self.__transform.RAApparent / 24. * 360, self.__transform.DECApparent, epoch="JNOW")
-        self.__solution = Solution(center, result['orientation'], result['parity'], hFOV, vFOV)
+        self.__solution = Solution(center, result['orientation'], result['parity'], 0, 0)
 
         self._notify('Solved!')
         self.__found = True
