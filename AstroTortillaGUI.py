@@ -4,7 +4,9 @@ import wx
 import logging
 import astrotortilla.gui.MainFrame as MainFrame
 
-logger = logging.getLogger("astrotortilla.main")
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 modules = {'BookmarkEditor': [0, '', 'astrotortilla/gui/BookmarkEditor.py'],
            'DlgCameraSetup': [0, '', 'astrotortilla/gui/DlgCameraSetup.py'],

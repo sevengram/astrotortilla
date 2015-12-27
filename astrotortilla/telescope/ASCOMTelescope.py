@@ -149,7 +149,6 @@ class ASCOMTelescope(ITelescope):
         if now - self.__positionTime > self._maxAge:
             try:
                 # convert RA from hours to degrees
-                logger.debug("request position")
                 RA = self.__scope.RightAscension * 360. / 24
                 dec = self.__scope.Declination
                 self.__position = Coordinate(RA, dec)
@@ -168,7 +167,6 @@ class ASCOMTelescope(ITelescope):
         # convert RA from hours to degrees
         now = time.time()
         if now - self.__targetTime > self._maxAge:
-            logger.debug("request target")
             try:
                 self.__targetTime = now
                 RA = self.__scope.TargetRightAscension * 360. / 24
@@ -223,7 +221,6 @@ class ASCOMTelescope(ITelescope):
             return False
         now = time.time()
         if now - self.__slewingTime > self._maxAge:
-            logger.debug("request slewing attribute")
             try:
                 wasSlewing = self.__slewing
                 isSlewing = self.__scope.Slewing
@@ -251,7 +248,6 @@ class ASCOMTelescope(ITelescope):
         now = time.time()
         if now - self.__trackingTime > self._maxAge:
             try:
-                logger.debug("request tracking status")
                 self.__tracking = self.__scope.Tracking
                 self.__trackingTime = now
                 self._operation_ok = True

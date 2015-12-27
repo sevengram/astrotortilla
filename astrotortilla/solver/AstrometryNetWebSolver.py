@@ -79,6 +79,7 @@ class AstrometryNetWebSolver(IPlateSolver):
 
         The callback function must be callable with a string argument and with explicit None.
         """
+        logging.info('Try to solve: %s' % imagePath)
         self.__callback = callback
         self.__found = False
         self.__abort = False
