@@ -8,11 +8,9 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
-modules = {'BookmarkEditor': [0, '', 'astrotortilla/gui/BookmarkEditor.py'],
-           'DlgCameraSetup': [0, '', 'astrotortilla/gui/DlgCameraSetup.py'],
+modules = {'DlgCameraSetup': [0, '', 'astrotortilla/gui/DlgCameraSetup.py'],
            'DlgHelpAbout': [0, '', 'astrotortilla/gui/DlgHelpAbout.py'],
            'DlgTelescopeSetup': [0, '', 'astrotortilla/gui/DlgTelescopeSetup.py'],
-           'LogFrame': [0, 'Log window', 'astrotortilla/gui/LogFrame.py'],
            'MainFrame': [1, 'Main frame of Application', 'astrotortilla/gui/MainFrame.py']}
 
 
@@ -43,6 +41,7 @@ class BoaApp(wx.App):
         self.main.updateCamera()
         self.main.Show()
         self.SetTopWindow(self.main)
+
         # update GUI on engine status
         if self.main.engine.getCamera():
             self.main.choiceCam.SetStringSelection(self.main.engine.getCameraName())

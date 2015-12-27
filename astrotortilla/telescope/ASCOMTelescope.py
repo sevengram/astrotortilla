@@ -9,8 +9,6 @@ from ..ITelescope import ITelescope
 from ..units import Coordinate, deg2str
 from win32com.client import Dispatch
 
-logger = logging.getLogger("astrotortilla.ASCOMTelescope")
-
 PROPERTYLIST = {
     "lastselection": ("", str, "", "", ""),
     "propertyAgeLimit": ("", float, "", "", "1.0"),
@@ -81,7 +79,7 @@ class ASCOMTelescope(ITelescope):
         else:
             self.__errorCounter = 0
         if self.__errorCounter > 10:
-            logger.error("10 errors in a row, disconnecting.")
+            logging.error("10 errors in a row, disconnecting.")
             self.connected = False
 
     @classmethod
@@ -102,7 +100,7 @@ class ASCOMTelescope(ITelescope):
             rval = self.__scope.Connected
             self._operation_ok = True
         except:
-            logger.error("ASCOM Error trying to retrieve connection status")
+            logging.error("ASCOM Error trying to retrieve connection status")
             self.__scope = None
             self._operation_ok = False
         return rval
@@ -155,7 +153,7 @@ class ASCOMTelescope(ITelescope):
                 self.__positionTime = now
                 self._operation_ok = True
             except:
-                logger.error("ASCOM Error: Getting RA/DEC failed")
+                logging.error("ASCOM Error: Getting RA/DEC failed")
                 self._operation_ok = False
         return self.__position
 
@@ -185,7 +183,7 @@ class ASCOMTelescope(ITelescope):
             self.__scope.TargetRightAscension = RA
             self.__scope.TargetDeclination = dec
         except:
-            logger.warning("target set failed")
+            logging.warning("target set failed")
         self.__invalidateCache()
 
     @position.setter
@@ -194,14 +192,14 @@ class ASCOMTelescope(ITelescope):
         if not isinstance(coord, Coordinate):
             raise TypeError("Parameter not a Coordinate")
         if not self.connected:
-            logger.debug("not connected")
+            logging.debug("not connected")
             return
         # convert degrees to hours
-        logger.info("Syncing to %s" % (str(coord)))
+        logging.info("Syncing to %s" % (str(coord)))
         RA = coord.RA * 24. / 360.
         dec = coord.dec
         separation = self.position - coord
-        logger.info("Sync separation is %s" % deg2str(separation.degrees))
+        logging.info("Sync separation is %s" % deg2str(separation.degrees))
         self.__scope.SyncToCoordinates(RA, dec)
         sync_time = now = time.time()
         while (now - sync_time) < float(self.getProperty("syncMaxWait")):
@@ -212,7 +210,7 @@ class ASCOMTelescope(ITelescope):
             time.sleep(float(self.getProperty("syncMaxWait")) / 10.0)
             now = time.time()
         if separation.arcminutes > float(self.getProperty("syncAccuracy")):
-            logger.warning("Sync delta detected: %.2f arcmin" % separation.arcminutes)
+            logging.warning("Sync delta detected: %.2f arcmin" % separation.arcminutes)
 
     @property
     def slewing(self):
@@ -235,7 +233,7 @@ class ASCOMTelescope(ITelescope):
                     self.__slewing = isSlewing
                 self._operation_ok = False
             except:
-                logger.error("ASCOM error reading slewing status")
+                logging.error("ASCOM error reading slewing status")
                 self._operation_ok = False
         return self.__slewing
 
@@ -253,7 +251,7 @@ class ASCOMTelescope(ITelescope):
                 self._operation_ok = True
             except:
                 self._operation_ok = False
-                logger.error("ASCOM error reading tracking status")
+                logging.error("ASCOM error reading tracking status")
         return self.__tracking
 
     @tracking.setter
@@ -307,7 +305,7 @@ class ASCOMTelescope(ITelescope):
         now = time.time()
         try:
             if now - self.__parkedTime > self._maxAge:
-                logger.debug("request parked status")
+                logging.debug("request parked status")
                 self.__parked = self.__scope.AtPark
                 self.__parkedTime = now
         except:  # Getting parked status fails, assume V1 driver

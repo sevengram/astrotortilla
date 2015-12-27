@@ -1,16 +1,13 @@
 import logging
 import time
 import gettext
-from PIL import Image
-
 import pyfits
+from PIL import Image
 
 from win32com.client import Dispatch
 from ..IPlateSolver import IPlateSolver, Solution
 from ..units import Coordinate
 from astrotortilla.solver import http
-
-logger = logging.getLogger("astrotortilla.AstrometryNetWebSolver")
 
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
@@ -43,7 +40,7 @@ class AstrometryNetWebSolver(IPlateSolver):
         try:
             self.__transform = Dispatch("ASCOM.Astrometry.Transform.Transform")
         except:
-            logger.error("Failed to initialize ASCOM astrometric transformer, no epoch conversion available")
+            logging.error("Failed to initialize ASCOM astrometric transformer, no epoch conversion available")
             self.__transform = None
 
     @classmethod
@@ -128,10 +125,10 @@ class AstrometryNetWebSolver(IPlateSolver):
         if resp_data and resp_data.get('status') == 'success':
             self.__session = resp_data.get('session')
         if not self.__session:
-            logger.error('login failed')
+            logging.error('login failed')
             self._notify('Login Failed')
         else:
-            logger.info('login succeed')
+            logging.info('login succeed')
             self._notify('Login succeed')
 
     def _upload_url(self, url):
@@ -143,7 +140,7 @@ class AstrometryNetWebSolver(IPlateSolver):
                     'allow_modifications': 'd',
                     'publicly_visible': 'n'}
         resp_data = http.post_data('url_upload', req_data)
-        logger.info('upload result: %s' % resp_data)
+        logging.info('upload result: %s' % resp_data)
         if resp_data and resp_data.get('status') == 'success':
             subid = resp_data.get('subid')
             self._notify('Submission ID: %s' % subid)
@@ -162,7 +159,7 @@ class AstrometryNetWebSolver(IPlateSolver):
                     'publicly_visible': 'n'}
         self._notify("Uploading...")
         resp_data = http.post_file('upload', filepath, req_data)
-        logger.info('upload result: %s' % resp_data)
+        logging.info('upload result: %s' % resp_data)
         if resp_data and resp_data.get('status') == 'success':
             subid = resp_data.get('subid')
             self._notify('Submission ID: %s' % subid)
@@ -174,13 +171,13 @@ class AstrometryNetWebSolver(IPlateSolver):
 
     def _solve_result(self, subid):
         resp_data = http.get('submissions/%s' % subid)
-        logger.info('submission %s status: %s' % (subid, resp_data))
+        logging.info('submission %s status: %s' % (subid, resp_data))
         jobs = resp_data.get('jobs', [])
         if jobs and jobs[0]:
             jobid = jobs[0]
             self._notify('Job ID: %s' % jobid)
             resp_data = http.get('jobs/%s/info' % jobid)
-            logger.info('job %s result: %s' % (jobid, resp_data))
+            logging.info('job %s result: %s' % (jobid, resp_data))
             if resp_data and resp_data.get('status') == 'success':
                 return 0, resp_data.get('calibration')
             elif resp_data and resp_data.get('status') == 'failure':

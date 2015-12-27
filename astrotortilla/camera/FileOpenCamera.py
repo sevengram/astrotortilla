@@ -2,15 +2,12 @@
 FileOpenCamera - simple camera interface to read a file from disc
 """
 
-import logging
 import os
 import wx
 import gettext
 
 from ..ICamera import ICamera
 from .. import CameraState
-
-logger = logging.getLogger("astrotortilla.FileOpenCamera")
 
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext

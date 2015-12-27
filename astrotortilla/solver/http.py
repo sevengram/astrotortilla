@@ -1,6 +1,5 @@
 import json
 import os
-import logging
 import urllib
 import urllib2
 
@@ -20,13 +19,16 @@ def post_data(service, data=None, headers=None):
 
 
 def post_file(service, filepath, data=None, headers=None):
-    req_data = {'request-json': json.dumps(data or {})}
-    content_type, body = encode_multipart_formdata(req_data, filepath)
-    headers = headers or {}
-    headers['Content-Type'] = content_type
-    req = urllib2.Request(url=build_url(service), data=body, headers=headers)
-    resp = urllib2.urlopen(req)
-    return json.loads(resp.read()) if resp.code == 200 else None
+    try:
+        req_data = {'request-json': json.dumps(data or {})}
+        content_type, body = encode_multipart_formdata(req_data, filepath)
+        headers = headers or {}
+        headers['Content-Type'] = content_type
+        req = urllib2.Request(url=build_url(service), data=body, headers=headers)
+        resp = urllib2.urlopen(req)
+        return json.loads(resp.read()) if resp.code == 200 else None
+    except (ValueError, IOError):
+        return None
 
 
 def get(service, headers=None):

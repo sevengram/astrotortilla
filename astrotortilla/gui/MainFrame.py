@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-import win32gui
 import wx
 import wx.grid
 import wx.lib.masked.numctrl
@@ -9,22 +8,16 @@ import logging
 from time import time, sleep
 from wx.lib.anchors import LayoutAnchors
 
+import win32gui
 import DlgHelpAbout
 import DlgCameraSetup
 import DlgTelescopeSetup
-import BookmarkEditor
-import LogFrame
 from astrotortilla import CameraState
-from astrotortilla.bookmark import Bookmark
 from astrotortilla.engine import TortillaEngine
 from astrotortilla.units import deg2dms, deg2hms, deg2str
 
-logger = logging.getLogger("astrotortilla.Main")
-
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
-
-DEBUG = 0  # 1 to enable some debug prints
 
 
 def create(parent):
@@ -93,17 +86,10 @@ def disable(ctrl):
 
 
 [wxID_MAINFRAMEMENUFILEFILEEXIT, wxID_MAINFRAMEMENUFILEITEMS1,
- wxID_MAINFRAMEMENUFILEITEMS2,
- ] = [wx.NewId() for _init_coll_menuFile_Items in range(3)]
+ wxID_MAINFRAMEMENUFILEITEMS2] = [wx.NewId() for _init_coll_menuFile_Items in range(3)]
 
-[wxID_MAINFRAMEMENUTOOLSDRIFTSHOT, wxID_MAINFRAMEMENUTOOLSITEMS2,
- wxID_MAINFRAMEMENUTOOLSLOGWINDOW,
- ] = [wx.NewId() for _init_coll_menuTools_Items in range(3)]
-
-[wxID_MAINFRAMEMENUBOOKMARKSADDIMAGEBM,
- wxID_MAINFRAMEMENUBOOKMARKSADDSOLUTIONBM,
- wxID_MAINFRAMEMENUBOOKMARKSEDITBOOKMARKS,
- ] = [wx.NewId() for _init_coll_menuBookmarks_Items in range(3)]
+[wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
+ wxID_MAINFRAMEMENUTOOLSITEMS2] = [wx.NewId() for _init_coll_menuTools_Items in range(2)]
 
 [wxID_MAINFRAMEMENUHELPHELPABOUT] = [wx.NewId() for _init_coll_menuHelp_Items in range(1)]
 
@@ -111,34 +97,12 @@ def disable(ctrl):
 
 
 class mainFrame(wx.Frame):
-    def _init_coll_menuBookmarks_Items(self, parent):
-        # generated method, don't edit
-
-        parent.Append(help='', id=wxID_MAINFRAMEMENUBOOKMARKSADDSOLUTIONBM,
-                      kind=wx.ITEM_NORMAL, text=_('Add current solution'))
-        parent.Append(help='', id=wxID_MAINFRAMEMENUBOOKMARKSADDIMAGEBM,
-                      kind=wx.ITEM_NORMAL, text=_('Add from solved image'))
-        parent.Append(help='', id=wxID_MAINFRAMEMENUBOOKMARKSEDITBOOKMARKS,
-                      kind=wx.ITEM_NORMAL, text=_('Edit bookmarks'))
-        parent.AppendSeparator()
-        self.Bind(wx.EVT_MENU, self.OnMenuBookmarksAddsolutionbmMenu,
-                  id=wxID_MAINFRAMEMENUBOOKMARKSADDSOLUTIONBM)
-        self.Bind(wx.EVT_MENU, self.OnMenuBookmarksAddimagebmMenu,
-                  id=wxID_MAINFRAMEMENUBOOKMARKSADDIMAGEBM)
-        self.Bind(wx.EVT_MENU, self.OnMenuBookmarksEditbookmarksMenu,
-                  id=wxID_MAINFRAMEMENUBOOKMARKSEDITBOOKMARKS)
-
     def _init_coll_menuBar1_Menus(self, parent):
-        # generated method, don't edit
-
         parent.Append(menu=self.menuFile, title=_('File'))
-        parent.Append(menu=self.menuBookmarks, title=_('Bookmarks'))
         parent.Append(menu=self.menuTools, title=_('Tools'))
         parent.Append(menu=self.menuHelp, title=_('Help'))
 
     def _init_coll_menuHelp_Items(self, parent):
-        # generated method, don't edit
-
         parent.Append(help=_('Information about the application.'),
                       id=wxID_MAINFRAMEMENUHELPHELPABOUT, kind=wx.ITEM_NORMAL,
                       text=_('About'))
@@ -146,8 +110,6 @@ class mainFrame(wx.Frame):
                   id=wxID_MAINFRAMEMENUHELPHELPABOUT)
 
     def _init_coll_menuFile_Items(self, parent):
-        # generated method, don't edit
-
         parent.Append(help='', id=wxID_MAINFRAMEMENUFILEITEMS1,
                       kind=wx.ITEM_NORMAL, text=_('Load settings...'))
         parent.Append(help='', id=wxID_MAINFRAMEMENUFILEITEMS2,
@@ -164,23 +126,16 @@ class mainFrame(wx.Frame):
                   id=wxID_MAINFRAMEMENUFILEITEMS2)
 
     def _init_coll_menuTools_Items(self, parent):
-        # generated method, don't edit
-
         parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSITEMS2,
                       kind=wx.ITEM_NORMAL, text=_('Goto Image'))
         parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
                       kind=wx.ITEM_NORMAL, text=_('Drift shot'))
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW,
-                      kind=wx.ITEM_NORMAL, text=_('Log viewer'))
         self.Bind(wx.EVT_MENU, self.OnMenuToolsDriftshotMenu,
                   id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT)
         self.Bind(wx.EVT_MENU, self.OnMenuToolsGotoImage,
                   id=wxID_MAINFRAMEMENUTOOLSITEMS2)
-        self.Bind(wx.EVT_MENU, self.OnMenuToolsLogwindowMenu,
-                  id=wxID_MAINFRAMEMENUTOOLSLOGWINDOW)
 
     def _init_coll_statusBar1_Fields(self, parent):
-        # generated method, don't edit
         parent.SetFieldsCount(1)
 
         parent.SetStatusText(number=0, text='status')
@@ -188,30 +143,20 @@ class mainFrame(wx.Frame):
         parent.SetStatusWidths([-1])
 
     def _init_utils(self):
-        # generated method, don't edit
         self.menuFile = wx.Menu(title='')
-
         self.menuHelp = wx.Menu(title='')
-
         self.menuBar1 = wx.MenuBar()
-
-        self.scopePollTimer = wx.Timer(id=wxID_MAINFRAMESCOPEPOLLTIMER,
-                                       owner=self)
-        self.Bind(wx.EVT_TIMER, self.OnScopePollTimer,
-                  id=wxID_MAINFRAMESCOPEPOLLTIMER)
-
         self.menuTools = wx.Menu(title='')
 
-        self.menuBookmarks = wx.Menu(title='')
+        self.scopePollTimer = wx.Timer(id=wxID_MAINFRAMESCOPEPOLLTIMER, owner=self)
+        self.Bind(wx.EVT_TIMER, self.OnScopePollTimer, id=wxID_MAINFRAMESCOPEPOLLTIMER)
 
         self._init_coll_menuFile_Items(self.menuFile)
         self._init_coll_menuHelp_Items(self.menuHelp)
         self._init_coll_menuBar1_Menus(self.menuBar1)
         self._init_coll_menuTools_Items(self.menuTools)
-        self._init_coll_menuBookmarks_Items(self.menuBookmarks)
 
     def _init_ctrls(self, prnt):
-        # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_MAINFRAME, name='mainFrame',
                           parent=prnt, pos=wx.Point(892, 147), size=wx.Size(410, 384),
                           style=wx.DEFAULT_FRAME_STYLE, title='AstroTortilla')
@@ -226,8 +171,7 @@ class mainFrame(wx.Frame):
         self.Bind(wx.EVT_SIZE, self.OnMainFrameSize)
         self.Bind(wx.EVT_ACTIVATE, self.OnMainFrameActivate)
 
-        self.statusBar1 = wx.StatusBar(id=wxID_MAINFRAMESTATUSBAR1,
-                                       name='statusBar1', parent=self, style=0)
+        self.statusBar1 = wx.StatusBar(id=wxID_MAINFRAMESTATUSBAR1, name='statusBar1', parent=self, style=0)
         self.statusBar1.SetLabel('')
         self.statusBar1.SetStatusText('')
         self._init_coll_statusBar1_Fields(self.statusBar1)
@@ -245,62 +189,49 @@ class mainFrame(wx.Frame):
         self.Telescope.SetHelpText('')
         self.Telescope.SetWindowVariant(wx.WINDOW_VARIANT_NORMAL)
         self.Telescope.SetThemeEnabled(False)
-        self.Telescope.SetConstraints(LayoutAnchors(self.Telescope, True, True,
-                                                    True, False))
+        self.Telescope.SetConstraints(LayoutAnchors(self.Telescope, True, True, True, False))
 
-        self.mainCamera = wx.StaticBox(id=wxID_MAINFRAMEMAINCAMERA,
-                                       label=_('Camera'), name='mainCamera', parent=self, pos=wx.Point(8,
-                                                                                                       80),
-                                       size=wx.Size(384, 88), style=0)
+        self.mainCamera = wx.StaticBox(id=wxID_MAINFRAMEMAINCAMERA, label=_('Camera'), name='mainCamera', parent=self,
+                                       pos=wx.Point(8, 80), size=wx.Size(384, 88), style=0)
         self.mainCamera.SetToolTipString('')
         self.mainCamera.SetConstraints(LayoutAnchors(self.mainCamera, True,
                                                      True, True, False))
 
-        self.staticBox1 = wx.StaticBox(id=wxID_MAINFRAMESTATICBOX1,
-                                       label=_('Actions'), name='staticBox1', parent=self,
+        self.staticBox1 = wx.StaticBox(id=wxID_MAINFRAMESTATICBOX1, label=_('Actions'), name='staticBox1', parent=self,
                                        pos=wx.Point(256, 168), size=wx.Size(136, 134), style=0)
         self.staticBox1.SetToolTipString('')
         self.staticBox1.SetConstraints(LayoutAnchors(self.staticBox1, False,
                                                      True, True, False))
 
-        self.camSetup = wx.Button(id=wxID_MAINFRAMECAMSETUP, label=_('Setup'),
-                                  name='camSetup', parent=self, pos=wx.Point(16, 128),
-                                  size=wx.Size(96, 23), style=0)
+        self.camSetup = wx.Button(id=wxID_MAINFRAMECAMSETUP, label=_('Setup'), name='camSetup', parent=self,
+                                  pos=wx.Point(16, 128), size=wx.Size(96, 23), style=0)
         self.camSetup.SetToolTipString(_('Setup camera'))
-        self.camSetup.Bind(wx.EVT_BUTTON, self.OnCamSetupButton,
-                           id=wxID_MAINFRAMECAMSETUP)
+        self.camSetup.Bind(wx.EVT_BUTTON, self.OnCamSetupButton, id=wxID_MAINFRAMECAMSETUP)
 
-        self.lblRA = wx.StaticText(id=wxID_MAINFRAMELBLRA, label=_('RA:'),
-                                   name='lblRA', parent=self, pos=wx.Point(184, 24), size=wx.Size(16,
-                                                                                                  16), style=0)
+        self.lblRA = wx.StaticText(id=wxID_MAINFRAMELBLRA, label=_('RA:'), name='lblRA', parent=self,
+                                   pos=wx.Point(184, 24), size=wx.Size(16, 16), style=0)
         self.lblRA.SetToolTipString('')
 
-        self.lblDec = wx.StaticText(id=wxID_MAINFRAMELBLDEC, label=_('Dec:'),
-                                    name='lblDec', parent=self, pos=wx.Point(176, 40),
-                                    size=wx.Size(24, 16), style=0)
+        self.lblDec = wx.StaticText(id=wxID_MAINFRAMELBLDEC, label=_('Dec:'), name='lblDec', parent=self,
+                                    pos=wx.Point(176, 40), size=wx.Size(24, 16), style=0)
         self.lblDec.SetToolTipString('')
 
-        self.txtRA = wx.StaticText(id=wxID_MAINFRAMETXTRA, label='00h00m00.00s',
-                                   name='txtRA', parent=self, pos=wx.Point(208, 24), size=wx.Size(71,
-                                                                                                  13), style=0)
+        self.txtRA = wx.StaticText(id=wxID_MAINFRAMETXTRA, label='00h00m00.00s', name='txtRA', parent=self,
+                                   pos=wx.Point(208, 24), size=wx.Size(71, 13), style=0)
         self.txtRA.SetToolTipString(_('Right ascension'))
 
-        self.txtDec = wx.StaticText(id=wxID_MAINFRAMETXTDEC, label='0',
-                                    name='txtDec', parent=self, pos=wx.Point(208, 40),
-                                    size=wx.Size(71, 13), style=0)
+        self.txtDec = wx.StaticText(id=wxID_MAINFRAMETXTDEC, label='0', name='txtDec', parent=self,
+                                    pos=wx.Point(208, 40), size=wx.Size(71, 13), style=0)
         self.txtDec.SetToolTipString(_('Declination'))
 
-        self.txtCam = wx.StaticText(id=wxID_MAINFRAMETXTCAM,
-                                    label=_('No camera'), name='txtCam', parent=self,
+        self.txtCam = wx.StaticText(id=wxID_MAINFRAMETXTCAM, label=_('No camera'), name='txtCam', parent=self,
                                     pos=wx.Point(120, 96), size=wx.Size(51, 13), style=0)
         self.txtCam.SetToolTipString('')
 
-        self.btnScopeSetup = wx.Button(id=wxID_MAINFRAMEBTNSCOPESETUP,
-                                       label=_('Setup'), name='btnScopeSetup', parent=self,
-                                       pos=wx.Point(16, 48), size=wx.Size(96, 23), style=0)
+        self.btnScopeSetup = wx.Button(id=wxID_MAINFRAMEBTNSCOPESETUP, label=_('Setup'), name='btnScopeSetup',
+                                       parent=self, pos=wx.Point(16, 48), size=wx.Size(96, 23), style=0)
         self.btnScopeSetup.SetToolTipString(_('Telescope driver workarounds'))
-        self.btnScopeSetup.Bind(wx.EVT_BUTTON, self.OnBtnScopeSetupButton,
-                                id=wxID_MAINFRAMEBTNSCOPESETUP)
+        self.btnScopeSetup.Bind(wx.EVT_BUTTON, self.OnBtnScopeSetupButton, id=wxID_MAINFRAMEBTNSCOPESETUP)
 
         self.lblField = wx.StaticText(id=wxID_MAINFRAMELBLFIELD,
                                       label=_('Field size:'), name='lblField', parent=self,
@@ -533,7 +464,6 @@ class mainFrame(wx.Frame):
         self.engine.setAccuracy(self.numCtrlAccuracy.GetValue())
 
     def __init__(self, parent):
-        self.__logFrame = None
         self._init_ctrls(parent)
         self.engine = TortillaEngine()
         if not self.engine.version_tag.startswith("NoIcon"):
@@ -561,11 +491,7 @@ class mainFrame(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.numCtrlExposure.SetValue(self.engine.getExposure() or 5.0)  # set default exposure value
         self.numCtrlAccuracy.SetValue(self.engine.getAccuracy() or 1.0)  # set default accuracy value
-        self.bookmarkMenuStart = self.menuBookmarks.GetMenuItemCount()
-        self.bookmarkMenuItems = []
-        self.bookmarkMap = {}
         disable(self.btnScopeSetup)
-        self.updateBookmarkMenu()
         self.updateCamera()
         # Old compatibility mode
         x = y = w = h = -32000
@@ -695,7 +621,7 @@ class mainFrame(wx.Frame):
             return
         self.engine.selectCamera(event.GetClientData())
         self.updateCamera()
-        logger.debug("Camera set to %s" % self.choiceCam.GetStringSelection())
+        logging.debug("Camera set to %s" % self.choiceCam.GetStringSelection())
 
     def updateCamera(self):
         """Update camera status display"""
@@ -744,10 +670,8 @@ class mainFrame(wx.Frame):
             if not self.engine.getCamera().connected:
                 try:
                     self.engine.getCamera().connected = True
-                except Exception, detail:
-                    import traceback
-                    logger.error("Camera error: %s" % traceback.format_exc())
-                    self.showTracebackDialog(traceback.format_exc(), _("Camera error"))
+                except:
+                    logging.error("Camera error")
                     return
             self.engine.getCamera().setup()
             return
@@ -783,19 +707,6 @@ class mainFrame(wx.Frame):
             self.chkSlewTarget.SetValue(True)
             self.chkSync.SetValue(True)
 
-    def showTracebackDialog(self, traceback, header):
-        diag = wx.MessageDialog(parent=self,
-                                message=traceback.format_exc(),
-                                caption=header,
-                                style=wx.OK
-                                )
-        try:
-            diag.ShowModal()
-        except:
-            pass
-        finally:
-            diag.Destroy()
-
     def OnBtnGOButton(self, event):
         if not self.engine.getCamera() or not self.engine.getSolver():
             event.Skip()
@@ -821,26 +732,21 @@ class mainFrame(wx.Frame):
                     self.engine.getTelescope().position = self.engine.solution.center
                     sync_error = self.engine.getTelescope().position - self.engine.solution.center
                     if sync_error.arcminutes > arcminLimit:
-                        raise Exception(_("ASCOM Telescope sync error"))
-        except Exception as e:
-            import traceback
-            logger.error("Sync failed: %s" % traceback.format_exc())
-            self.showTracebackDialog(traceback.format_exc(), _("Telescope communication error"))
-
-        finally:
-            self.updateCamera()
-            # update solver configuration grid from solver properties
-            for row in range(self.configGrid.GetNumberRows()):
-                key = self.configGrid.GetRowLabelValue(row)
-                self.configGrid.SetCellValue(row, 1, str(self.engine.getSolver().getProperty(key)))
-
-            self.engine.clearStatus()
-            self.btnGO.SetLabel(_("Capture and Solve"))
+                        raise Exception("ASCOM Telescope sync error")
+        except:
+            logging.error("Sync failed")
+            return
+        self.updateCamera()
+        # update solver configuration grid from solver properties
+        for row in range(self.configGrid.GetNumberRows()):
+            key = self.configGrid.GetRowLabelValue(row)
+            self.configGrid.SetCellValue(row, 1, str(self.engine.getSolver().getProperty(key)))
+        self.engine.clearStatus()
+        self.btnGO.SetLabel(_("Capture and Solve"))
 
     def __statusUpdater(self, status=None):
         """Update status bar and process UI events safely"""
         if status:
-            if DEBUG: print status
             self.SetStatusText(status)
         wx.SafeYield(self, True)
         wx.GetApp().Yield(True)
@@ -926,8 +832,7 @@ class mainFrame(wx.Frame):
             message=_("Load settings"),
             default_path=self.engine.config.get("AstroTortilla", "settings_path"),
             flags=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
-            wildcard=_("Config files") + " (*.cfg)|*.cfg",
-        )
+            wildcard=_("Config files") + " (*.cfg)|*.cfg")
 
         if fileName:
             self.engine.loadConfig(fileName)
@@ -947,9 +852,7 @@ class mainFrame(wx.Frame):
                 fileName += ".cfg"
             self.engine.saveConfig(fileName)
         except:
-            import traceback
-            logger.error("Saving settings failed: %s" % traceback.format_exc())
-            self.showTracebackDialog(traceback.format_exc(), _("Error saving settings"))
+            logging.error("Saving settings failed")
 
     def OnMenuToolsDriftshotMenu(self, event):
         if not self.engine.isReady:
@@ -1026,98 +929,10 @@ class mainFrame(wx.Frame):
             try:
                 self.engine.gotoImage(fileName)
             except:
-                import traceback
-                logger.error("Solver error occurred: %s" % traceback.format_exc())
-                self.showTracebackDialog(traceback.format_exc(), _("Solver error"))
+                logging.error("Solver error occurred")
+                return
             self.btnGO.SetLabel(_("Capture and Solve"))
             self.updateCamera()
-
-    def OnMenuToolsLogwindowMenu(self, event):
-        if not self.__logFrame or not self.__logFrame.IsShown():
-            self.__logFrame = LogFrame.create(self)
-        self.__logFrame.Show()
-        self.__logFrame.Iconize(False)
-        self.__logFrame.Raise()
-
-    def OnMenuBookmarksAddsolutionbmMenu(self, event):
-        if not self.engine.solution:
-            self.SetStatusText(_("No current solution"))
-            return
-        self.SetStatusText(_("Creating bookmark from current solution"))
-        self.CreateBookmark(self.engine.solution)
-
-    def CreateBookmark(self, solution):
-        dlg = wx.TextEntryDialog(self, message=_("Enter a name for the bookmark"), caption=_("Bookmark name"))
-        try:
-            dlg.ShowModal()
-            bmName = dlg.GetValue()
-            bm = Bookmark(bmName, solution.center, solution.rotation)
-            self.engine.addBookmark(bm)
-            self.updateBookmarkMenu()
-            self.SetStatusText(_("Done"))
-        except:
-            pass
-        finally:
-            dlg.Destroy()
-
-    def OnMenuBookmarksAddimagebmMenu(self, event):
-        self.SetStatusText(_("Creating bookmark from image"))
-        if not self.engine.config.has_option("AstroTortilla", "last_gotoimage"):
-            self.engine.config.set("AstroTortilla", "last_gotoimage", "")
-        fileName = wx.FileSelector(
-            message=_("Goto Image"),
-            default_path=self.engine.config.get("AstroTortilla", "last_gotoimage"),
-            flags=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
-            wildcard=_(
-                "Image files") + " (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm",
-        )
-
-        if fileName:
-            self.btnGO.SetLabel(_("Abort solver"))
-            target = None
-            try:
-                target = self.engine.solveImage(fileName)
-            except:
-                import traceback
-                logger.error("Solver error occurred: %s" % traceback.format_exc())
-                self.showTracebackDialog(traceback.format_exc(), _("Solver error"))
-            self.btnGO.SetLabel(_("Capture and Solve"))
-            if target:
-                self.CreateBookmark(target)
-
-    def OnMenuBookmarksBookmarklistMenu(self, event):
-        event.skip()
-
-    def updateBookmarkMenu(self):
-        # Clear old bookmarks from menu
-        while self.menuBookmarks.GetMenuItemCount() > self.bookmarkMenuStart:
-            bm = self.bookmarkMenuItems.pop()
-            self.Unbind(wx.EVT_MENU, id=bm, handler=self.OnMenuBookmarksBookmarklistEntry)
-            self.menuBookmarks.DeleteItem(self.menuBookmarks.FindItemByPosition(self.bookmarkMenuStart))
-        self.bookmarkMap = {}
-        # add bookmarks from engine to menu
-        for bookmark in self.engine.bookmarks:
-            i = wx.NewId()
-            self.menuBookmarks.Append(help='', id=i,
-                                      kind=wx.ITEM_NORMAL, text=bookmark.name)
-            self.Bind(wx.EVT_MENU, self.OnMenuBookmarksBookmarklistEntry,
-                      id=i)
-            self.bookmarkMenuItems.append(i)
-            self.bookmarkMap[i] = bookmark
-
-    def OnMenuBookmarksBookmarklistEntry(self, event):
-        bm = self.bookmarkMap[event.GetId()]
-        self.engine.gotoPosition(bm.position)
-
-    def OnMenuBookmarksEditbookmarksMenu(self, event):
-        editor = BookmarkEditor.create(self)
-        try:
-            editor.ShowModal()
-        except:
-            pass
-        finally:
-            editor.Destroy()
-        self.updateBookmarkMenu()
 
     def OnMainFrameMove(self, event):
         event.Skip()
@@ -1127,13 +942,3 @@ class mainFrame(wx.Frame):
 
     def OnMainFrameActivate(self, event):
         event.Skip()
-
-    def LogWindowClosed(self):
-        self.__logFrame = None
-
-
-if __name__ == '__main__':
-    app = wx.PySimpleApp()
-    frame = create(None)
-    frame.Show()
-    app.MainLoop()

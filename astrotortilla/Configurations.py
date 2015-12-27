@@ -1,7 +1,5 @@
 import logging
 
-logger = logging.getLogger("astrotortilla.Configurable")
-
 
 class Configurable(object):
     """
@@ -85,4 +83,4 @@ class Configurable(object):
             try:
                 self.setProperty(key, value)
             except Exception, detail:
-                logger.error("Setting property `%s` failed: %s" % (key, detail))
+                logging.error("Setting property `%s` failed: %s" % (key, detail))

@@ -12,7 +12,6 @@ import os.path
 import time
 from inspect import isclass, getmembers
 
-from libs.appdirs.appdirs import AppDirs
 from win32api import LoadResource
 import camera
 import solver
@@ -21,12 +20,9 @@ from IPlateSolver import IPlateSolver
 from ICamera import ICamera
 from ITelescope import ITelescope
 from astrotortilla import CameraState
-from astrotortilla.bookmark import Bookmark
+from libs.appdirs.appdirs import AppDirs
 
 appdirs = AppDirs("AstroTortilla", "astrotortilla.sf.net")
-logger = logging.getLogger("astrotortilla")
-logger.setLevel(logging.DEBUG)
-logFormatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
@@ -41,22 +37,12 @@ CFGDEFAULTS = {
             "solver": "",
             "syncmode": "0",
         },
-    "Bookmarks": {"count": "0"},
     "AstroTortilla":
         {
             "settings_path": "",
             "log_file": "",
             "log_level": "ERROR",
         }
-}
-
-logLevels = {
-    "FATAL": logging.FATAL,
-    "CRITICAL": logging.CRITICAL,
-    "ERROR": logging.ERROR,
-    "WARNING": logging.WARNING,
-    "INFO": logging.INFO,
-    "DEBUG": logging.DEBUG,
 }
 
 
@@ -70,11 +56,6 @@ class Status(object):
 
 class TortillaEngine(object):
     def __init__(self):
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.ERROR)
-        ch.setFormatter(logFormatter)
-        logger.addHandler(ch)
-
         self.__workDirectory = None
 
         self.__telescopes = self._list_subclasses(ITelescope, telescope)
@@ -88,8 +69,6 @@ class TortillaEngine(object):
         self.__cameras = self._list_subclasses(ICamera, camera)
         self.__camera = None
         self.__cameraName = _('Not selected')
-
-        self.__bookmarks = []
 
         self.__status = [Status.Idle]
         self.__abortAction = False  # did user want to abort current action?
@@ -107,10 +86,6 @@ class TortillaEngine(object):
 
         self.solution = None
         self.lastCorrection = None
-
-    @property
-    def logger(self):
-        return logger
 
     @property
     def version(self):
@@ -147,34 +122,6 @@ class TortillaEngine(object):
             except:
                 pass  # No config file necessarily exists on first start
 
-        # Create log-file if not defined yet
-        logFile = None
-        try:
-            logFile = self.config.get("AstroTortilla", "log_file").strip()
-        except:
-            logger.warning("The log_file parameter value in config file is invalid.")
-        if logFile:
-            if not os.path.isabs(logFile):
-                logFile = os.path.join(appdirs.user_log_dir, logFile)
-            try:
-                os.makedirs(os.path.dirname(logFile))
-            except:
-                pass
-            exists = False
-            for file_handler in filter(lambda h: isinstance(h, logging.FileHandler), tuple(logger.handlers)):
-                if os.path.normpath(file_handler.baseFilename).lower() == os.path.normpath(logFile).lower():
-                    exists = True
-                    continue
-                logger.removeHandler(file_handler)
-
-            if not exists:
-                logger.info("Starting logfile %s" % logFile)
-                logHandler = logging.FileHandler(logFile)
-                logHandler.setLevel(logLevels[self.config.get("AstroTortilla", "log_level")])
-                logHandler.setFormatter(logFormatter)
-                logger.addHandler(logHandler)
-                logger.info("Log started")
-
         default_path = None
         try:
             default_path = self.config.get("AstroTortilla", "settings_path")
@@ -188,37 +135,27 @@ class TortillaEngine(object):
             except:
                 pass
             self.config.set("AstroTortilla", "settings_path", data_dir)
-        if self.config.has_section("Bookmarks"):
-            bmlist = []
-            bm_count = self.config.getint("Bookmarks", "count")
-            for i in xrange(bm_count):
-                try:
-                    bm = Bookmark.from_string(self.config.get("Bookmarks", "bm-%d" % i))
-                    bmlist.append(bm)
-                except:
-                    pass
-            self.__bookmarks = bmlist
         self.__workDirectory = self.config.get("AstroTortilla", "work_directory") if self.config.has_option(
             "AstroTortilla", "work_directory") else None
         if self.__workDirectory:
             try:
-                logger.debug("work_directory set as %s" % self.__workDirectory)
+                logging.debug("work_directory set as %s" % self.__workDirectory)
                 if not os.path.exists(self.__workDirectory):
                     os.makedirs(self.__workDirectory)
                 if not os.path.isdir(self.__workDirectory):
-                    logger.error("work_directory not set to a directory, using system temporary directory")
+                    logging.error("work_directory not set to a directory, using system temporary directory")
                     self.__workDirectory = None
-                logger.debug("Testing if work_directory is writable")
+                logging.debug("Testing if work_directory is writable")
                 import tempfile
                 tfn = tempfile.mktemp(dir=self.__workDirectory)
-                logger.debug("Creating test-file %s" % tfn)
+                logging.debug("Creating test-file %s" % tfn)
                 tf = file(tfn, "w")
                 tf.close()
                 del tf
                 os.remove(tfn)
-                logger.debug("work_directory setting OK")
+                logging.debug("work_directory setting OK")
             except:
-                logger.error("work_directory not accessible, using system temporary directory")
+                logging.error("work_directory not accessible, using system temporary directory")
                 self.__workDirectory = None
         if self.config.has_option("Session", "solver"):
             self.selectSolver(self.config.get("Session", "solver"))
@@ -257,9 +194,7 @@ class TortillaEngine(object):
                 if self.__workDirectory is not None:
                     self.__camera.workingDirectory = self.__workDirectory
             except:
-                import traceback
-                logger.error(
-                    "Setting working to '%s' directory failed: %s" % (self.__workDirectory, traceback.format_exc()))
+                logging.error("Setting working directory failed")
             self.__cameraName = camName
             self.__loadCameraConfig()
         self.config.set("Session", "camera", camName)
@@ -336,7 +271,9 @@ class TortillaEngine(object):
         return self.config.getfloat("Session", "exposure")
 
     def subscribeStatus(self, callback):
-        """Add @callback as a status callback function"""
+        """
+        Add @callback as a status callback function
+        """
         if not callable(callback):
             raise ValueError("Parameter for callback must be a callable function accepting a single string value.")
         if callback not in self.__statusCB:
@@ -376,7 +313,7 @@ class TortillaEngine(object):
                 if type(status) in (str, unicode):
                     failed.append(callback)
         if status and status.strip():
-            logger.info(status)
+            logging.info(status)
         [self.__statusCB.remove(cb) for cb in failed]
 
     def setProgress(self, progress, status=None):
@@ -399,7 +336,7 @@ class TortillaEngine(object):
                 try:
                     obj.setProperty(k, v)
                 except:
-                    logger.info("Failed to set '%s' to '%s' for '%s'" % (k, v, name))
+                    logging.info("Failed to set '%s' to '%s' for '%s'" % (k, v, name))
 
     def __saveObjConfig(self, obj, name):
         """Save obj properties as section name in config structure"""
@@ -410,41 +347,17 @@ class TortillaEngine(object):
             self.config.set(name, k, unicode(v).replace("%", "%%"))
 
     def saveConfig(self, filename=CFGFILE):
-        try:
-            self.config.set("AstroTortilla", "settings_path", os.path.abspath(os.path.dirname(filename)))
-            if self.__telescope and self.__telescopeName:
-                self.__saveObjConfig(self.__telescope, "Telescope-%s" % self.__telescopeName)
-            if self.__camera and self.__cameraName:
-                self.__saveCameraConfig()
-            if self.__solver and self.__solverName:
-                self.__saveObjConfig(self.__solver, "Solver-%s" % self.__solverName)
-            if self.__bookmarks:
-                self.config.remove_section("Bookmarks")  # clear old bookmarks from settings
-                self.config.add_section("Bookmarks")
-                bmi = 0
-                for bookmark in self.__bookmarks:
-                    self.config.set("Bookmarks", "bm-%d" % bmi, bookmark.to_string().replace("%", "%%"))
-                    bmi += 1
-                self.config.set("Bookmarks", "count", "%d" % bmi)
-            if not os.path.exists(os.path.dirname(filename)):
-                os.makedirs(os.path.dirname(filename))
-            with codecs.open(filename, mode="wb", encoding="UTF-8") as conffile:
-                self.config.write(conffile)
-        except:
-            import traceback
-            logger.error(traceback.format_exc())
-
-    def addBookmark(self, bookmark):
-        if type(bookmark) != Bookmark:
-            return
-        self.__bookmarks.append(bookmark)
-
-    def replaceBookmarks(self, bookmarks):
-        self.__bookmarks = bookmarks
-
-    @property
-    def bookmarks(self):
-        return self.__bookmarks
+        self.config.set("AstroTortilla", "settings_path", os.path.abspath(os.path.dirname(filename)))
+        if self.__telescope and self.__telescopeName:
+            self.__saveObjConfig(self.__telescope, "Telescope-%s" % self.__telescopeName)
+        if self.__camera and self.__cameraName:
+            self.__saveCameraConfig()
+        if self.__solver and self.__solverName:
+            self.__saveObjConfig(self.__solver, "Solver-%s" % self.__solverName)
+        if not os.path.exists(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
+        with codecs.open(filename, mode="wb", encoding="UTF-8") as conffile:
+            self.config.write(conffile)
 
     @property
     def isReady(self):
@@ -485,16 +398,12 @@ class TortillaEngine(object):
         self.setStatus(_("Solving..."))
         startTime = time.time()
         # solve based on current location if telescope is tracking, otherwise pure blind solve
-        try:
-            if not blind and self.__telescope and self.__telescope.tracking:
-                self.solution = self.__solver.solve(imgFile, target=self.__telescope.position, targetRadius=None,
-                                                    callback=self.setStatus)
-            else:
-                self.solution = self.__solver.solve(imgFile, callback=self.setStatus)
-            self.__status.pop()
-        except:  # Silent errors
-            import traceback
-            logger.error(traceback.format_exc())
+        if not blind and self.__telescope and self.__telescope.tracking:
+            self.solution = self.__solver.solve(imgFile, target=self.__telescope.position, targetRadius=None,
+                                                callback=self.setStatus)
+        else:
+            self.solution = self.__solver.solve(imgFile, callback=self.setStatus)
+        self.__status.pop()
         if self.solution:
             self.setStatus(_("Solved in %.1fs") % (time.time() - startTime))
         else:
@@ -517,7 +426,7 @@ class TortillaEngine(object):
                 if self.__camera.cameraList:
                     self.__camera.camera = self.__camera.cameraList[0]
                 else:
-                    raise Exception(_("No window matches search pattern"))
+                    raise Exception("No window matches search pattern")
             exposure = exposure or self.getExposure()
             if not self.__camera.connected:
                 self.setStatus(_("ERROR: No camera connected."))
@@ -545,7 +454,7 @@ class TortillaEngine(object):
             self.setProgress(-1)
             cameraError = False
             if self.__camera.cameraState == CameraState.Error:
-                logger.debug("Camera in error state")
+                logging.debug("Camera in error state")
                 cameraError = True
             if self.__camera.imageReady and not self.__abortAction:
                 self.setStatus(_("Reading image from camera"))
@@ -562,12 +471,10 @@ class TortillaEngine(object):
                 self.setStatus(_("Aborted."))
             else:
                 self.setStatus(_("Camera did not produce an image to solve"))
-        except Exception as detail:
-            self.setStatus(_("Camera error: ") + str(detail.message))
+        except Exception, detail:
+            self.setStatus("Camera error: %s" % detail)
             self.setProgress(-1)
-            import traceback
-            logger.error(detail.message)
-            logger.error(traceback.format_exc())
+            logging.error(detail.message)
         self.setStatus("")
         solution = None
         if img:

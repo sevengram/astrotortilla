@@ -14,8 +14,6 @@ from win32com.client import Dispatch
 from ..IPlateSolver import IPlateSolver, Solution
 from ..units import Coordinate
 
-logger = logging.getLogger("astrotortilla.AstrometryNetSolver")
-
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
@@ -65,12 +63,12 @@ class AstrometryNetSolver(IPlateSolver):
         if not os.path.exists(self.__wd):
             os.makedirs(self.__wd)
         if not os.path.isdir(self.__wd):
-            logger.error("Work directory exists and is not a directory")
+            logging.error("Work directory exists and is not a directory")
             raise IOError()
         try:
             self.__transform = Dispatch("ASCOM.Astrometry.Transform.Transform")
         except:
-            logger.error("Failed to initialize ASCOM astrometric transformer, no epoch conversion available")
+            logging.error("Failed to initialize ASCOM astrometric transformer, no epoch conversion available")
             self.__transform = None
 
     def __del__(self):
@@ -87,7 +85,7 @@ class AstrometryNetSolver(IPlateSolver):
 
     def __execute(self, command):
         """Execute a command in cygwin shell"""
-        logger.debug("Executing: %s" % command)
+        logging.debug("Executing: %s" % command)
         if self.__callback:
             stderrPipe = subprocess.STDOUT
         else:
@@ -191,11 +189,11 @@ class AstrometryNetSolver(IPlateSolver):
             pid = self.__shell.pid
             self.__shell.wait()
             rc = self.__shell.returncode
-            logger.debug("Pid %d exit code %d" % (pid, rc))
+            logging.debug("Pid %d exit code %d" % (pid, rc))
             self.__shell = None
 
         if r and len(r) > 1 and r[1]:
-            map(logger.info, r[1])
+            map(logging.info, r[1])
 
         # solution resolution exists and a solution was found?
         if os.path.exists(resultRoot + ".solved") and open(resultRoot + ".solved", "rb").read() == b'\x01':
@@ -209,7 +207,7 @@ class AstrometryNetSolver(IPlateSolver):
                 if callback:
                     map(callback, errors)
                 else:
-                    map(logger.error, errors)
+                    map(logging.error, errors)
 
             # build a WCS info dict, make all numbers to floats
             self.__wcsInfo = dict(

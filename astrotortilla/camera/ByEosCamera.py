@@ -12,8 +12,6 @@ import gettext
 from ..ICamera import ICamera
 from .. import CameraState
 
-logger = logging.getLogger("astrotortilla.ByEosCamera")
-
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
@@ -56,7 +54,7 @@ class ByEosCamera(ICamera):
                                          timeout=self.__timeout)
         except:
             self.__lastError = "Failed to connect to BackyardEOS"
-            logger.error("Failed to connect to BackyardEOS")
+            logging.error("Failed to connect to BackyardEOS")
         return s
 
     @property
@@ -78,9 +76,7 @@ class ByEosCamera(ICamera):
         except socket.timeout:
             pass  # TODO: handle timeouts properly
         except:
-            import traceback
-            logger.error(traceback.format_exc())
-            logger.error("BackyardEOS connection lost during command")
+            logging.error("BackyardEOS connection lost during command")
         return response
 
     def __del__(self):
@@ -143,10 +139,8 @@ class ByEosCamera(ICamera):
         try:
             rsp = self.__command("getstatus")
             status = STATUS[rsp]
-        except Exception:
-            import traceback
-            logger.error(traceback.format_exc())
-            logger.error("BackyardEOS response: '%s'" % rsp)
+        except:
+            logging.error("BackyardEOS response: '%s'" % rsp)
         return status
 
     @property
@@ -187,7 +181,7 @@ class ByEosCamera(ICamera):
         if self.__latestImage:
             try:
                 os.remove(self.__latestImage)
-            except Exception as detail:
+            except Exception, detail:
                 raise IOError("Failed to clear cache: %s" % detail)
         self.__latestImage = None
 
@@ -195,8 +189,7 @@ class ByEosCamera(ICamera):
             self.__command(
                 "takepicture duration:%f iso:%s bin:%d" % (duration, self.getProperty("ISO"), self.__bin))
         except:
-            import traceback
-            logger.error(traceback.format_exc())
+            logging.error("Take Picture Error!")
             self.__state = CameraState.Error
         self.__state = CameraState.Idle
 
@@ -218,6 +211,6 @@ class ByEosCamera(ICamera):
     def reset(self):
         status = self.cameraState
         if status == CameraState.Error:
-            logger.error("Resetting error: %s" % self.errorMessage)
+            logging.error("Resetting error: %s" % self.errorMessage)
         elif status == CameraState.Exposing:
             self.__command("abort")
