@@ -19,8 +19,6 @@ logger = logging.getLogger("astrotortilla.AstrometryNetSolver")
 t = gettext.translation('astrotortilla', 'locale', fallback=True)
 _ = t.gettext
 
-DEBUG = 0  # 1 to enable some debug prints
-
 PROPERTYLIST = {
     "downscale": (_("Downscaling"), int, _("Image downscaling factor"), "", 0),
     "configfile": (
@@ -35,7 +33,7 @@ PROPERTYLIST = {
     "shell": (
         _("Cygwin shell"), str, _("Shell command for Cygwin execution"), "", 'C:\\cygwin\\bin\\bash --login -c "%s"'),
     "shell_hide": (_("Hide Cygwin"), bool, _("Hide Cygwin window while solving"), "True, False", True),
-    "year_epoch": (_("JNow or J2000"), str, _("JNOW or J2000"), "", "JNOW"),
+    "year_epoch": (_("JNow or J2000"), str, _("JNOW or J2000"), "", "J2000")
 }
 
 
@@ -165,6 +163,7 @@ class AstrometryNetSolver(IPlateSolver):
         self.__callback = callback
         self.__found = False
         self.__abort = False
+
         # construct command line
         workDir = os.path.join(self.__wd, str(self.__counter)).replace("\\", "/")
         imageBase = os.path.splitext(os.path.basename(imagePath))[0].replace("\\", "/")
@@ -172,10 +171,7 @@ class AstrometryNetSolver(IPlateSolver):
         imagePath = imagePath.replace("\\", "/")
         options = []
         if target:
-            if targetRadius:
-                t_radius = float(targetRadius)
-            else:
-                t_radius = float(self.getProperty("searchradius"))
+            t_radius = float(targetRadius) if targetRadius else float(self.getProperty("searchradius"))
             options.append("-3 %f -4 %f -5 %f" % (target.RA, target.dec, t_radius))
         options.append("-b %s" % (self.getProperty("configfile").replace("\\", "/")))
         options.append("%s" % (self.getProperty("xtra")))
@@ -239,13 +235,12 @@ class AstrometryNetSolver(IPlateSolver):
                 hFOV /= 3600.
                 vFOV /= 3600.
 
-                # construct a Solution
+            # construct a Solution
             self.__solution = Solution(center,
                                        self.__wcsInfo["orientation_center"],
                                        self.__wcsInfo["parity"],
                                        hFOV, vFOV,
-                                       wcsInfo=self.__wcsInfo
-                                       )
+                                       wcsInfo=self.__wcsInfo)
             self.__found = True
 
             # see if the property for image width should be refined based on solution
@@ -262,11 +257,9 @@ class AstrometryNetSolver(IPlateSolver):
                     aspp = float(self.__wcsInfo["pixscale"])
                     self.setProperty("scale_low", aspp / refinement)
                     self.setProperty("scale_max", aspp * refinement)
-
         else:
             # No solution was found
             self.__found = False
-            del self.__solution
             self.__solution = None
 
         # Clean up and return
@@ -292,7 +285,7 @@ class AstrometryNetSolver(IPlateSolver):
         return v
 
     def reset(self):
-        """Reset solver state."""
+        """Reset solver state"""
         self.__found = False
         self.__solution = None
         self.__abort = False

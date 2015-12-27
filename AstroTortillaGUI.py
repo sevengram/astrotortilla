@@ -19,13 +19,11 @@ class BoaApp(wx.App):
         self.main = MainFrame.create(None)
         self.main.choiceSolver.Clear()
         self.__populateChoiceList(self.main.choiceSolver, self.main.engine.listSolvers())
-        if len(self.main.engine.listSolvers()) == 1:
-            self.main.engine.selectSolver(self.main.engine.listSolvers()[0][0])
-            self.main.choiceSolver.SetSelection(0)
-            self.main.choiceSolver.Disable()
-            self.main.updateSolverGrid()
-        else:
-            self.main.configGrid.Show(False)
+
+        self.main.engine.selectSolver(self.main.engine.listSolvers()[0][0])
+        self.main.choiceSolver.SetSelection(0)
+        self.main.updateSolverGrid()
+
         self.main.choiceCam.Clear()
         self.main.choiceCam.Append("Disconnected")
         self.main.choiceCam.SetSelection(0)
