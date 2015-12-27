@@ -1,11 +1,10 @@
 # -*- coding: UTF-8 -*-
-
+import threading
 import wx
 import wx.grid
 import wx.lib.masked.numctrl
 import gettext
 import logging
-from time import time, sleep
 from wx.lib.anchors import LayoutAnchors
 
 import win32gui
@@ -137,9 +136,7 @@ class mainFrame(wx.Frame):
 
     def _init_coll_statusBar1_Fields(self, parent):
         parent.SetFieldsCount(1)
-
         parent.SetStatusText(number=0, text='status')
-
         parent.SetStatusWidths([-1])
 
     def _init_utils(self):
@@ -515,6 +512,97 @@ class mainFrame(wx.Frame):
         except:
             pass
 
+    def __statusUpdater(self, status=None):
+        """Update status bar and process UI events safely"""
+        if status:
+            self.SetStatusText(status)
+        wx.SafeYield(self, True)
+        wx.GetApp().Yield(True)
+
+    def __progressUpdater(self, pct, readable=None):
+        if pct < 0:
+            hide(self.progress)
+        else:
+            show(self.progress)
+            self.progress.SetValue(pct)
+        wx.SafeYield(self, True)
+        wx.GetApp().Yield(True)
+
+    def updateSolverGrid(self):
+        """Update solver configuration grid"""
+        if not self.engine.getSolver():
+            return
+        solverProps = self.engine.getSolver().propertyList
+        self.configGrid.ClearGrid()
+        solverConfig = self.engine.getSolver().configuration
+        cfgSize = len(solverConfig)
+        gridSize = self.configGrid.GetNumberRows()
+        if gridSize > cfgSize:
+            self.configGrid.DeleteRows(0, gridSize - cfgSize)
+        elif gridSize < cfgSize:
+            self.configGrid.AppendRows(cfgSize - gridSize)
+        self.configGrid.SetRowLabelSize(0)
+        self.configGrid.DisableDragGridSize()
+        self.configGrid.SetColSize(1, 200)
+
+        i = 0
+        keyList = solverConfig.keys()
+        keyList.sort()
+        for key in keyList:
+            self.configGrid.SetCellValue(i, 0, solverProps[key][0])
+            self.configGrid.SetReadOnly(i, 0, True)
+            self.configGrid.SetCellValue(i, 1, str(solverConfig[key]))
+            self.configGrid.SetRowLabelValue(i, key)
+            i += 1
+        wx.EVT_MOTION(self.configGrid.GetGridWindow(), self.OnConfigGridMotion)
+        self.configGrid.SetColMinimalAcceptableWidth(80)
+        self.configGrid.AutoSize()
+        self.configGrid.ForceRefresh()
+        self.configGrid.Show()
+
+    def updateCamera(self):
+        """Update camera status display"""
+        if not self.engine.getCamera():
+            self.txtCamStatus.SetLabel(_("Not connected"))
+            self.btnGO.Disable()
+        else:
+            self.camSetup.Enable()
+            self.btnGO.Enable()
+            self.txtCamStatus.SetLabel(CameraState.State[self.engine.getCamera().cameraState])
+            n = self.choiceCam.GetSelection()
+            if n < 0 or self.choiceCam.GetClientData(n) != self.engine.getCamera():
+                self.choiceCam.SetSelection(self.choiceCam.FindString(self.engine.getCamera().getName()))
+
+        if not self.engine.solution:
+            if self.engine.getCamera():
+                self.txtCam.SetLabel(_("Previous solution"))
+        else:
+            self.txtCamRA.SetLabel(deg2hms(self.engine.solution.center.RA))
+            self.txtCamDec.SetLabel(deg2dms(self.engine.solution.center.dec))
+            hFov, vFov = self.engine.solution.fieldOfView
+            fovUnit = u"\xb0"
+            if hFov < 1.0 or vFov < 1.0:
+                hFov *= 60.
+                vFov *= 60.
+                fovUnit = "'"
+            self.txtField.SetLabel("%01.2f%s x %01.2f%s" % (hFov, fovUnit, vFov, fovUnit))
+            if int(self.engine.solution.parity) == 1:
+                self.lblMirror.SetLabel(_("Flipped"))
+            else:
+                self.lblMirror.SetLabel(_("Normal"))
+            self.txtRotation.SetLabel("%.2f" % self.engine.solution.rotation)
+            if self.engine.lastCorrection:
+                separation = self.engine.lastCorrection
+                separationString = deg2str(separation.degrees)
+                self.txtCam.SetLabel(_("Last error: %s") % separationString)
+
+    def updateSolveResult(self):
+        self.updateCamera()
+        for row in range(self.configGrid.GetNumberRows()):
+            key = self.configGrid.GetRowLabelValue(row)
+            self.configGrid.SetCellValue(row, 1, str(self.engine.getSolver().getProperty(key)))
+        self.btnGO.SetLabel(_("Capture and Solve"))
+
     def OnClose(self, event):
         """Save settings on exit"""
         placement = win32gui.GetWindowPlacement(self.GetHandle())
@@ -551,38 +639,6 @@ class mainFrame(wx.Frame):
         self.engine.selectSolver(event.GetClientData())
         if self.engine.getSolver():
             self.updateSolverGrid()
-
-    def updateSolverGrid(self):
-        """Update solver configuration grid"""
-        if not self.engine.getSolver():
-            return
-        solverProps = self.engine.getSolver().propertyList
-        self.configGrid.ClearGrid()
-        solverConfig = self.engine.getSolver().configuration
-        cfgSize = len(solverConfig)
-        gridSize = self.configGrid.GetNumberRows()
-        if gridSize > cfgSize:
-            self.configGrid.DeleteRows(0, gridSize - cfgSize)
-        elif gridSize < cfgSize:
-            self.configGrid.AppendRows(cfgSize - gridSize)
-        self.configGrid.SetRowLabelSize(0)
-        self.configGrid.DisableDragGridSize()
-        self.configGrid.SetColSize(1, 200)
-
-        i = 0
-        keyList = solverConfig.keys()
-        keyList.sort()
-        for key in keyList:
-            self.configGrid.SetCellValue(i, 0, solverProps[key][0])
-            self.configGrid.SetReadOnly(i, 0, True)
-            self.configGrid.SetCellValue(i, 1, str(solverConfig[key]))
-            self.configGrid.SetRowLabelValue(i, key)
-            i += 1
-        wx.EVT_MOTION(self.configGrid.GetGridWindow(), self.OnConfigGridMotion)
-        self.configGrid.SetColMinimalAcceptableWidth(80)
-        self.configGrid.AutoSize()
-        self.configGrid.ForceRefresh()
-        self.configGrid.Show()
 
     def OnConfigGridMotion(self, evt):
         # evt.GetRow() and evt.GetCol() would be nice to have here,
@@ -622,42 +678,6 @@ class mainFrame(wx.Frame):
         self.engine.selectCamera(event.GetClientData())
         self.updateCamera()
         logging.debug("Camera set to %s" % self.choiceCam.GetStringSelection())
-
-    def updateCamera(self):
-        """Update camera status display"""
-        if not self.engine.getCamera():
-            self.txtCamStatus.SetLabel(_("Not connected"))
-            self.btnGO.Disable()
-        else:
-            self.camSetup.Enable()
-            self.btnGO.Enable()
-            self.txtCamStatus.SetLabel(CameraState.State[self.engine.getCamera().cameraState])
-            n = self.choiceCam.GetSelection()
-            if n < 0 or self.choiceCam.GetClientData(n) != self.engine.getCamera():
-                self.choiceCam.SetSelection(self.choiceCam.FindString(self.engine.getCamera().getName()))
-
-        if not self.engine.solution:
-            if self.engine.getCamera():
-                self.txtCam.SetLabel(_("Previous solution"))
-        else:
-            self.txtCamRA.SetLabel(deg2hms(self.engine.solution.center.RA))
-            self.txtCamDec.SetLabel(deg2dms(self.engine.solution.center.dec))
-            hFov, vFov = self.engine.solution.fieldOfView
-            fovUnit = u"\xb0"
-            if hFov < 1.0 or vFov < 1.0:
-                hFov *= 60.
-                vFov *= 60.
-                fovUnit = "'"
-            self.txtField.SetLabel("%01.2f%s x %01.2f%s" % (hFov, fovUnit, vFov, fovUnit))
-            if int(self.engine.solution.parity) == 1:
-                self.lblMirror.SetLabel(_("Flipped"))
-            else:
-                self.lblMirror.SetLabel(_("Normal"))
-            self.txtRotation.SetLabel("%.2f" % self.engine.solution.rotation)
-            if self.engine.lastCorrection:
-                separation = self.engine.lastCorrection
-                separationString = deg2str(separation.degrees)
-                self.txtCam.SetLabel(_("Last error: %s") % separationString)
 
     def OnConfigGridMouseEvents(self, event):
         event.Skip()
@@ -716,40 +736,7 @@ class mainFrame(wx.Frame):
             self.btnGO.SetLabel(_("Aborting..."))
             return
         self.btnGO.SetLabel(_("Abort solver"))
-        try:
-            arcminLimit = self.numCtrlAccuracy.GetValue()
-            exposeTime = self.numCtrlExposure.GetValue()
-            self.engine.setExposure(exposeTime)
-            if self.chkSlewTarget.IsChecked():
-                if self.chkRepeat.IsChecked():
-                    limit = 0
-                else:
-                    limit = 1
-                self.engine.gotoCurrentTarget(limit=limit, threshold=arcminLimit)
-            else:
-                self.engine.solveCamera()
-                if self.chkSync.IsChecked() and self.engine.solution:
-                    self.engine.getTelescope().position = self.engine.solution.center
-                    sync_error = self.engine.getTelescope().position - self.engine.solution.center
-                    if sync_error.arcminutes > arcminLimit:
-                        raise Exception("ASCOM Telescope sync error")
-        except:
-            logging.error("Sync failed")
-            return
-        self.updateCamera()
-        # update solver configuration grid from solver properties
-        for row in range(self.configGrid.GetNumberRows()):
-            key = self.configGrid.GetRowLabelValue(row)
-            self.configGrid.SetCellValue(row, 1, str(self.engine.getSolver().getProperty(key)))
-        self.engine.clearStatus()
-        self.btnGO.SetLabel(_("Capture and Solve"))
-
-    def __statusUpdater(self, status=None):
-        """Update status bar and process UI events safely"""
-        if status:
-            self.SetStatusText(status)
-        wx.SafeYield(self, True)
-        wx.GetApp().Yield(True)
+        SolveThread(self).start()
 
     def OnScopePollTimer(self, event):
         if not self.engine.getTelescope():
@@ -855,84 +842,10 @@ class mainFrame(wx.Frame):
             logging.error("Saving settings failed")
 
     def OnMenuToolsDriftshotMenu(self, event):
-        if not self.engine.isReady:
-            event.Skip()
-            return
-        disable(self.btnGO)
-        self.SetStatusText(_("Connecting to camera..."))
-        if self.engine.getCamera().canAutoConnect:
-            autoDisco = self.engine.getCamera().disconnectAfterCapture
-            self.engine.getCamera().disconnectAfterCapture = False
-        self.engine.getCamera().connected = True
-        if self.engine.getCamera().needsCameraName and not self.engine.getCamera().camera:
-            self.engine.getCamera().camera = self.engine.getCamera().cameraList[0]
-        exposeTime = self.numCtrlExposure.GetValue()
-        if exposeTime < 30.0:
-            exposeTime = 30.0
-        self.SetStatusText(_("Drifting: %.2f seconds") % exposeTime)
-        self.engine.getCamera().capture(exposeTime)
-        self.engine.getTelescope().tracking = True
-        if exposeTime < 60:
-            stillTime = 5
-        else:
-            stillTime = 10
-        rateQueue = [(-14.0, exposeTime - stillTime), (14.0, (exposeTime - stillTime) / 2.)]
-        tEnd = time() + exposeTime
-        tLeft = tEnd - time()
-        while tLeft > 0:
-            if rateQueue and tLeft < rateQueue[0][1]:
-                self.engine.getTelescope().RightAscensionRate = rateQueue[0][0]
-                del rateQueue[0]
-            sleep(0.1)
-            tLeft = tEnd - time()
-            if tLeft >= 0:
-                self.SetStatusText(_("Drifting: %.2f seconds") % tLeft)
-            wx.SafeYield(self, True)
-            wx.GetApp().Yield(True)
-        self.engine.getTelescope().RightAscensionRate = 0.0
-        self.engine.getTelescope().tracking = True
-        if self.engine.getCamera().canAutoConnect:
-            self.engine.getCamera().disconnectAfterCapture = autoDisco
-        self.SetStatusText(_("Waiting for camera"))
-        if self.engine.getCamera().disconnectAfterCapture:
-            while not self.engine.getCamera().imageReady and self.engine.getCamera().cameraState not in (
-                    CameraState.Error,):
-                sleep(0.2)
-            self.engine.getCamera().connected = False
-        enable(self.btnGO)
-        self.SetStatusText(_("Drifting done."))
-
-    def __progressUpdater(self, pct, readable=None):
-        if pct < 0:
-            hide(self.progress)
-        else:
-            show(self.progress)
-            self.progress.SetValue(pct)
-        wx.SafeYield(self, True)
-        wx.GetApp().Yield(True)
+        pass
 
     def OnMenuToolsGotoImage(self, event):
-        if not self.engine.config.has_option("AstroTortilla", "last_gotoimage"):
-            self.engine.config.set("AstroTortilla", "last_gotoimage", "")
-
-        fileName = wx.FileSelector(
-            message=_("Goto Image"),
-            default_path=self.engine.config.get("AstroTortilla", "last_gotoimage"),
-            flags=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
-            wildcard=_(
-                "Image files") + " (*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm)|*.fit; *.fits; *.fts; *.jpg; *.tiff; *.tif; *.pnm",
-        )
-
-        if fileName:
-            self.engine.config.set("AstroTortilla", "last_gotoimage", fileName)
-            self.btnGO.SetLabel(_("Abort solver"))
-            try:
-                self.engine.gotoImage(fileName)
-            except:
-                logging.error("Solver error occurred")
-                return
-            self.btnGO.SetLabel(_("Capture and Solve"))
-            self.updateCamera()
+        pass
 
     def OnMainFrameMove(self, event):
         event.Skip()
@@ -942,3 +855,31 @@ class mainFrame(wx.Frame):
 
     def OnMainFrameActivate(self, event):
         event.Skip()
+
+
+class SolveThread(threading.Thread):
+    def __init__(self, window):
+        threading.Thread.__init__(self)
+        self.engine = window.engine
+        self.window = window
+
+    def run(self):
+        try:
+            arcminLimit = self.window.numCtrlAccuracy.GetValue()
+            exposeTime = self.window.numCtrlExposure.GetValue()
+            self.engine.setExposure(exposeTime)
+            if self.window.chkSlewTarget.IsChecked():
+                limit = 0 if self.window.chkRepeat.IsChecked() else 1
+                self.engine.gotoCurrentTarget(limit=limit, threshold=arcminLimit)
+            else:
+                self.engine.solveCamera()
+                if self.window.chkSync.IsChecked() and self.engine.solution:
+                    self.engine.getTelescope().position = self.engine.solution.center
+                    sync_error = self.engine.getTelescope().position - self.engine.solution.center
+                    if sync_error.arcminutes > arcminLimit:
+                        raise Exception("ASCOM Telescope sync error")
+        except:
+            logging.error("Sync failed")
+            return
+        self.engine.clearStatus()
+        wx.CallAfter(self.window.updateSolveResult)

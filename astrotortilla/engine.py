@@ -13,6 +13,7 @@ import time
 from inspect import isclass, getmembers
 
 from win32api import LoadResource
+import wx
 import camera
 import solver
 import telescope
@@ -308,7 +309,8 @@ class TortillaEngine(object):
         failed = []
         for callback in self.__statusCB:
             try:
-                callback(status)
+                wx.CallAfter(callback, status)
+                # callback(status)
             except:
                 if type(status) in (str, unicode):
                     failed.append(callback)
@@ -324,7 +326,8 @@ class TortillaEngine(object):
         failed = []
         for callback in self.__progressCB:
             try:
-                callback(progress, status)
+                wx.CallAfter(callback, progress, status)
+                # callback(progress, status)
             except:
                 failed.append(callback)
         [self.__statusCB.remove(cb) for cb in failed]
@@ -399,8 +402,7 @@ class TortillaEngine(object):
         startTime = time.time()
         # solve based on current location if telescope is tracking, otherwise pure blind solve
         if not blind and self.__telescope and self.__telescope.tracking:
-            self.solution = self.__solver.solve(imgFile, target=self.__telescope.position, targetRadius=None,
-                                                callback=self.setStatus)
+            self.solution = self.__solver.solve(imgFile, target=self.__telescope.position, callback=self.setStatus)
         else:
             self.solution = self.__solver.solve(imgFile, callback=self.setStatus)
         self.__status.pop()
@@ -483,25 +485,6 @@ class TortillaEngine(object):
         self.__status.pop()
         self.__abortAction = False
         return solution
-
-    def gotoImage(self, imageFile, limit=0, threshold=0.0):
-        """Goto solved image"""
-        if not self.__telescope:
-            self.setStatus(_("ERROR: No telescope connected."))
-            return None
-        newTarget = self.solveImage(imageFile, blind=True)
-        if newTarget:
-            self.__telescope.slewToAsync(newTarget.center)
-            return self.gotoCurrentTarget(limit, threshold)
-        return None
-
-    def gotoPosition(self, coords, limit=0, threshold=0.0):
-        """Goto a defined coordinate position"""
-        if not self.__telescope:
-            self.setStatus(_("ERROR: No telescope connected."))
-            return None
-        self.__telescope.slewToAsync(coords)
-        return self.gotoCurrentTarget(limit, threshold)
 
     def gotoCurrentTarget(self, limit=0, threshold=0.0):
         """Correct slew to telescope target, retry until within 'threshold' arc minutes, no more than 'limit' times"""
