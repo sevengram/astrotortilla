@@ -136,9 +136,7 @@ class mainFrame(wx.Frame):
 
     def _init_coll_statusBar1_Fields(self, parent):
         parent.SetFieldsCount(1)
-
         parent.SetStatusText(number=0, text='status')
-
         parent.SetStatusWidths([-1])
 
     def _init_utils(self):
@@ -742,9 +740,11 @@ class mainFrame(wx.Frame):
             self.btnGO.SetLabel(_("Abort solver"))
             self.engine.setExposure(self.numCtrlExposure.GetValue())
             if self.chkSlewTarget.IsChecked():
-                self.engine.gotoCurrentTarget(callback=self.solveComplete)
+                result = self.engine.gotoCurrentTarget(callback=self.solveComplete)
             else:
-                self.engine.solveCamera(callback=self.solveComplete)
+                result = self.engine.solveCamera(callback=self.solveComplete)
+            if not result:
+                self.solveComplete()
 
     def solveComplete(self):
         if self.chkSync.IsChecked() and not self.chkSlewTarget.IsChecked() and self.engine.solution:

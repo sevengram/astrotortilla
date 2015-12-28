@@ -396,6 +396,7 @@ class TortillaEngine(object):
         """Return Solution object for a given image"""
         if not self.__solver:
             self.setStatus(_("ERROR: No solver selected."))
+            return False
         else:
             self.solution = None
             self.__status.append(Status.Solving)
@@ -404,32 +405,33 @@ class TortillaEngine(object):
             SolveThread(self.__solver, imgfile, current, target, callback,
                         on_status_update=main_thread_func(self.setStatus),
                         on_complete=main_thread_func(self.solveImageComplete)).start()
+            return True
 
     def solveImageComplete(self, solution, cost_time, target, callback):
         self.solution = solution
         self.__status.pop()
-        if self.solution:
+        if solution:
             self.setStatus(_("Solved in %.1fs") % cost_time)
         else:
             self.setStatus(_("No solution in %.1fs") % cost_time)
         self.__status.pop()
         self.__abortAction = False
 
-        if not self.solution:
+        if target:
+            if not solution:
+                self.lastCorrection = None
+            else:
+                pointError = target - solution.center
+                self.lastCorrection = pointError
+                self.setStatus(_("Re-centering..."))
+                self.__telescope.position = solution.center
+                self.__telescope.slewToAsync(target)
+                while self.__telescope.slewing:
+                    time.sleep(0.1)
+                    distance = self.__telescope.position - target
+                    self.setProgress((1. - distance.arcminutes / pointError.arcminutes) * 100)
+                self.setProgress(-1)
             self.__status.pop()
-            self.lastCorrection = None
-            return
-        pointError = target - self.solution.center
-        self.lastCorrection = pointError
-        self.setStatus(_("Re-centering..."))
-        self.__telescope.position = self.solution.center
-        self.__telescope.slewToAsync(target)
-        while self.__telescope.slewing:
-            time.sleep(0.1)
-            distance = self.__telescope.position - target
-            self.setProgress((1. - distance.arcminutes / pointError.arcminutes) * 100)
-        self.setProgress(-1)
-        self.__status.pop()
         if callback:
             callback()
 
@@ -437,7 +439,7 @@ class TortillaEngine(object):
         """Return Solution object for current camera view"""
         if not self.__camera:
             self.setStatus(_("ERROR: No camera connected."))
-            return None
+            return False
         self.__status.append(Status.Capturing)
 
         img = None
@@ -454,7 +456,7 @@ class TortillaEngine(object):
             if not self.__camera.connected:
                 self.setStatus(_("ERROR: No camera connected."))
                 self.__status.pop()
-                return None
+                return False
             self.setStatus(_("Exposing: %.2f seconds") % exposure)
             self.__camera.capture(exposure)
             tEnd = time.time() + exposure
@@ -499,13 +501,17 @@ class TortillaEngine(object):
             self.setProgress(-1)
             logging.error(detail.message)
         self.setStatus("")
-        self.solveImage(img, target, callback=callback)
+        result = self.solveImage(img, target, callback=callback) if img else False
+        if not result:
+            self.__status.pop()
+        return result
 
+        
     def gotoCurrentTarget(self, callback=None):
         """Correct slew to telescope target"""
         if not self.__telescope:
             self.setStatus(_("ERROR: No telescope connected."))
-            return
+            return False
         self.__status.append(Status.Slewing)
         self.setStatus(_("Waiting for scope to stop"))
         startPosition = self.__telescope.position
@@ -521,10 +527,13 @@ class TortillaEngine(object):
         self.setProgress(-1)
         if not self.__telescope:
             self.lastCorrection = None
-            self.__status.pop()
             self.setStatus(_("ERROR: Telescope connection lost"))
+            result = False
         else:
-            self.solveCamera(target=self.__telescope.position, callback=callback)
+            result = self.solveCamera(target=self.__telescope.position, callback=callback)
+        if not result:
+            self.__status.pop()
+        return result
 
 
 class SolveThread(threading.Thread):
