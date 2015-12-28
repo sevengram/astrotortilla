@@ -87,9 +87,6 @@ def disable(ctrl):
 [wxID_MAINFRAMEMENUFILEFILEEXIT, wxID_MAINFRAMEMENUFILEITEMS1,
  wxID_MAINFRAMEMENUFILEITEMS2] = [wx.NewId() for _init_coll_menuFile_Items in range(3)]
 
-[wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
- wxID_MAINFRAMEMENUTOOLSITEMS2] = [wx.NewId() for _init_coll_menuTools_Items in range(2)]
-
 [wxID_MAINFRAMEMENUHELPHELPABOUT] = [wx.NewId() for _init_coll_menuHelp_Items in range(1)]
 
 [wxID_MAINFRAMESCOPEPOLLTIMER] = [wx.NewId() for _init_utils in range(1)]
@@ -98,7 +95,6 @@ def disable(ctrl):
 class mainFrame(wx.Frame):
     def _init_coll_menuBar1_Menus(self, parent):
         parent.Append(menu=self.menuFile, title=_('File'))
-        parent.Append(menu=self.menuTools, title=_('Tools'))
         parent.Append(menu=self.menuHelp, title=_('Help'))
 
     def _init_coll_menuHelp_Items(self, parent):
@@ -124,16 +120,6 @@ class mainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnMenuFileSaveSettingsMenu,
                   id=wxID_MAINFRAMEMENUFILEITEMS2)
 
-    def _init_coll_menuTools_Items(self, parent):
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSITEMS2,
-                      kind=wx.ITEM_NORMAL, text=_('Goto Image'))
-        parent.Append(help='', id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT,
-                      kind=wx.ITEM_NORMAL, text=_('Drift shot'))
-        self.Bind(wx.EVT_MENU, self.OnMenuToolsDriftshotMenu,
-                  id=wxID_MAINFRAMEMENUTOOLSDRIFTSHOT)
-        self.Bind(wx.EVT_MENU, self.OnMenuToolsGotoImage,
-                  id=wxID_MAINFRAMEMENUTOOLSITEMS2)
-
     def _init_coll_statusBar1_Fields(self, parent):
         parent.SetFieldsCount(1)
         parent.SetStatusText(number=0, text='status')
@@ -143,7 +129,6 @@ class mainFrame(wx.Frame):
         self.menuFile = wx.Menu(title='')
         self.menuHelp = wx.Menu(title='')
         self.menuBar1 = wx.MenuBar()
-        self.menuTools = wx.Menu(title='')
 
         self.scopePollTimer = wx.Timer(id=wxID_MAINFRAMESCOPEPOLLTIMER, owner=self)
         self.Bind(wx.EVT_TIMER, self.OnScopePollTimer, id=wxID_MAINFRAMESCOPEPOLLTIMER)
@@ -151,7 +136,6 @@ class mainFrame(wx.Frame):
         self._init_coll_menuFile_Items(self.menuFile)
         self._init_coll_menuHelp_Items(self.menuHelp)
         self._init_coll_menuBar1_Menus(self.menuBar1)
-        self._init_coll_menuTools_Items(self.menuTools)
 
     def _init_ctrls(self, prnt):
         wx.Frame.__init__(self, id=wxID_MAINFRAME, name='mainFrame',
@@ -459,8 +443,7 @@ class mainFrame(wx.Frame):
                                          label=_('Re-slew to target'), name='chkSlewTarget', parent=self,
                                          pos=wx.Point(264, 216), size=wx.Size(120, 13), style=0)
         self.chkSlewTarget.SetValue(True)
-        self.chkSlewTarget.SetConstraints(LayoutAnchors(self.chkSlewTarget,
-                                                        False, True, True, False))
+        self.chkSlewTarget.SetConstraints(LayoutAnchors(self.chkSlewTarget, False, True, True, False))
         self.chkSlewTarget.Bind(wx.EVT_CHECKBOX, self.OnChkSlewTargetCheckbox,
                                 id=wxID_MAINFRAMECHKSLEWTARGET)
 
@@ -776,18 +759,10 @@ class mainFrame(wx.Frame):
 
         if self.engine.getTelescope().tracking:
             show(self.txtScopeTracking)
-            map(enable, (
-                self.chkSync,
-                self.chkSlewTarget,
-                self.chkRepeat
-            ))
+            map(enable, (self.chkSync, self.chkSlewTarget, self.chkRepeat))
         else:
             hide(self.txtScopeTracking)
-            map(disable, (
-                self.chkSync,
-                self.chkSlewTarget,
-                self.chkRepeat
-            ))
+            map(disable, (self.chkSync, self.chkSlewTarget, self.chkRepeat))
         if self.engine.getTelescope().slewing:
             show(self.txtScopeSlewing)
             disable(self.btnGO)
@@ -849,20 +824,13 @@ class mainFrame(wx.Frame):
             default_path=self.engine.config.get("AstroTortilla", "settings_path"),
             flags=wx.FD_SAVE,
             wildcard=_("Config files") + " (*.cfg)|*.cfg")
-        if not fileName:
-            return
-        try:
-            if (fileName[-4:]).lower() != ".cfg":
-                fileName += ".cfg"
-            self.engine.saveConfig(fileName)
-        except:
-            logging.error("Saving settings failed")
-
-    def OnMenuToolsDriftshotMenu(self, event):
-        pass
-
-    def OnMenuToolsGotoImage(self, event):
-        pass
+        if fileName:
+            try:
+                if (fileName[-4:]).lower() != ".cfg":
+                    fileName += ".cfg"
+                self.engine.saveConfig(fileName)
+            except:
+                logging.error("Saving settings failed")
 
     def OnMainFrameMove(self, event):
         event.Skip()

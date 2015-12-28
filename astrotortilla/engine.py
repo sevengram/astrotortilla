@@ -2,6 +2,8 @@
 AstroTortilla main engine classes
 """
 
+import threading
+import wx
 import logging
 import gettext
 import sys
@@ -11,8 +13,6 @@ import os
 import os.path
 import time
 from inspect import isclass, getmembers
-import threading
-import wx
 
 from win32api import LoadResource
 import camera
@@ -367,13 +367,7 @@ class TortillaEngine(object):
 
     @property
     def isReady(self):
-        rv = True
-        if not self.__camera or not self.__solver or not self.__telescope or (
-                        self.__telescope is not None and self.__telescope.slewing):
-            rv = False
-        if not self.__telescope.tracking:
-            rv = False
-        return rv
+        return self.__camera and self.__solver and self.__telescope and not self.__telescope.slewing and self.__telescope.tracking
 
     @property
     def isBusy(self):
@@ -431,7 +425,9 @@ class TortillaEngine(object):
                     distance = self.__telescope.position - target
                     self.setProgress((1. - distance.arcminutes / pointError.arcminutes) * 100)
                 self.setProgress(-1)
+                self.setStatus(_("Re-centered!"))
             self.__status.pop()
+
         if callback:
             callback()
 
@@ -506,7 +502,6 @@ class TortillaEngine(object):
             self.__status.pop()
         return result
 
-        
     def gotoCurrentTarget(self, callback=None):
         """Correct slew to telescope target"""
         if not self.__telescope:
