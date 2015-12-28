@@ -11,9 +11,10 @@ import os
 import os.path
 import time
 from inspect import isclass, getmembers
+import threading
+import wx
 
 from win32api import LoadResource
-import wx
 import camera
 import solver
 import telescope
@@ -45,6 +46,10 @@ CFGDEFAULTS = {
             "log_level": "ERROR",
         }
 }
+
+
+def main_thread_func(f):
+    return lambda *args, **kw: wx.CallAfter(f, *args, **kw)
 
 
 class Status(object):
@@ -309,8 +314,7 @@ class TortillaEngine(object):
         failed = []
         for callback in self.__statusCB:
             try:
-                wx.CallAfter(callback, status)
-                # callback(status)
+                callback(status)
             except:
                 if type(status) in (str, unicode):
                     failed.append(callback)
@@ -326,8 +330,7 @@ class TortillaEngine(object):
         failed = []
         for callback in self.__progressCB:
             try:
-                wx.CallAfter(callback, progress, status)
-                # callback(progress, status)
+                callback(progress, status)
             except:
                 failed.append(callback)
         [self.__statusCB.remove(cb) for cb in failed]
@@ -365,10 +368,8 @@ class TortillaEngine(object):
     @property
     def isReady(self):
         rv = True
-        if not self.__camera or \
-                not self.__solver or \
-                not self.__telescope or \
-                (self.__telescope is not None and self.__telescope.slewing):
+        if not self.__camera or not self.__solver or not self.__telescope or (
+                        self.__telescope is not None and self.__telescope.slewing):
             rv = False
         if not self.__telescope.tracking:
             rv = False
@@ -391,28 +392,48 @@ class TortillaEngine(object):
         self.__abortAction = False
         self.__status = self.__status[:1]
 
-    def solveImage(self, imgFile, blind=False):
+    def solveImage(self, imgfile, target=None, callback=None):
         """Return Solution object for a given image"""
         if not self.__solver:
             self.setStatus(_("ERROR: No solver selected."))
-            return None
-        self.solution = None
-        self.__status.append(Status.Solving)
-        self.setStatus(_("Solving..."))
-        startTime = time.time()
-        # solve based on current location if telescope is tracking, otherwise pure blind solve
-        if not blind and self.__telescope and self.__telescope.tracking:
-            self.solution = self.__solver.solve(imgFile, target=self.__telescope.position, callback=self.setStatus)
         else:
-            self.solution = self.__solver.solve(imgFile, callback=self.setStatus)
+            self.solution = None
+            self.__status.append(Status.Solving)
+            self.setStatus(_("Solving..."))
+            current = self.__telescope.position if self.__telescope and self.__telescope.tracking else None
+            SolveThread(self.__solver, imgfile, current, target, callback,
+                        on_status_update=main_thread_func(self.setStatus),
+                        on_complete=main_thread_func(self.solveImageComplete)).start()
+
+    def solveImageComplete(self, solution, cost_time, target, callback):
+        self.solution = solution
         self.__status.pop()
         if self.solution:
-            self.setStatus(_("Solved in %.1fs") % (time.time() - startTime))
+            self.setStatus(_("Solved in %.1fs") % cost_time)
         else:
-            self.setStatus(_("No solution in %.1fs") % (time.time() - startTime))
-        return self.solution
+            self.setStatus(_("No solution in %.1fs") % cost_time)
+        self.__status.pop()
+        self.__abortAction = False
 
-    def solveCamera(self, exposure=None):
+        if not self.solution:
+            self.__status.pop()
+            self.lastCorrection = None
+            return
+        pointError = target - self.solution.center
+        self.lastCorrection = pointError
+        self.setStatus(_("Re-centering..."))
+        self.__telescope.position = self.solution.center
+        self.__telescope.slewToAsync(target)
+        while self.__telescope.slewing:
+            time.sleep(0.1)
+            distance = self.__telescope.position - target
+            self.setProgress((1. - distance.arcminutes / pointError.arcminutes) * 100)
+        self.setProgress(-1)
+        self.__status.pop()
+        if callback:
+            callback()
+
+    def solveCamera(self, target=None, callback=None):
         """Return Solution object for current camera view"""
         if not self.__camera:
             self.setStatus(_("ERROR: No camera connected."))
@@ -429,7 +450,7 @@ class TortillaEngine(object):
                     self.__camera.camera = self.__camera.cameraList[0]
                 else:
                     raise Exception("No window matches search pattern")
-            exposure = exposure or self.getExposure()
+            exposure = self.getExposure()
             if not self.__camera.connected:
                 self.setStatus(_("ERROR: No camera connected."))
                 self.__status.pop()
@@ -478,19 +499,13 @@ class TortillaEngine(object):
             self.setProgress(-1)
             logging.error(detail.message)
         self.setStatus("")
-        solution = None
-        if img:
-            solution = self.solveImage(img)
+        self.solveImage(img, target, callback=callback)
 
-        self.__status.pop()
-        self.__abortAction = False
-        return solution
-
-    def gotoCurrentTarget(self, limit=0, threshold=0.0):
-        """Correct slew to telescope target, retry until within 'threshold' arc minutes, no more than 'limit' times"""
+    def gotoCurrentTarget(self, callback=None):
+        """Correct slew to telescope target"""
         if not self.__telescope:
             self.setStatus(_("ERROR: No telescope connected."))
-            return None
+            return
         self.__status.append(Status.Slewing)
         self.setStatus(_("Waiting for scope to stop"))
         startPosition = self.__telescope.position
@@ -508,40 +523,24 @@ class TortillaEngine(object):
             self.lastCorrection = None
             self.__status.pop()
             self.setStatus(_("ERROR: Telescope connection lost"))
-            return None
-        targetPos = self.__telescope.position
-        currentSolution = self.solveCamera()
-        if not currentSolution:
-            self.__status.pop()
-            self.lastCorrection = None
-            return None
+        else:
+            self.solveCamera(target=self.__telescope.position, callback=callback)
 
-        limit = limit or self.config.getint("Session", "iterlimitcount")
-        threshold = threshold or self.config.getfloat("Session", "iterlimitarcmin")
 
-        pointError = targetPos - currentSolution.center
-        self.lastCorrection = pointError
+class SolveThread(threading.Thread):
+    def __init__(self, _solver, imgfile, current=None, target=None, callback=None, on_status_update=None,
+                 on_complete=None):
+        threading.Thread.__init__(self)
+        self.solver = _solver
+        self.imgfile = imgfile
+        self.current = current
+        self.target = target
+        self.callback = callback
+        self.on_status_update = on_status_update
+        self.on_complete = on_complete
 
-        retries = 0
-        while (retries < limit) and (pointError.arcminutes > threshold):
-            self.setStatus(_("Re-centering..."))
-            self.__telescope.position = currentSolution.center
-            sync_delta = self.__telescope.position - currentSolution.center
-            if sync_delta.arcminutes > threshold:
-                raise Exception("ASCOM Telescope sync error")
-            self.__telescope.slewToAsync(targetPos)
-            while self.__telescope.slewing:
-                time.sleep(0.1)
-                distance = self.__telescope.position - targetPos
-                self.setProgress((1. - distance.arcminutes / pointError.arcminutes) * 100)
-            self.setProgress(-1)
-            currentSolution = self.solveCamera()
-            if not currentSolution:
-                self.__status.pop()
-                return None
-
-            pointError = targetPos - currentSolution.center
-            self.lastCorrection = pointError
-            retries += 1
-        self.__status.pop()
-        return pointError
+    def run(self):
+        startTime = time.time()
+        solution = self.solver.solve(self.imgfile, target=self.current, callback=self.on_status_update)
+        if self.on_complete:
+            self.on_complete(solution, time.time() - startTime, self.target, self.callback)

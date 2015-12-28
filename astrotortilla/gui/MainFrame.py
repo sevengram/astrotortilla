@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-import threading
+
 import wx
 import wx.grid
 import wx.lib.masked.numctrl
@@ -136,7 +136,9 @@ class mainFrame(wx.Frame):
 
     def _init_coll_statusBar1_Fields(self, parent):
         parent.SetFieldsCount(1)
+
         parent.SetStatusText(number=0, text='status')
+
         parent.SetStatusWidths([-1])
 
     def _init_utils(self):
@@ -194,41 +196,51 @@ class mainFrame(wx.Frame):
         self.mainCamera.SetConstraints(LayoutAnchors(self.mainCamera, True,
                                                      True, True, False))
 
-        self.staticBox1 = wx.StaticBox(id=wxID_MAINFRAMESTATICBOX1, label=_('Actions'), name='staticBox1', parent=self,
+        self.staticBox1 = wx.StaticBox(id=wxID_MAINFRAMESTATICBOX1,
+                                       label=_('Actions'), name='staticBox1', parent=self,
                                        pos=wx.Point(256, 168), size=wx.Size(136, 134), style=0)
         self.staticBox1.SetToolTipString('')
         self.staticBox1.SetConstraints(LayoutAnchors(self.staticBox1, False,
                                                      True, True, False))
 
-        self.camSetup = wx.Button(id=wxID_MAINFRAMECAMSETUP, label=_('Setup'), name='camSetup', parent=self,
-                                  pos=wx.Point(16, 128), size=wx.Size(96, 23), style=0)
+        self.camSetup = wx.Button(id=wxID_MAINFRAMECAMSETUP, label=_('Setup'),
+                                  name='camSetup', parent=self, pos=wx.Point(16, 128),
+                                  size=wx.Size(96, 23), style=0)
         self.camSetup.SetToolTipString(_('Setup camera'))
-        self.camSetup.Bind(wx.EVT_BUTTON, self.OnCamSetupButton, id=wxID_MAINFRAMECAMSETUP)
+        self.camSetup.Bind(wx.EVT_BUTTON, self.OnCamSetupButton,
+                           id=wxID_MAINFRAMECAMSETUP)
 
-        self.lblRA = wx.StaticText(id=wxID_MAINFRAMELBLRA, label=_('RA:'), name='lblRA', parent=self,
-                                   pos=wx.Point(184, 24), size=wx.Size(16, 16), style=0)
+        self.lblRA = wx.StaticText(id=wxID_MAINFRAMELBLRA, label=_('RA:'),
+                                   name='lblRA', parent=self, pos=wx.Point(184, 24), size=wx.Size(16,
+                                                                                                  16), style=0)
         self.lblRA.SetToolTipString('')
 
-        self.lblDec = wx.StaticText(id=wxID_MAINFRAMELBLDEC, label=_('Dec:'), name='lblDec', parent=self,
-                                    pos=wx.Point(176, 40), size=wx.Size(24, 16), style=0)
+        self.lblDec = wx.StaticText(id=wxID_MAINFRAMELBLDEC, label=_('Dec:'),
+                                    name='lblDec', parent=self, pos=wx.Point(176, 40),
+                                    size=wx.Size(24, 16), style=0)
         self.lblDec.SetToolTipString('')
 
-        self.txtRA = wx.StaticText(id=wxID_MAINFRAMETXTRA, label='00h00m00.00s', name='txtRA', parent=self,
-                                   pos=wx.Point(208, 24), size=wx.Size(71, 13), style=0)
+        self.txtRA = wx.StaticText(id=wxID_MAINFRAMETXTRA, label='00h00m00.00s',
+                                   name='txtRA', parent=self, pos=wx.Point(208, 24), size=wx.Size(71,
+                                                                                                  13), style=0)
         self.txtRA.SetToolTipString(_('Right ascension'))
 
-        self.txtDec = wx.StaticText(id=wxID_MAINFRAMETXTDEC, label='0', name='txtDec', parent=self,
-                                    pos=wx.Point(208, 40), size=wx.Size(71, 13), style=0)
+        self.txtDec = wx.StaticText(id=wxID_MAINFRAMETXTDEC, label='0',
+                                    name='txtDec', parent=self, pos=wx.Point(208, 40),
+                                    size=wx.Size(71, 13), style=0)
         self.txtDec.SetToolTipString(_('Declination'))
 
-        self.txtCam = wx.StaticText(id=wxID_MAINFRAMETXTCAM, label=_('No camera'), name='txtCam', parent=self,
+        self.txtCam = wx.StaticText(id=wxID_MAINFRAMETXTCAM,
+                                    label=_('No camera'), name='txtCam', parent=self,
                                     pos=wx.Point(120, 96), size=wx.Size(51, 13), style=0)
         self.txtCam.SetToolTipString('')
 
-        self.btnScopeSetup = wx.Button(id=wxID_MAINFRAMEBTNSCOPESETUP, label=_('Setup'), name='btnScopeSetup',
-                                       parent=self, pos=wx.Point(16, 48), size=wx.Size(96, 23), style=0)
+        self.btnScopeSetup = wx.Button(id=wxID_MAINFRAMEBTNSCOPESETUP,
+                                       label=_('Setup'), name='btnScopeSetup', parent=self,
+                                       pos=wx.Point(16, 48), size=wx.Size(96, 23), style=0)
         self.btnScopeSetup.SetToolTipString(_('Telescope driver workarounds'))
-        self.btnScopeSetup.Bind(wx.EVT_BUTTON, self.OnBtnScopeSetupButton, id=wxID_MAINFRAMEBTNSCOPESETUP)
+        self.btnScopeSetup.Bind(wx.EVT_BUTTON, self.OnBtnScopeSetupButton,
+                                id=wxID_MAINFRAMEBTNSCOPESETUP)
 
         self.lblField = wx.StaticText(id=wxID_MAINFRAMELBLFIELD,
                                       label=_('Field size:'), name='lblField', parent=self,
@@ -454,12 +466,6 @@ class mainFrame(wx.Frame):
         self.chkSlewTarget.Bind(wx.EVT_CHECKBOX, self.OnChkSlewTargetCheckbox,
                                 id=wxID_MAINFRAMECHKSLEWTARGET)
 
-    def __exposureChanged(self, event_args):
-        self.engine.setExposure(self.numCtrlExposure.GetValue())
-
-    def __accuracyChanged(self, event_args):
-        self.engine.setAccuracy(self.numCtrlAccuracy.GetValue())
-
     def __init__(self, parent):
         self._init_ctrls(parent)
         self.engine = TortillaEngine()
@@ -512,8 +518,13 @@ class mainFrame(wx.Frame):
         except:
             pass
 
+    def __exposureChanged(self, event_args):
+        self.engine.setExposure(self.numCtrlExposure.GetValue())
+
+    def __accuracyChanged(self, event_args):
+        self.engine.setAccuracy(self.numCtrlAccuracy.GetValue())
+
     def __statusUpdater(self, status=None):
-        """Update status bar and process UI events safely"""
         if status:
             self.SetStatusText(status)
         wx.SafeYield(self, True)
@@ -527,38 +538,6 @@ class mainFrame(wx.Frame):
             self.progress.SetValue(pct)
         wx.SafeYield(self, True)
         wx.GetApp().Yield(True)
-
-    def updateSolverGrid(self):
-        """Update solver configuration grid"""
-        if not self.engine.getSolver():
-            return
-        solverProps = self.engine.getSolver().propertyList
-        self.configGrid.ClearGrid()
-        solverConfig = self.engine.getSolver().configuration
-        cfgSize = len(solverConfig)
-        gridSize = self.configGrid.GetNumberRows()
-        if gridSize > cfgSize:
-            self.configGrid.DeleteRows(0, gridSize - cfgSize)
-        elif gridSize < cfgSize:
-            self.configGrid.AppendRows(cfgSize - gridSize)
-        self.configGrid.SetRowLabelSize(0)
-        self.configGrid.DisableDragGridSize()
-        self.configGrid.SetColSize(1, 200)
-
-        i = 0
-        keyList = solverConfig.keys()
-        keyList.sort()
-        for key in keyList:
-            self.configGrid.SetCellValue(i, 0, solverProps[key][0])
-            self.configGrid.SetReadOnly(i, 0, True)
-            self.configGrid.SetCellValue(i, 1, str(solverConfig[key]))
-            self.configGrid.SetRowLabelValue(i, key)
-            i += 1
-        wx.EVT_MOTION(self.configGrid.GetGridWindow(), self.OnConfigGridMotion)
-        self.configGrid.SetColMinimalAcceptableWidth(80)
-        self.configGrid.AutoSize()
-        self.configGrid.ForceRefresh()
-        self.configGrid.Show()
 
     def updateCamera(self):
         """Update camera status display"""
@@ -596,12 +575,37 @@ class mainFrame(wx.Frame):
                 separationString = deg2str(separation.degrees)
                 self.txtCam.SetLabel(_("Last error: %s") % separationString)
 
-    def updateSolveResult(self):
-        self.updateCamera()
-        for row in range(self.configGrid.GetNumberRows()):
-            key = self.configGrid.GetRowLabelValue(row)
-            self.configGrid.SetCellValue(row, 1, str(self.engine.getSolver().getProperty(key)))
-        self.btnGO.SetLabel(_("Capture and Solve"))
+    def updateSolverGrid(self):
+        """Update solver configuration grid"""
+        if not self.engine.getSolver():
+            return
+        solverProps = self.engine.getSolver().propertyList
+        self.configGrid.ClearGrid()
+        solverConfig = self.engine.getSolver().configuration
+        cfgSize = len(solverConfig)
+        gridSize = self.configGrid.GetNumberRows()
+        if gridSize > cfgSize:
+            self.configGrid.DeleteRows(0, gridSize - cfgSize)
+        elif gridSize < cfgSize:
+            self.configGrid.AppendRows(cfgSize - gridSize)
+        self.configGrid.SetRowLabelSize(0)
+        self.configGrid.DisableDragGridSize()
+        self.configGrid.SetColSize(1, 200)
+
+        i = 0
+        keyList = solverConfig.keys()
+        keyList.sort()
+        for key in keyList:
+            self.configGrid.SetCellValue(i, 0, solverProps[key][0])
+            self.configGrid.SetReadOnly(i, 0, True)
+            self.configGrid.SetCellValue(i, 1, str(solverConfig[key]))
+            self.configGrid.SetRowLabelValue(i, key)
+            i += 1
+        wx.EVT_MOTION(self.configGrid.GetGridWindow(), self.OnConfigGridMotion)
+        self.configGrid.SetColMinimalAcceptableWidth(80)
+        self.configGrid.AutoSize()
+        self.configGrid.ForceRefresh()
+        self.configGrid.Show()
 
     def OnClose(self, event):
         """Save settings on exit"""
@@ -734,9 +738,23 @@ class mainFrame(wx.Frame):
         if self.engine.isBusy:
             self.engine.abort()
             self.btnGO.SetLabel(_("Aborting..."))
-            return
-        self.btnGO.SetLabel(_("Abort solver"))
-        SolveThread(self).start()
+        else:
+            self.btnGO.SetLabel(_("Abort solver"))
+            self.engine.setExposure(self.numCtrlExposure.GetValue())
+            if self.chkSlewTarget.IsChecked():
+                self.engine.gotoCurrentTarget(callback=self.solveComplete)
+            else:
+                self.engine.solveCamera(callback=self.solveComplete)
+
+    def solveComplete(self):
+        if self.chkSync.IsChecked() and not self.chkSlewTarget.IsChecked() and self.engine.solution:
+            self.engine.getTelescope().position = self.engine.solution.center
+        self.updateCamera()
+        for row in range(self.configGrid.GetNumberRows()):
+            key = self.configGrid.GetRowLabelValue(row)
+            self.configGrid.SetCellValue(row, 1, str(self.engine.getSolver().getProperty(key)))
+        self.engine.clearStatus()
+        self.btnGO.SetLabel(_("Capture and Solve"))
 
     def OnScopePollTimer(self, event):
         if not self.engine.getTelescope():
@@ -751,6 +769,7 @@ class mainFrame(wx.Frame):
                 self.chkRepeat
             ))
             return
+
         if not self.engine.getTelescope().connected:
             self.engine.deselectTelescope()
             return
@@ -794,7 +813,7 @@ class mainFrame(wx.Frame):
             if self.engine.lastCorrection:
                 separation = self.engine.lastCorrection
                 separationString = deg2str(separation.degrees)
-                self.txtCam.SetLabel(_("Last error: %s") % (separationString))
+                self.txtCam.SetLabel("Last error: %s" % separationString)
 
     def OnChkSyncCheckbox(self, event):
         state = event.GetEventObject().IsChecked()
@@ -820,7 +839,6 @@ class mainFrame(wx.Frame):
             default_path=self.engine.config.get("AstroTortilla", "settings_path"),
             flags=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
             wildcard=_("Config files") + " (*.cfg)|*.cfg")
-
         if fileName:
             self.engine.loadConfig(fileName)
             self.updateSolverGrid()
@@ -830,8 +848,7 @@ class mainFrame(wx.Frame):
             message=_("Save settings"),
             default_path=self.engine.config.get("AstroTortilla", "settings_path"),
             flags=wx.FD_SAVE,
-            wildcard=_("Config files") + " (*.cfg)|*.cfg",
-        )
+            wildcard=_("Config files") + " (*.cfg)|*.cfg")
         if not fileName:
             return
         try:
@@ -855,31 +872,3 @@ class mainFrame(wx.Frame):
 
     def OnMainFrameActivate(self, event):
         event.Skip()
-
-
-class SolveThread(threading.Thread):
-    def __init__(self, window):
-        threading.Thread.__init__(self)
-        self.engine = window.engine
-        self.window = window
-
-    def run(self):
-        try:
-            arcminLimit = self.window.numCtrlAccuracy.GetValue()
-            exposeTime = self.window.numCtrlExposure.GetValue()
-            self.engine.setExposure(exposeTime)
-            if self.window.chkSlewTarget.IsChecked():
-                limit = 0 if self.window.chkRepeat.IsChecked() else 1
-                self.engine.gotoCurrentTarget(limit=limit, threshold=arcminLimit)
-            else:
-                self.engine.solveCamera()
-                if self.window.chkSync.IsChecked() and self.engine.solution:
-                    self.engine.getTelescope().position = self.engine.solution.center
-                    sync_error = self.engine.getTelescope().position - self.engine.solution.center
-                    if sync_error.arcminutes > arcminLimit:
-                        raise Exception("ASCOM Telescope sync error")
-        except:
-            logging.error("Sync failed")
-            return
-        self.engine.clearStatus()
-        wx.CallAfter(self.window.updateSolveResult)
